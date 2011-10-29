@@ -30,7 +30,8 @@ var PAVO = new function() {
 		self.hud.wait();
 		
 		FOAM.shaders.build(
-			"block", "vs-block", "fs-block", 
+			"block", "vs-block", "fs-block",
+			["position", "texturec", "a_color", "a_light"],
 			["projector", "modelview"],
 			["palette", "panels"] );
 

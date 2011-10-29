@@ -45,6 +45,7 @@ PAVO.space = new function() {
 	this.generate = function(defines) {
 		var nx, px, ny, py, nz, pz;
 		var x, y, z, o, p, c, l;
+		var program;
 
 		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
 		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
@@ -54,14 +55,12 @@ PAVO.space = new function() {
 			return Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
 
+		program = FOAM.shaders.get("block");
 		mesh = new FOAM.Mesh();
-		mesh.add(mesh.POSITION, 3);
-		mesh.TEXTURE = 1;
-		mesh.add(mesh.TEXTURE, 2);
-		mesh.COLOR = 2;
-		mesh.add(mesh.COLOR, 1);
-		mesh.LIGHT = 3;
-		mesh.add(mesh.LIGHT, 1);
+		mesh.add(program.position, 3);
+		mesh.add(program.texturec, 2);
+		mesh.add(program.a_color, 1);
+		mesh.add(program.a_light, 1);
 
 		for (x = 0; x <= LENGTH; x += RESOLUTION) {
 			nx = x;
