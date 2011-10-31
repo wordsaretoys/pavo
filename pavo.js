@@ -29,21 +29,29 @@ var PAVO = new function() {
 		self.hud.init();
 		self.hud.wait();
 		
-		FOAM.shaders.build(
-			"block", "vs-block", "fs-block",
-			["position", "texturec", "a_color", "a_light"],
-			["projector", "modelview"],
-			["palette", "panels"] );
-
-		self.world.init(worlddef);
-
-		FOAM.schedule(self.world.update, 0, true);
-		FOAM.schedule(self.world.draw, 0, true);
-
-		// insure that window redraws when paused and resized			
-		jQuery(window).bind("resize", function(){ self.world.draw() });
+		FOAM.resources.addImage("walls", "res/walls.png");
+		FOAM.resources.onComplete = function() {
 		
-		self.hud.unwait();
+			FOAM.shaders.build(
+				"block", "vs-block", "fs-block",
+				["position", "texturec", "a_color", "a_light", "a_panel"],
+				["projector", "modelview"],
+				["palette", "panels"] );
+
+			FOAM.textures.build("walls");
+
+			self.world.init(worlddef);
+
+			FOAM.schedule(self.world.update, 0, true);
+			FOAM.schedule(self.world.draw, 0, true);
+
+			// insure that window redraws when paused and resized			
+			jQuery(window).bind("resize", function(){ self.world.draw() });
+		
+			self.hud.unwait();
+		};
+		
+		FOAM.resources.load();
 	};
 	
 };
