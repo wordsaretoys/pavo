@@ -8,7 +8,7 @@ PAVO.player = new function() {
 
 	var SPIN_RATE = -0.007;
 	var NORMAL_SPEED = 10;
-	var DEBUG_SPEED = 100;
+	var SPRINT_SPEED = 50;
 
 	var self = this;
 
@@ -25,21 +25,24 @@ PAVO.player = new function() {
 	
 	this.position = new FOAM.Vector();
 	this.velocity = new FOAM.Vector();
-	this.debugMode = false;
+	this.sprint = false;
+	this.debug = false;
 
 	this.init = function() {
 		jQuery(window).bind("keydown", this.onKeyDown);
 		jQuery(window).bind("keyup", this.onKeyUp);
-		jQuery(window).bind("mousedown", this.onMouseDown);
-		jQuery(window).bind("mouseup", this.onMouseUp);
-		jQuery(window).bind("mousemove", this.onMouseMove);
+		jQuery("#gl").bind("mousedown", this.onMouseDown);
+		jQuery("#gl").bind("mouseup", this.onMouseUp);
+		jQuery("#gl").bind("mousemove", this.onMouseMove);
 		FOAM.camera.nearLimit = 0.01;
 		FOAM.camera.farLimit = 1024;
+		
+		this.position.copy(PAVO.defines.space.start);
 	};
 	
 	this.update = function() {
 		var dt = FOAM.interval * 0.001;
-		var speed = (this.debugMode) ? DEBUG_SPEED : NORMAL_SPEED;
+		var speed = (this.sprint) ? SPRINT_SPEED : NORMAL_SPEED;
 
 		// determine new velocity
 		this.velocity.set();
@@ -58,7 +61,7 @@ PAVO.player = new function() {
 		this.velocity.norm().mul(dt * speed);
 
 		// test collision
-		if (this.debugMode || !PAVO.space.testCollision(this.position, this.velocity)) {
+		if (this.debug || !PAVO.space.testCollision(this.position, this.velocity)) {
 			this.position.add(this.velocity);
 		}
 		FOAM.camera.position.copy(this.position);
@@ -79,7 +82,7 @@ PAVO.player = new function() {
 				motion.moveback = true;
 				break;
 			case FOAM.KEY.SHIFT:
-				self.debugMode = true;
+				self.sprint = true;
 				break;
 			default:
 				//window.alert(event.keyCode);
@@ -103,7 +106,7 @@ PAVO.player = new function() {
 				motion.moveback = false;
 				break;
 			case FOAM.KEY.SHIFT:
-				self.debugMode = false;
+				self.sprint = false;
 				break;
 			default:
 				break;

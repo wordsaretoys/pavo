@@ -13,14 +13,34 @@ PAVO.world = new function() {
 	var map;
 	var activeMap;
 
-	this.init = function(defines) {
+	this.createPalette = function() {
+		var pastels = [
+			224, 224, 224, 255,
+			224, 224, 255, 255,
+			224, 255, 224, 255,
+			224, 255, 255, 255,
+			255, 224, 224, 255,
+			255, 224, 255, 255,
+			255, 255, 224, 255,
+			255, 255, 255, 255
+		];
+		var canvas = document.createElement("canvas");
+		var context = canvas.getContext("2d");
+		var palette = context.createImageData(1, pastels.length / 4);
+		var i, il;
+		for (i = 0, il = pastels.length; i < il; i++)
+			palette.data[i] = pastels[i];
+		FOAM.textures.buildFromImageData("block-palette", palette);
+	};
+
+	this.init = function() {
+
+		this.createPalette();
 	
-		PAVO.decals.init();
 		PAVO.space.init();
 		PAVO.player.init();
 		
-		PAVO.space.generate(defines.space);
-		PAVO.player.position.copy(defines.space.start);
+		PAVO.space.generate();
 	};
 	
 	this.update = function() {

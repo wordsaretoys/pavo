@@ -50,7 +50,7 @@ uniform sampler2D palette;
 uniform sampler2D panels;
 
 void main(void) {
-	vec2 st = vec2((uv.x + panel) / 2.0, uv.y);
+	vec2 st = vec2((uv.x + panel) / 8.0, uv.y);
 	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
 	vec4 tex1 = texture2D(panels, st);
 	gl_FragColor = vec4(mix(tex0 * light, tex1.rgb * light, tex1.a), 1.0);

@@ -27,9 +27,6 @@ PAVO.space = new function() {
 	};
 	
 	this.init = function() {
-		// create color palette and decals
-		PAVO.decals.createPalette("block-palette");
-		PAVO.decals.createWallPanels("block-panels");
 	};
 
 	this.inside = function(x, y, z) {
@@ -43,21 +40,27 @@ PAVO.space = new function() {
 		return field.get(x, y, z) > THRESHOLD;
 	};
 	
-	this.generate = function(defines) {
+	this.generate = function() {
+		var defines = PAVO.defines.space;
 		var nx, px, ny, py, nz, pz;
 		var x, y, z, o, p, c, l, w;
 		var program;
+		
 
 		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
 		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
 		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE, defines.light.scale);
-		panel = new FOAM.Prng(0);
+		panel = new FOAM.Prng(defines.panel.seed);
 
 		light.gets = function(x, y, z) {
-			return Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
+			return (y / LENGTH) * Math.pow(light.get(x, y, z), defines.light.power);
 		};
 		panel.gets = function() {
-			return (panel.get() < 0.01) ? 1 : 0;
+			var p = panel.get();
+			if (p > 0.02)
+				return 0;
+			else
+				return Math.floor(7 * panel.get()) + 1;
 		};
 
 		program = FOAM.shaders.get("block");
@@ -94,37 +97,37 @@ PAVO.space = new function() {
 					if ( o && !p ) {
 						c = color.get(x, y, z);
 						w = panel.gets();
-						mesh.set(px, ny, nz, 1, 0, c, light.gets(px, ny, nz), w);
-						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
-						mesh.set(px, py, nz, 1, 1, c, light.gets(px, py, nz), w);
+						mesh.set(px, ny, nz, 0, 0, c, light.gets(px, ny, nz), w);
+						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
+						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
 				
-						mesh.set(px, ny, nz, 1, 0, c, light.gets(px, ny, nz), w);
-						mesh.set(px, ny, pz, 0, 0, c, light.gets(px, ny, pz), w);
-						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
+						mesh.set(px, ny, nz, 0, 0, c, light.gets(px, ny, nz), w);
+						mesh.set(px, ny, pz, 1, 0, c, light.gets(px, ny, pz), w);
+						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
 					}
 					
 					p = this.inside(x, y + RESOLUTION, z);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
 						w = panel.gets();
-						mesh.set(nx, py, nz, 0, 0, c, light.gets(nx, py, nz), w);
-						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
-						mesh.set(px, py, nz, 1, 0, c, light.gets(px, py, nz), w);
+						mesh.set(nx, py, nz, 1, 0, c, light.gets(nx, py, nz), w);
+						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
+						mesh.set(px, py, nz, 0, 0, c, light.gets(px, py, nz), w);
 				
-						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
-						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
-						mesh.set(px, py, nz, 1, 0, c, light.gets(px, py, nz), w);
+						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
+						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
+						mesh.set(px, py, nz, 0, 0, c, light.gets(px, py, nz), w);
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
 						w = panel.gets();
-						mesh.set(nx, py, nz, 0, 0, c, light.gets(nx, py, nz), w);
-						mesh.set(px, py, nz, 1, 0, c, light.gets(px, py, nz), w);
-						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
+						mesh.set(nx, py, nz, 1, 1, c, light.gets(nx, py, nz), w);
+						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
+						mesh.set(nx, py, pz, 1, 0, c, light.gets(nx, py, pz), w);
 				
-						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
-						mesh.set(px, py, nz, 1, 0, c, light.gets(px, py, nz), w);
-						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
+						mesh.set(nx, py, pz, 1, 0, c, light.gets(nx, py, pz), w);
+						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
+						mesh.set(px, py, pz, 0, 0, c, light.gets(px, py, pz), w);
 					}
 					
 					p = this.inside(x, y, z + RESOLUTION);
@@ -142,14 +145,14 @@ PAVO.space = new function() {
 					if ( o && !p ) {
 						c = color.get(x, y, z);
 						w = panel.gets();
-						mesh.set(nx, ny, pz, 0, 0, c, light.gets(nx, ny, pz), w);
-						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
-						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
+						mesh.set(nx, ny, pz, 1, 0, c, light.gets(nx, ny, pz), w);
+						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
+						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
 
-						mesh.set(nx, ny, pz, 0, 0, c, light.gets(nx, ny, pz), w);
-						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
-						mesh.set(px, ny, pz, 1, 0, c, light.gets(px, ny, pz), w);
-					}
+						mesh.set(nx, ny, pz, 1, 0, c, light.gets(nx, ny, pz), w);
+						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
+						mesh.set(px, ny, pz, 0, 0, c, light.gets(px, ny, pz), w);
+					} 
 				}
 			}
 		}

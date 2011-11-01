@@ -24,14 +24,13 @@
 		<script type="text/javascript" src="/debug/pavo/decals.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
 
+		<script type="text/javascript" src="/debug/pavo/defines.js"></script>
 <?php
 include("pavo.glsl");
 ?>
 		<script type="text/javascript">
 			window.addEventListener("load", function() {
-<?php
-include("defines.js");
-?>
+				PAVO.init();
 			});
 		</script>
     </head>

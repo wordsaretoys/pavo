@@ -12,7 +12,7 @@ var PAVO = new function() {
 	
 	var self = this;
 
-	this.init = function(worlddef) {
+	this.init = function() {
 	
 		// initialize the Foam API
 		if (!FOAM.init("gl", true)) {
@@ -40,7 +40,7 @@ var PAVO = new function() {
 
 			FOAM.textures.build("walls");
 
-			self.world.init(worlddef);
+			self.world.init();
 
 			FOAM.schedule(self.world.update, 0, true);
 			FOAM.schedule(self.world.draw, 0, true);
