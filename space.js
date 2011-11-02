@@ -57,7 +57,7 @@ PAVO.space = new function() {
 		};
 		panel.gets = function() {
 			var p = panel.get();
-			if (p > 0.02)
+			if (p > 0.03)
 				return 0;
 			else
 				return Math.floor(7 * panel.get()) + 1;
