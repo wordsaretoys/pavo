@@ -46,6 +46,7 @@ PAVO.space = new function() {
 		var x, y, z, o, p, c, l, w;
 		var program;
 		
+		FOAM.interpolate = FOAM.linearInterpolate;
 
 		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
 		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
