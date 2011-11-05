@@ -10,9 +10,6 @@ PAVO.world = new function() {
 
 	var self = this;
 
-	var map;
-	var activeMap;
-
 	this.createPalette = function() {
 		var pastels = [
 			224, 224, 224, 255,
@@ -41,6 +38,7 @@ PAVO.world = new function() {
 		PAVO.player.init();
 		
 		PAVO.space.generate();
+		PAVO.player.position.copy(PAVO.defines.space.start);
 	};
 	
 	this.update = function() {

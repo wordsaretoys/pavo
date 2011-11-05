@@ -22,6 +22,10 @@ PAVO.player = new function() {
 		x: 0,
 		y: 0
 	};
+
+	var temp = {
+		position: new FOAM.Vector()
+	};
 	
 	this.position = new FOAM.Vector();
 	this.velocity = new FOAM.Vector();
@@ -36,8 +40,6 @@ PAVO.player = new function() {
 		jQuery("#gl").bind("mousemove", this.onMouseMove);
 		FOAM.camera.nearLimit = 0.01;
 		FOAM.camera.farLimit = 1024;
-		
-		this.position.copy(PAVO.defines.space.start);
 	};
 	
 	this.update = function() {
@@ -59,10 +61,11 @@ PAVO.player = new function() {
 			this.velocity.add(FOAM.camera.orientation.right);
 		}
 		this.velocity.norm().mul(dt * speed);
+		temp.position.copy(this.position).add(this.velocity);
 
 		// test collision
-		if (this.debug || !PAVO.space.testCollision(this.position, this.velocity)) {
-			this.position.add(this.velocity);
+		if (this.debug || !PAVO.space.testCollision(this.position, temp.position)) {
+			this.position.copy(temp.position);
 		}
 		FOAM.camera.position.copy(this.position);
 	};
@@ -83,6 +86,9 @@ PAVO.player = new function() {
 				break;
 			case FOAM.KEY.SHIFT:
 				self.sprint = true;
+				break;
+			case FOAM.KEY.X:
+				self.debug = !self.debug;
 				break;
 			default:
 				//window.alert(event.keyCode);

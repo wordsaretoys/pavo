@@ -12,6 +12,8 @@ PAVO.space = new function() {
 	var RESOLUTION = 8;
 	var LENGTH = 256;
 	var SOURCE = LENGTH / RESOLUTION;
+	var LLIMIT = RESOLUTION;
+	var ULIMIT = LENGTH - RESOLUTION;
 
 	var self = this;
 	var mesh;
@@ -30,12 +32,11 @@ PAVO.space = new function() {
 	};
 
 	this.inside = function(x, y, z) {
-		var ll = RESOLUTION;
-		var ul = LENGTH - RESOLUTION;
 		x = Math.floor(x / RESOLUTION) * RESOLUTION;
 		y = Math.floor(y / RESOLUTION) * RESOLUTION;
 		z = Math.floor(z / RESOLUTION) * RESOLUTION;
-		if (x < ll || y < ll || z < ll || x > ul || y > ul || z > ul)
+		if (x < LLIMIT || y < LLIMIT || z < LLIMIT || 
+			x > ULIMIT || y > ULIMIT || z > ULIMIT)
 			return false;
 		return field.get(x, y, z) > THRESHOLD;
 	};
@@ -46,15 +47,13 @@ PAVO.space = new function() {
 		var x, y, z, o, p, c, l, w;
 		var program;
 		
-		FOAM.interpolate = FOAM.linearInterpolate;
-
 		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
 		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
 		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE, defines.light.scale);
 		panel = new FOAM.Prng(defines.panel.seed);
 
 		light.gets = function(x, y, z) {
-			return (y / LENGTH) * Math.pow(light.get(x, y, z), defines.light.power);
+			return (y / LENGTH) * Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
 		panel.gets = function() {
 			var p = panel.get();
@@ -160,12 +159,8 @@ PAVO.space = new function() {
 		mesh.build();
 	};
 
-	this.testCollision = function(p, v) {
-		var nx = (v.x > 0) ? 1 : -1;
-		var ny = (v.y > 0) ? 1 : -1;
-		var nz = (v.z > 0) ? 1 : -1;
-		return this.inside(p.x, p.y, p.z) != 
-			this.inside(p.x + v.x + nx, p.y + v.y + ny, p.z + v.z + nz);
+	this.testCollision = function(p0, p1) {
+		return this.inside(p0.x, p0.y, p0.z) != this.inside(p1.x, p1.y, p1.z);
 	};
 	
 	this.draw = function() {
