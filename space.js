@@ -52,6 +52,9 @@ PAVO.space = new function() {
 		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE, defines.light.scale);
 		panel = new FOAM.Prng(defines.panel.seed);
 
+		this.field = field;
+		this.light = light;
+
 		light.gets = function(x, y, z) {
 			return (y / LENGTH) * Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
@@ -166,7 +169,6 @@ PAVO.space = new function() {
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = FOAM.camera;
-		var pos = cam.position;
 		var program;
 	
 		gl.enable(gl.CULL_FACE);

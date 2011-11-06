@@ -30,6 +30,8 @@ var PAVO = new function() {
 		self.hud.wait();
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
+		FOAM.resources.addImage("bots", "res/bots.png");
+		
 		FOAM.resources.onComplete = function() {
 		
 			FOAM.shaders.build(
@@ -38,7 +40,14 @@ var PAVO = new function() {
 				["projector", "modelview"],
 				["palette", "panels"] );
 
+			FOAM.shaders.build(
+				"bot", "vs-bot", "fs-bot",
+				["position", "texturec"],
+				["projector", "modelview", "color", "light", "center", "rotations"],
+				["palette", "panels"] );
+
 			FOAM.textures.build("walls");
+			FOAM.textures.build("bots");
 
 			self.world.init();
 

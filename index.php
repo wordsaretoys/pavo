@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="/debug/foam/resources.js"></script>
 		<script type="text/javascript" src="/debug/foam/vector.js"></script>
 		<script type="text/javascript" src="/debug/foam/quaternion.js"></script>
+		<script type="text/javascript" src="/debug/foam/thing.js"></script>
 		<script type="text/javascript" src="/debug/foam/shaders.js"></script>
 		<script type="text/javascript" src="/debug/foam/textures.js"></script>
 		<script type="text/javascript" src="/debug/foam/camera.js"></script>
@@ -23,6 +24,7 @@
 		<script type="text/javascript" src="/debug/pavo/player.js"></script>
 		<script type="text/javascript" src="/debug/pavo/decals.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
+		<script type="text/javascript" src="/debug/pavo/bot.js"></script>
 
 		<script type="text/javascript" src="/debug/pavo/defines.js"></script>
 <?php

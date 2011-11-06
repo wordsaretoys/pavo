@@ -19,5 +19,6 @@ PAVO.defines = {
 		},
 		start: { x: 180,y: 60,z: 50 }
 	}
+	
 };
 
