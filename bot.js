@@ -6,12 +6,21 @@
 
 PAVO.Bot = function() {
 
+	var SPIN_RATE = 0.1;
+	var NORMAL_SPEED = 10;
+	var SPRINT_SPEED = 50;
+
 	var mesh;
 	var angl = new FOAM.Vector();
 	var prng = new FOAM.Prng();
+	var velocity = new FOAM.Vector();
 	var color;
 
-	this.init = function() {
+	var temp = {
+		position: new FOAM.Vector()
+	};
+
+	this.init = function(defines) {
 		var nx = ny = nz = -0.5;
 		var px = py = pz =  0.5;
 		var program = FOAM.shaders.get("bot");
@@ -70,14 +79,31 @@ PAVO.Bot = function() {
 		
 		mesh.build();
 		
-		angl.set(prng.get() * 0.01, prng.get() * 0.01, prng.get() * 0.01);
+		angl.set(prng.get() * SPIN_RATE, prng.get() * SPIN_RATE, prng.get() * SPIN_RATE);
 		color = prng.get();
+		
+		this.position.copy(defines.start);
+		
+		
 	};
 
 	this.update = function() {
+		var dt = FOAM.interval * 0.001;
+		var speed = NORMAL_SPEED;
+
 		this.turn(angl.x, angl.y, angl.z);
-		this.position.x = (this.position.x < 258) ? this.position.x + 0.1 : 0;
-		
+/*
+		// determine new velocity
+		velocity.copy(this.orientation.front).norm().mul(dt * speed);
+		temp.position.copy(this.position).add(velocity);
+
+		// test collision
+		if (!PAVO.space.testCollision(this.position, temp.position)) {
+			this.position.copy(temp.position);
+		} else {
+			angl.set(prng.get() * SPIN_RATE, prng.get() * SPIN_RATE, prng.get() * SPIN_RATE);
+		}		
+*/		
 	};
 	
 	this.draw = function(gl, program) {

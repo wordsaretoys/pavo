@@ -9,8 +9,10 @@
 PAVO.world = new function() {
 
 	var self = this;
-	var bot = [];
+	var bot;
 
+	var nospace = false;
+	
 	this.createPalette = function() {
 		var pastels = [
 			224, 224, 224, 255,
@@ -32,43 +34,44 @@ PAVO.world = new function() {
 	};
 
 	this.init = function() {
-		var prng = new FOAM.Prng();
-		var i;
-	
+		var r;
+		
 		this.createPalette();
 	
 		PAVO.space.init();
 		PAVO.player.init();
 		
-		for (i = 0; i < 1000; i++) {
-			PAVO.Bot.prototype = new FOAM.Thing();
-			bot[i] = new PAVO.Bot();
-			bot[i].init();
-			bot[i].position.set(256 * prng.get(), 256 * prng.get(), 256 * prng.get());
-		}
+		PAVO.Bot.prototype = new FOAM.Thing();
+		bot = new PAVO.Bot();
+		bot.init(PAVO.defines.bots.boz);
+		
+		PAVO.player.position.copy(PAVO.defines.player.position);
+		r = PAVO.defines.player.rotation;
+		FOAM.camera.turn(r.x, r.y, r.z);
 		
 		PAVO.space.generate();
-		PAVO.player.position.copy(PAVO.defines.space.start);
+
+		window.addEventListener("keydown", function(e) {
+			if (e.keyCode === FOAM.KEY.N)
+				nospace = !nospace;
+		});		
 	};
 	
 	this.update = function() {
-		var i, il;
 		PAVO.player.update();
-		for (i = 0, il = bot.length; i < il; i++) {
-			bot[i].update();
-		}
+		bot.update();
 	};
 	
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = FOAM.camera;
 		var program;
-		var i, il;
 		
 		gl.clearColor(0.0, 0.0, 0.0, 1.0);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 			
-		PAVO.space.draw();
+		if (!nospace)
+			PAVO.space.draw();
 
 		program = FOAM.shaders.activate("bot");
 		gl.enable(gl.CULL_FACE);
@@ -77,9 +80,7 @@ PAVO.world = new function() {
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
 		FOAM.textures.bind(0, program.palette, "block-palette");
 		FOAM.textures.bind(1, program.panels, "bots");
-		for (i = 0, il = bot.length; i < il; i++) {
-			bot[i].draw(gl, program);
-		}
+		bot.draw(gl, program);
 		gl.disable(gl.CULL_FACE);
 	};
 };

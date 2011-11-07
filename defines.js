@@ -16,9 +16,18 @@ PAVO.defines = {
 		},
 		panel: {
 			seed: 209348
-		},
-		start: { x: 180,y: 60,z: 50 }
-	}
+		}
+	},
 	
+	bots: {
+		boz: {
+			start: { x: 170, y: 65, z: 60 }
+		}
+	},
+	
+	player: {
+		position: { x: 180, y: 60, z: 50 },
+		rotation: { x: -1, y: 2, z: 1 }
+	}
 };
 
