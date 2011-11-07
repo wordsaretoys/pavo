@@ -21,7 +21,8 @@ PAVO.defines = {
 	
 	bots: {
 		boz: {
-			start: { x: 170, y: 65, z: 60 }
+			start: { x: 170, y: 65, z: 60 },
+			color: 0.7
 		}
 	},
 	

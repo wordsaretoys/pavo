@@ -54,6 +54,8 @@ PAVO.world = new function() {
 		window.addEventListener("keydown", function(e) {
 			if (e.keyCode === FOAM.KEY.N)
 				nospace = !nospace;
+			if (e.keyCode === FOAM.KEY.M)
+				PAVO.fuckSlow = !PAVO.fuckSlow;
 		});		
 	};
 	

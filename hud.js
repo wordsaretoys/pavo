@@ -13,7 +13,7 @@ PAVO.hud = new function() {
 
 		dom = {
 			curtain: jQuery("#curtain"),
-			debug: jQuery("#debug"),
+			debug: jQuery("#debug")
 		};
 		
 		this.resize();
@@ -22,7 +22,7 @@ PAVO.hud = new function() {
 		jQuery(window).bind("resize", function(){ instance.resize() });
 		jQuery(window).bind("keydown", instance.onKeyDown);
 		
-//		dom.debug.css("display", "block");
+		dom.debug.css("display", "block");
 //		FOAM.schedule(this.showDebug, 25, true);
 	};
 	
@@ -35,14 +35,11 @@ PAVO.hud = new function() {
 	}
 
 	this.showDebug = function() {
-		var pos = PAVO.player.position;
-		var get = PAVO.space.get();
-//		var col = PAVO.space.testCollision(pos, PAVO.player.velocity);
 		var s = ""
-		s += "fps: " + FOAM.fps + "<br>";
-		s += "position: (" + chop(pos.x, 3) + ", " + chop(pos.y, 3) + ", " + chop(pos.z, 3) + ")<br>";
-		s += "space: " + get + "<br>";
-//		s += "collision: " + col;
+		dom.debug.html(s);
+	};
+	
+	this.setDebug = function(s) {
 		dom.debug.html(s);
 	};
 

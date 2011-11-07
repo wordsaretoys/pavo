@@ -10,6 +10,7 @@ PAVO.space = new function() {
 
 	var THRESHOLD = 0.5;
 	var RESOLUTION = 8;
+	var HALF_RES = RESOLUTION / 2;
 	var LENGTH = 256;
 	var SOURCE = LENGTH / RESOLUTION;
 	var LLIMIT = RESOLUTION;
@@ -29,24 +30,8 @@ PAVO.space = new function() {
 	};
 	
 	this.init = function() {
-	};
-
-	this.inside = function(x, y, z) {
-		x = Math.floor(x / RESOLUTION) * RESOLUTION;
-		y = Math.floor(y / RESOLUTION) * RESOLUTION;
-		z = Math.floor(z / RESOLUTION) * RESOLUTION;
-		if (x < LLIMIT || y < LLIMIT || z < LLIMIT || 
-			x > ULIMIT || y > ULIMIT || z > ULIMIT)
-			return false;
-		return field.get(x, y, z) > THRESHOLD;
-	};
-	
-	this.generate = function() {
 		var defines = PAVO.defines.space;
-		var nx, px, ny, py, nz, pz;
-		var x, y, z, o, p, c, l, w;
-		var program;
-		
+
 		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
 		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
 		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE, defines.light.scale);
@@ -56,7 +41,7 @@ PAVO.space = new function() {
 		this.light = light;
 
 		light.gets = function(x, y, z) {
-			return (y / LENGTH) * Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
+			return /*(y / LENGTH) * */ Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
 		panel.gets = function() {
 			var p = panel.get();
@@ -65,7 +50,23 @@ PAVO.space = new function() {
 			else
 				return Math.floor(7 * panel.get()) + 1;
 		};
+	};
 
+	this.inside = function(x, y, z) {
+		x = Math.floor(x / RESOLUTION) * RESOLUTION;
+		y = Math.floor(y / RESOLUTION) * RESOLUTION;
+		z = Math.floor(z / RESOLUTION) * RESOLUTION;
+		if (x < LLIMIT || y < LLIMIT || z < LLIMIT || 
+			x > ULIMIT || y > ULIMIT || z > ULIMIT)
+			return false;
+		return field.get(x + HALF_RES, y + HALF_RES, z + HALF_RES) > THRESHOLD;
+	};
+	
+	this.generate = function() {
+		var nx, px, ny, py, nz, pz;
+		var x, y, z, o, p, c, l, w;
+		var program;
+		
 		program = FOAM.shaders.get("block");
 		mesh = new FOAM.Mesh();
 		mesh.add(program.position, 3);
