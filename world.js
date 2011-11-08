@@ -9,7 +9,7 @@
 PAVO.world = new function() {
 
 	var self = this;
-	var bot;
+	var bots = [];
 
 	var nospace = false;
 	
@@ -41,9 +41,19 @@ PAVO.world = new function() {
 		PAVO.space.init();
 		PAVO.player.init();
 		
-		PAVO.Bot.prototype = new FOAM.Thing();
-		bot = new PAVO.Bot();
-		bot.init(PAVO.defines.bots.boz);
+		var i, bot;
+		var prng = new FOAM.Prng();
+		for (i = 0; i < 10; i++) {
+			PAVO.Bot.prototype = new FOAM.Thing();
+			bot = new PAVO.Bot();
+			bot.init(PAVO.defines.bots.boz);
+			do {		
+				bot.position.set(prng.get() * 256, prng.get() * 256, prng.get() * 256);
+			} while (!PAVO.space.inside(bot.position.x, bot.position.y, bot.position.z));
+			
+			bots.push(bot);
+		}
+		
 		
 		PAVO.player.position.copy(PAVO.defines.player.position);
 		r = PAVO.defines.player.rotation;
@@ -61,7 +71,9 @@ PAVO.world = new function() {
 	
 	this.update = function() {
 		PAVO.player.update();
-		bot.update();
+		var i, il;
+		for (i = 0, il = bots.length; i < il; i++)
+			bots[i].update();
 	};
 	
 	this.draw = function() {
@@ -82,7 +94,9 @@ PAVO.world = new function() {
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
 		FOAM.textures.bind(0, program.palette, "block-palette");
 		FOAM.textures.bind(1, program.panels, "bots");
-		bot.draw(gl, program);
+		var i, il;
+		for (i = 0, il = bots.length; i < il; i++)
+			bots[i].draw(gl, program);
 		gl.disable(gl.CULL_FACE);
 	};
 };

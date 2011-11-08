@@ -103,7 +103,7 @@ uniform float color;
 uniform float light;
 
 void main(void) {
-	vec2 st = vec2(uv.x / 2.0, uv.y);
+	vec2 st = vec2(uv.x / 4.0, uv.y);
 	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
 	vec4 tex1 = texture2D(panels, st);
 	gl_FragColor = vec4(light * mix(tex0, tex1.rgb, tex1.a), 1.0);

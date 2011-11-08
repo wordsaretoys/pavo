@@ -9,12 +9,13 @@ PAVO.Bot = function() {
 	var SPIN_RATE = 0.1;
 	var NORMAL_SPEED = 10;
 	var SPRINT_SPEED = 50;
+	var PIDIV2 = Math.PI * 0.5;
 
 	var mesh;
 	var prng = new FOAM.Prng();
 	var goal = new FOAM.Vector();
-	var turnX = 0;
-	var turnY = 0;
+	var turnSum = 0;
+	var turnAxis = 0;
 	var color;
 
 	var temp = {
@@ -32,13 +33,13 @@ PAVO.Bot = function() {
 		mesh.add(program.position, 3);
 		mesh.add(program.texturec, 2);
 		
-		mesh.set(px, ny, nz, 1, 0);
-		mesh.set(px, py, nz, 1, 1);
-		mesh.set(px, py, pz, 0, 1);
+		mesh.set(px, ny, nz, 4, 3);
+		mesh.set(px, py, nz, 4, 4);
+		mesh.set(px, py, pz, 3, 4);
 
-		mesh.set(px, ny, nz, 1, 0);
-		mesh.set(px, py, pz, 0, 1);
-		mesh.set(px, ny, pz, 0, 0);
+		mesh.set(px, ny, nz, 4, 3);
+		mesh.set(px, py, pz, 3, 4);
+		mesh.set(px, ny, pz, 3, 3);
 
 		mesh.set(nx, ny, nz, 0, 0);
 		mesh.set(nx, py, pz, 1, 1);
@@ -72,13 +73,13 @@ PAVO.Bot = function() {
 		mesh.set(px, ny, pz, 2, 1);
 		mesh.set(px, py, pz, 2, 2);
 
-		mesh.set(nx, ny, nz, 1, 0);
-		mesh.set(nx, py, nz, 1, 1);
-		mesh.set(px, py, nz, 0, 1);
+		mesh.set(nx, ny, nz, 3, 2);
+		mesh.set(nx, py, nz, 3, 3);
+		mesh.set(px, py, nz, 2, 3);
 
-		mesh.set(nx, ny, nz, 1, 0);
-		mesh.set(px, py, nz, 0, 1);
-		mesh.set(px, ny, nz, 0, 0);
+		mesh.set(nx, ny, nz, 3, 2);
+		mesh.set(px, py, nz, 2, 3);
+		mesh.set(px, ny, nz, 2, 2);
 		
 		mesh.build();
 		
@@ -105,49 +106,26 @@ PAVO.Bot = function() {
 		var dt = FOAM.interval * 0.001;
 		var speed = NORMAL_SPEED;
 		var dist, turnf, movef;
-		var dxn, dxp, dyn, dyp;
 
 		speed = (PAVO.fuckSlow) ? 1 : NORMAL_SPEED;
 
 		dist = this.lookahead();
-		if (dist < 128) {
-			turnf = ((128 - dist) / 128) / 2;
-			temp.rot.copy(this.rotation);
-			this.turn(-turnf, 0, 0);
-			dxn = this.lookahead();
-			this.rotation.copy(temp.rot);
+		turnf = ((128 - dist) / 128) * 0.05;
+		if (turnAxis === 0)
 			this.turn(turnf, 0, 0);
-			dxp = this.lookahead();
-			this.rotation.copy(temp.rot);
-			if (dxn > dist) {
-				this.turn(-turnf, 0, 0);
-			} else if (dxp > dist) {
-				this.turn(turnf, 0, 0);
-			} else {
-
-				temp.rot.copy(this.rotation);
-				this.turn(0, -turnf, 0);
-				dyn = this.lookahead();
-				this.rotation.copy(temp.rot);
-				this.turn(0, turnf, 0);
-				dyp = this.lookahead();
-				this.rotation.copy(temp.rot);
-				if (dyn > dist) {
-					this.turn(0, -turnf, 0);
-				} else if (dyp > dist) {
-					this.turn(0, turnf, 0);
-				} else {
-				
-					// punt
-				}
-			}
+		else
+			this.turn(0, turnf, 0);
+		turnSum += turnf;
+		if (turnSum > PIDIV2) {
+			turnAxis = (turnAxis === 0) ? 1 : 0;
+			turnSum = 0;
 		}
-				
+
 		movef = dist / 128;
 		temp.dir.copy(this.orientation.front).mul(speed * movef * dt);
 		this.position.add(temp.dir);
 
-		PAVO.hud.setDebug(dist);
+//		PAVO.hud.setDebug(turnAxis + "<br>" + turnSum);
 		
 	};
 	
