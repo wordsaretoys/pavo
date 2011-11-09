@@ -45,14 +45,14 @@ PAVO.world = new function() {
 		
 		var i, bot;
 		var prng = new FOAM.Prng();
-		for (i = 0; i < 1; i++) {
+		for (i = 0; i < 25; i++) {
 			PAVO.Bot.prototype = new FOAM.Thing();
 			bot = new PAVO.Bot();
 			bot.init(PAVO.defines.bots.boz);
-/*			do {		
+			do {		
 				bot.position.set(prng.get() * 256, prng.get() * 256, prng.get() * 256);
 			} while (!PAVO.space.inside(bot.position.x, bot.position.y, bot.position.z));
-*/			
+			
 			bots.push(bot);
 		}
 		
@@ -95,7 +95,6 @@ PAVO.world = new function() {
 		gl.cullFace(gl.BACK);
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
-		FOAM.textures.bind(0, program.palette, "block-palette");
 		FOAM.textures.bind(1, program.panels, "bots");
 		var i, il;
 		for (i = 0, il = bots.length; i < il; i++)

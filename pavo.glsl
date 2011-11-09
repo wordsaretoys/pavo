@@ -96,17 +96,13 @@ precision highp float;
  
 varying vec2 uv;
 
-uniform sampler2D palette;
 uniform sampler2D panels;
-
-uniform float color;
-uniform float light;
 
 void main(void) {
 	vec2 st = vec2(uv.x / 4.0, uv.y);
-	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
-	vec4 tex1 = texture2D(panels, st);
-	gl_FragColor = vec4(light * mix(tex0, tex1.rgb, tex1.a), 1.0);
+	vec3 base = vec3(1.0, 1.0, 1.0);
+	vec4 tex = texture2D(panels, st);
+	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), 1.0);
 }
 
 </script>

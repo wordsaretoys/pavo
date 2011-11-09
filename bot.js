@@ -14,7 +14,10 @@ PAVO.Bot = function() {
 		WANDERING: 0,
 		ATTENTION: 1,
 		
-		active: -1
+		active: -1,
+		
+		attendTimer: 0,
+		attendTarget: new FOAM.Vector()
 	};
 
 	var mesh;
@@ -103,8 +106,6 @@ PAVO.Bot = function() {
 		temp.dir.copy(this.orientation.front).mul(BASE_SPEED * movef * dt);
 		this.position.add(temp.dir);
 
-		// adds a little silliness, may remove
-		this.turn(0, 0, 0.01);
 	};
 	
 	this.attend = function() {
@@ -115,19 +116,32 @@ PAVO.Bot = function() {
 		
 		PAVO.hud.setDebug(temp.dir.x + "<br>" + temp.dir.y + "<br>" + temp.dir.z);
 */
-		temp.dir.copy(PAVO.player.position).sub(this.position).norm();
+		var ps = PAVO.player.position;
+		if (state.attendTimer <= 0) {
+			state.attendTarget.set(
+				ps.x + 4 * (prng.get() - 0.5),
+				ps.y + 4 * (prng.get() - 0.5),
+				ps.z + 4 * (prng.get() - 0.5)
+			);
+			state.attendTimer = 1000 + Math.floor(prng.get() * 2500);
+		} else {
+			state.attendTimer -= FOAM.interval;
+		}
+
+		temp.dir.copy(state.attendTarget).sub(this.position).norm();
 		temp.dir.cross(this.orientation.front);
-		this.turn(temp.dir.x, temp.dir.y, 0);
-			
+		this.turn(temp.dir.x * 0.1, temp.dir.y * 0.1, 0);
+		
+//		temp.dir.copy(this.orientation.up);
+//		temp.dir.cross(FOAM.camera.orientation.up);
+//		this.turn(0, 0, temp.dir.length() * 0.1);
+		
 	};
 	
 	this.draw = function(gl, program) {
 		var pos = this.position;
-		var light = PAVO.space.light;
 		gl.uniform3f(program.center, pos.x, pos.y, pos.z);
 		gl.uniformMatrix4fv(program.rotations, false, this.matrix.transpose);
-		gl.uniform1f(program.color, color);
-		gl.uniform1f(program.light, light.gets(pos.x, pos.y, pos.z));
 		PAVO.models.botMesh.draw();
 	};
 	

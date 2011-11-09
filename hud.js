@@ -22,7 +22,7 @@ PAVO.hud = new function() {
 		jQuery(window).bind("resize", function(){ instance.resize() });
 		jQuery(window).bind("keydown", instance.onKeyDown);
 		
-		dom.debug.css("display", "block");
+//		dom.debug.css("display", "block");
 //		FOAM.schedule(this.showDebug, 25, true);
 	};
 	
