@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="/debug/pavo/decals.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
 		<script type="text/javascript" src="/debug/pavo/bot.js"></script>
+		<script type="text/javascript" src="/debug/pavo/models.js"></script>
 
 		<script type="text/javascript" src="/debug/pavo/defines.js"></script>
 <?php

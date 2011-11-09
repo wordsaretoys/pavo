@@ -41,16 +41,18 @@ PAVO.world = new function() {
 		PAVO.space.init();
 		PAVO.player.init();
 		
+		PAVO.models.createBotMesh();
+		
 		var i, bot;
 		var prng = new FOAM.Prng();
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < 1; i++) {
 			PAVO.Bot.prototype = new FOAM.Thing();
 			bot = new PAVO.Bot();
 			bot.init(PAVO.defines.bots.boz);
-			do {		
+/*			do {		
 				bot.position.set(prng.get() * 256, prng.get() * 256, prng.get() * 256);
 			} while (!PAVO.space.inside(bot.position.x, bot.position.y, bot.position.z));
-			
+*/			
 			bots.push(bot);
 		}
 		
@@ -61,11 +63,12 @@ PAVO.world = new function() {
 		
 		PAVO.space.generate();
 
+		//
+		// TODO: REMOVE AFTER TESTING COMPLETE		
+		//
 		window.addEventListener("keydown", function(e) {
 			if (e.keyCode === FOAM.KEY.N)
 				nospace = !nospace;
-			if (e.keyCode === FOAM.KEY.M)
-				PAVO.fuckSlow = !PAVO.fuckSlow;
 		});		
 	};
 	
