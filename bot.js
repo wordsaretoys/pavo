@@ -33,7 +33,9 @@ PAVO.Bot = function() {
 	var temp = {
 		pos: new FOAM.Vector(),
 		dir: new FOAM.Vector(),
-		rot: new FOAM.Quaternion()
+		
+		vec: new FOAM.Vector(),
+		dst: new FOAM.Vector()
 	};
 
 	this.init = function(defines) {
@@ -73,20 +75,20 @@ PAVO.Bot = function() {
 		
 		case state.WANDERING:
 			this.wander();
+			if (this.position.distance(PAVO.player.position) < 10) {
+				state.active = state.ATTENTION;
+				//this.rotation.copy(FOAM.camera.rotation);
+				//this.turn(0, 0, 0);
+			}
 			break;
 			
 		case state.ATTENTION:
 			this.attend();
+			if (this.position.distance(PAVO.player.position) >= 10)
+				state.active = state.WANDERING;
 			break;
 			
 		}
-	
-		// player proximity switches state
-		if (this.position.distance(PAVO.player.position) < 10)
-			state.active = state.ATTENTION;
-		else
-			state.active = state.WANDERING;	
-		
 	};
 
 	this.wander = function() {
@@ -126,11 +128,17 @@ PAVO.Bot = function() {
 			state.attend.timer -= FOAM.interval;
 		}
 
-		temp.dir.copy(state.attend.target).sub(this.position).norm();
+//		temp.dir.copy(state.attend.target).sub(this.position).norm();
 //		temp.dir.copy(ps).sub(this.position).norm();
+//		temp.dir.cross(FOAM.camera.orientation.up).norm();
+//		temp.dir.sub(this.orientation.right);
+//		this.turn(0, -temp.dir.y * 0.1, temp.dir.z * 0.1);
+
+		temp.dir.copy(state.attend.target).sub(this.position).norm();
+		var z = temp.dir.z > 0 ? 1 : -1;
 		temp.dir.sub(this.orientation.front);
-		this.turn(temp.dir.x, temp.dir.z, 0);
-		
+		this.turn(temp.dir.x * 0.1, z * temp.dir.y * 0.1, 0);
+
 	};
 	
 	this.draw = function(gl, program) {
