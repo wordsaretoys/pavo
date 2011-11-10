@@ -16,8 +16,11 @@ PAVO.Bot = function() {
 		
 		active: -1,
 		
-		attendTimer: 0,
-		attendTarget: new FOAM.Vector()
+		attend: {
+			timer: 0,
+			target: new FOAM.Vector(),
+			lastPos: new FOAM.Vector()
+		}
 	};
 
 	var mesh;
@@ -109,32 +112,24 @@ PAVO.Bot = function() {
 	};
 	
 	this.attend = function() {
-/*
-		temp.dir.copy(this.position).sub(PAVO.player.position).norm();
-		temp.dir.add(this.orientation.front);
-		this.turn(temp.dir.x, temp.dir.y, 0);
-		
-		PAVO.hud.setDebug(temp.dir.x + "<br>" + temp.dir.y + "<br>" + temp.dir.z);
-*/
+
 		var ps = PAVO.player.position;
-		if (state.attendTimer <= 0) {
-			state.attendTarget.set(
+		if (state.attend.timer <= 0 || ps.distance(state.attend.lastPos) > 0) {
+			state.attend.target.set(
 				ps.x + 4 * (prng.get() - 0.5),
 				ps.y + 4 * (prng.get() - 0.5),
 				ps.z + 4 * (prng.get() - 0.5)
 			);
-			state.attendTimer = 1000 + Math.floor(prng.get() * 2500);
+			state.attend.timer = 1000 + Math.floor(prng.get() * 2500);
+			state.attend.lastPos.copy(ps);
 		} else {
-			state.attendTimer -= FOAM.interval;
+			state.attend.timer -= FOAM.interval;
 		}
 
-		temp.dir.copy(state.attendTarget).sub(this.position).norm();
-		temp.dir.cross(this.orientation.front);
-		this.turn(temp.dir.x * 0.1, temp.dir.y * 0.1, 0);
-		
-//		temp.dir.copy(this.orientation.up);
-//		temp.dir.cross(FOAM.camera.orientation.up);
-//		this.turn(0, 0, temp.dir.length() * 0.1);
+		temp.dir.copy(state.attend.target).sub(this.position).norm();
+//		temp.dir.copy(ps).sub(this.position).norm();
+		temp.dir.sub(this.orientation.front);
+		this.turn(temp.dir.x, temp.dir.z, 0);
 		
 	};
 	
