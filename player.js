@@ -9,6 +9,7 @@ PAVO.player = new function() {
 	var SPIN_RATE = -0.007;
 	var NORMAL_SPEED = 10;
 	var SPRINT_SPEED = 50;
+	var PITCH_LIMIT = Math.sqrt(2) / 2;
 
 	var self = this;
 
@@ -24,7 +25,8 @@ PAVO.player = new function() {
 	};
 
 	var temp = {
-		position: new FOAM.Vector()
+		position: new FOAM.Vector(),
+		rotation: new FOAM.Quaternion()
 	};
 
 	FOAM.Camera.prototype = new FOAM.Thing();
@@ -148,11 +150,17 @@ PAVO.player = new function() {
 			// clumsy, but it works. rotate the first quaternion by
 			// pitch angle, then use its orientation vectors as the
 			// basis vectors for the yaw rotation. insures no roll!
+			temp.rotation.copy(self.pitch.rotation);
 			self.pitch.turn(dy, 0, 0);
+			if (self.pitch.rotation.w < PITCH_LIMIT) {
+				self.pitch.rotation.copy(temp.rotation);
+				self.pitch.turn(0, 0, 0);
+			}
 			self.camera.unitquat.x.copy(self.pitch.orientation.right);
 			self.camera.unitquat.y.copy(self.pitch.orientation.up);
 			self.camera.unitquat.z.copy(self.pitch.orientation.front);
 			self.camera.turn(0, dx, 0);
+			
 			
 		}
 		mouse.x = event.pageX;
