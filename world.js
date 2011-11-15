@@ -58,8 +58,8 @@ PAVO.world = new function() {
 		
 		
 		PAVO.player.position.copy(PAVO.defines.player.position);
-		r = PAVO.defines.player.rotation;
-		FOAM.camera.turn(r.x, r.y, r.z);
+//		r = PAVO.defines.player.rotation;
+//		PAVO.player.camera.turn(r.x, r.y, r.z);
 		
 		PAVO.space.generate();
 
@@ -81,7 +81,7 @@ PAVO.world = new function() {
 	
 	this.draw = function() {
 		var gl = FOAM.gl;
-		var cam = FOAM.camera;
+		var cam = PAVO.player.camera;
 		var program;
 		
 		gl.clearColor(0.0, 0.0, 0.0, 1.0);

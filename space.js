@@ -169,7 +169,7 @@ PAVO.space = new function() {
 	
 	this.draw = function() {
 		var gl = FOAM.gl;
-		var cam = FOAM.camera;
+		var cam = PAVO.player.camera;
 		var program;
 	
 		gl.enable(gl.CULL_FACE);

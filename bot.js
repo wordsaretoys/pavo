@@ -128,12 +128,6 @@ PAVO.Bot = function() {
 			state.attend.timer -= FOAM.interval;
 		}
 
-//		temp.dir.copy(state.attend.target).sub(this.position).norm();
-//		temp.dir.copy(ps).sub(this.position).norm();
-//		temp.dir.cross(FOAM.camera.orientation.up).norm();
-//		temp.dir.sub(this.orientation.right);
-//		this.turn(0, -temp.dir.y * 0.1, temp.dir.z * 0.1);
-
 		temp.dir.copy(state.attend.target).sub(this.position).norm();
 		var z = temp.dir.z > 0 ? 1 : -1;
 		temp.dir.sub(this.orientation.front);
