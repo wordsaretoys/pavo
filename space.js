@@ -167,6 +167,10 @@ PAVO.space = new function() {
 		return this.inside(p0.x, p0.y, p0.z) != this.inside(p1.x, p1.y, p1.z);
 	};
 	
+	this.normal = function(p0, p1, n) {
+		n.set(0, 1, 0);
+	};
+	
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player.camera;

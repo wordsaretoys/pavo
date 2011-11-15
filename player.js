@@ -26,7 +26,10 @@ PAVO.player = new function() {
 
 	var temp = {
 		position: new FOAM.Vector(),
-		rotation: new FOAM.Quaternion()
+		rotation: new FOAM.Quaternion(),
+		direction: new FOAM.Vector(),
+		velocity: new FOAM.Vector(),
+		normal: new FOAM.Vector()
 	};
 
 	FOAM.Camera.prototype = new FOAM.Thing();
@@ -58,27 +61,38 @@ PAVO.player = new function() {
 		var dt = FOAM.interval * 0.001;
 		var speed = (this.sprint) ? SPRINT_SPEED : NORMAL_SPEED;
 
-		// determine new velocity
-		this.velocity.set();
+		temp.direction.set();
 		if (motion.movefore) {
-			this.velocity.sub(self.camera.orientation.front);
+			temp.direction.sub(self.camera.orientation.front);
 		}
 		if (motion.moveback) {
-			this.velocity.add(self.camera.orientation.front);
+			temp.direction.add(self.camera.orientation.front);
 		}
 		if (motion.moveleft) {
-			this.velocity.sub(self.camera.orientation.right);
+			temp.direction.sub(self.camera.orientation.right);
 		}
 		if (motion.moveright) {
-			this.velocity.add(self.camera.orientation.right);
+			temp.direction.add(self.camera.orientation.right);
 		}
-		this.velocity.norm().mul(dt * speed);
-		temp.position.copy(this.position).add(this.velocity);
+		temp.direction.y = 0;
+		temp.direction.norm();
+		
+		this.velocity.x = temp.direction.x * speed;
+		this.velocity.y -= 9.81 * dt;
+		this.velocity.z = temp.direction.z * speed;
+		
+		temp.velocity.copy(this.velocity).mul(dt);
+		temp.direction.copy(this.velocity).norm();
 
-		// test collision
-		if (this.debug || !PAVO.space.testCollision(this.position, temp.position)) {
-			this.position.copy(temp.position);
+		temp.position.copy(this.position).add(temp.velocity).add(temp.direction);
+
+		if (PAVO.space.testCollision(this.position, temp.position)) {
+			PAVO.space.normal(this.position, temp.position, temp.normal);
+			temp.normal.mul(this.velocity.length());
+			this.velocity.add(temp.normal);
+			temp.velocity.copy(this.velocity).mul(dt);
 		}
+		this.position.add(temp.velocity)
 		self.camera.position.copy(this.position);
 	};
 	
