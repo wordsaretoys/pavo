@@ -29,9 +29,7 @@ PAVO.player = new function() {
 
 	FOAM.Camera.prototype = new FOAM.Thing();
 	this.camera = new FOAM.Camera();
-	
 	this.pitch = new FOAM.Thing();
-	this.yaw = new FOAM.Thing();
 	
 	this.position = new FOAM.Vector();
 	this.velocity = new FOAM.Vector();
@@ -52,9 +50,6 @@ PAVO.player = new function() {
 		self.pitch.orientation.right.w = 0;
 		self.pitch.orientation.up.w = 0;
 		self.pitch.orientation.front.w = 0;
-		self.yaw.orientation.right.w = 0;
-		self.yaw.orientation.up.w = 0;
-		self.yaw.orientation.front.w = 0;
 	};
 	
 	this.update = function() {
@@ -154,14 +149,10 @@ PAVO.player = new function() {
 			// pitch angle, then use its orientation vectors as the
 			// basis vectors for the yaw rotation. insures no roll!
 			self.pitch.turn(dy, 0, 0);
-			self.yaw.unitquat.x.copy(self.pitch.orientation.right);
-			self.yaw.unitquat.y.copy(self.pitch.orientation.up);
-			self.yaw.unitquat.z.copy(self.pitch.orientation.front);
-			self.yaw.turn(0, dx, 0);
-			self.camera.unitquat.x.copy(self.yaw.orientation.right);
-			self.camera.unitquat.y.copy(self.yaw.orientation.up);
-			self.camera.unitquat.z.copy(self.yaw.orientation.front);
-			self.camera.turn(0, 0, 0);
+			self.camera.unitquat.x.copy(self.pitch.orientation.right);
+			self.camera.unitquat.y.copy(self.pitch.orientation.up);
+			self.camera.unitquat.z.copy(self.pitch.orientation.front);
+			self.camera.turn(0, dx, 0);
 			
 		}
 		mouse.x = event.pageX;
