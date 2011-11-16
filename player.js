@@ -81,17 +81,8 @@ PAVO.player = new function() {
 		this.velocity.y -= 9.81 * dt;
 		this.velocity.z = temp.direction.z * speed;
 		
+		PAVO.space.collision(this.position, this.velocity);
 		temp.velocity.copy(this.velocity).mul(dt);
-		temp.direction.copy(this.velocity).norm();
-
-		temp.position.copy(this.position).add(temp.velocity).add(temp.direction);
-
-		if (PAVO.space.testCollision(this.position, temp.position)) {
-			PAVO.space.normal(this.position, temp.position, temp.normal);
-			temp.normal.mul(this.velocity.length());
-			this.velocity.add(temp.normal);
-			temp.velocity.copy(this.velocity).mul(dt);
-		}
 		this.position.add(temp.velocity)
 		self.camera.position.copy(this.position);
 	};
@@ -116,6 +107,8 @@ PAVO.player = new function() {
 			case FOAM.KEY.X:
 				self.debug = !self.debug;
 				break;
+			case FOAM.KEY.SPACE:
+				self.velocity.y = 10;
 			default:
 				//window.alert(event.keyCode);
 				break;
@@ -174,8 +167,6 @@ PAVO.player = new function() {
 			self.camera.unitquat.y.copy(self.pitch.orientation.up);
 			self.camera.unitquat.z.copy(self.pitch.orientation.front);
 			self.camera.turn(0, dx, 0);
-			
-			
 		}
 		mouse.x = event.pageX;
 		mouse.y = event.pageY;

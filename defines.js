@@ -27,7 +27,7 @@ PAVO.defines = {
 	},
 	
 	player: {
-		position: { x: 180, y: 60, z: 50 },
+		position: { x: 180, y: 60, z: 90 },
 		rotation: { x: -1, y: 2, z: 0 }
 	}
 };
