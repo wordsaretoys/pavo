@@ -11,10 +11,11 @@ PAVO.space = new function() {
 	var THRESHOLD = 0.5;
 	var RESOLUTION = 8;
 	var HALF_RES = RESOLUTION / 2;
-	var LENGTH = 256;
-	var SOURCE = LENGTH / RESOLUTION;
-	var LLIMIT = RESOLUTION;
-	var ULIMIT = LENGTH - RESOLUTION;
+	var LENGTH = new FOAM.Vector(1024, 40, 1024);
+	var SOURCE = Math.max(LENGTH.x, LENGTH.y, LENGTH.z) / RESOLUTION;
+	var LLIMIT = new FOAM.Vector(RESOLUTION, RESOLUTION, RESOLUTION);
+	var ULIMIT = new FOAM.Vector(
+		LENGTH.x - RESOLUTION, LENGTH.y - RESOLUTION, LENGTH.z - RESOLUTION);
 
 	var self = this;
 	var mesh;
@@ -43,7 +44,7 @@ PAVO.space = new function() {
 		this.light = light;
 
 		light.gets = function(x, y, z) {
-			return /*(y / LENGTH) * */ Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
+			return (y / LENGTH.y) * Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
 		panel.gets = function() {
 			var p = panel.get();
@@ -55,8 +56,8 @@ PAVO.space = new function() {
 	};
 
 	this.pinside = function(p) {
-		if (p.x < LLIMIT || p.y < LLIMIT || p.z < LLIMIT || 
-			p.x > ULIMIT || p.y > ULIMIT || p.z > ULIMIT)
+		if (p.x < LLIMIT.x || p.y < LLIMIT.y || p.z < LLIMIT.z || 
+			p.x > ULIMIT.x || p.y > ULIMIT.y || p.z > ULIMIT.z)
 			return false;
 		return field.get(p.x + HALF_RES, p.y + HALF_RES, p.z + HALF_RES) > THRESHOLD;
 	}
@@ -79,13 +80,13 @@ PAVO.space = new function() {
 		mesh.add(program.a_light, 1);
 		mesh.add(program.a_panel, 1);
 
-		for (x = 0; x <= LENGTH; x += RESOLUTION) {
+		for (x = 0; x <= LENGTH.x; x += RESOLUTION) {
 			nx = x;
 			px = x + RESOLUTION;
-			for (y = 0; y <= LENGTH; y += RESOLUTION) {
+			for (y = 0; y <= LENGTH.y; y += RESOLUTION) {
 				ny = y;
 				py = y + RESOLUTION;
-				for (z = 0; z <= LENGTH; z += RESOLUTION) {
+				for (z = 0; z <= LENGTH.z; z += RESOLUTION) {
 					nz = z;
 					pz = z + RESOLUTION;
 					
@@ -227,6 +228,12 @@ PAVO.space = new function() {
 		mesh.draw();
 
 		gl.disable(gl.CULL_FACE);
+	};
+
+	this.findFreeSpace = function(prng, p) {
+		do {		
+			p.set(prng.get() * LENGTH.x, prng.get() * LENGTH.y, prng.get() * LENGTH.z);
+		} while (!this.pinside(p));
 	};
 
 };

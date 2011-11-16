@@ -23,9 +23,13 @@ PAVO.Bot = function() {
 		}
 	};
 
+	var self = this;
+
+	var pitch = new FOAM.Thing();
+	var yaw = new FOAM.Thing();
+
 	var mesh;
 	var prng = new FOAM.Prng();
-	var goal = new FOAM.Vector();
 	var turnSum = 0;
 	var turnAxis = 0;
 	var color;
@@ -43,12 +47,14 @@ PAVO.Bot = function() {
 		this.position.copy(defines.start);
 		color = defines.color;
 
-		do {		
-			goal.set(prng.get() * 256, prng.get() * 256, prng.get() * 256);
-		} while (!PAVO.space.inside(goal.x, goal.y, goal.z));
-		
 		this.turn(0, 0, 0);
 		state.active = state.WANDERING;
+
+		// orientation vectors will be treated as quaternions
+		// and need a w-component for copies to be meaningful		
+		pitch.orientation.right.w = 0;
+		pitch.orientation.up.w = 0;
+		pitch.orientation.front.w = 0;
 
 		//
 		// TODO: REMOVE AFTER TESTING COMPLETE		
@@ -56,7 +62,7 @@ PAVO.Bot = function() {
 		window.addEventListener("keydown", function(e) {
 			if (e.keyCode === FOAM.KEY.M)
 				BASE_SPEED = (BASE_SPEED === 10) ? 1 : 10;
-		});		
+		});
 
 	};
 
@@ -75,11 +81,8 @@ PAVO.Bot = function() {
 		
 		case state.WANDERING:
 			this.wander();
-			if (this.position.distance(PAVO.player.position) < 10) {
+			if (this.position.distance(PAVO.player.position) < 10)
 				state.active = state.ATTENTION;
-				//this.rotation.copy(FOAM.camera.rotation);
-				//this.turn(0, 0, 0);
-			}
 			break;
 			
 		case state.ATTENTION:

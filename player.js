@@ -74,14 +74,16 @@ PAVO.player = new function() {
 		if (motion.moveright) {
 			temp.direction.add(self.camera.orientation.right);
 		}
-		temp.direction.y = 0;
+		if (!this.debug)
+			temp.direction.y = 0;
 		temp.direction.norm();
 		
 		this.velocity.x = temp.direction.x * speed;
-		this.velocity.y -= 9.81 * dt;
+		this.velocity.y = this.debug ? temp.direction.y * speed : this.velocity.y - 9.81 * dt;
 		this.velocity.z = temp.direction.z * speed;
 		
-		PAVO.space.collision(this.position, this.velocity);
+		if (!this.debug)
+			PAVO.space.collision(this.position, this.velocity);
 		temp.velocity.copy(this.velocity).mul(dt);
 		this.position.add(temp.velocity)
 		self.camera.position.copy(this.position);
@@ -108,7 +110,8 @@ PAVO.player = new function() {
 				self.debug = !self.debug;
 				break;
 			case FOAM.KEY.SPACE:
-				self.velocity.y = 10;
+				if (self.velocity.y === 0)
+					self.velocity.y = 15;
 			default:
 				//window.alert(event.keyCode);
 				break;

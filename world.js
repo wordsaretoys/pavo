@@ -49,17 +49,12 @@ PAVO.world = new function() {
 			PAVO.Bot.prototype = new FOAM.Thing();
 			bot = new PAVO.Bot();
 			bot.init(PAVO.defines.bots.boz);
-			do {		
-				bot.position.set(prng.get() * 256, prng.get() * 256, prng.get() * 256);
-			} while (!PAVO.space.inside(bot.position.x, bot.position.y, bot.position.z));
-			
+			PAVO.space.findFreeSpace(prng, bot.position);
 			bots.push(bot);
 		}
 		
-		
 		PAVO.player.position.copy(PAVO.defines.player.position);
-//		r = PAVO.defines.player.rotation;
-//		PAVO.player.camera.turn(r.x, r.y, r.z);
+		PAVO.player.camera.turn(0, 3 * Math.PI / 2, 0);
 		
 		PAVO.space.generate();
 

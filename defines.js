@@ -21,14 +21,14 @@ PAVO.defines = {
 	
 	bots: {
 		boz: {
-			start: { x: 170, y: 65, z: 60 },
+			start: { x: 10, y: 10, z: 10 },
 			color: 0.7
 		}
 	},
 	
 	player: {
-		position: { x: 180, y: 60, z: 90 },
-		rotation: { x: -1, y: 2, z: 0 }
+		position: { x: 10, y: 10, z: 10 },
+		rotation: { x: 0, y: 1, z: 0, w: 2 }
 	}
 };
 
