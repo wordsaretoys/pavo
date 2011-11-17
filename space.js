@@ -11,11 +11,10 @@ PAVO.space = new function() {
 	var THRESHOLD = 0.5;
 	var RESOLUTION = 8;
 	var HALF_RES = RESOLUTION / 2;
-	var LENGTH = new FOAM.Vector(1024, 40, 1024);
-	var SOURCE = Math.max(LENGTH.x, LENGTH.y, LENGTH.z) / RESOLUTION;
-	var LLIMIT = new FOAM.Vector(RESOLUTION, RESOLUTION, RESOLUTION);
-	var ULIMIT = new FOAM.Vector(
-		LENGTH.x - RESOLUTION, LENGTH.y - RESOLUTION, LENGTH.z - RESOLUTION);
+	var LENGTH = new FOAM.Vector();
+	var SOURCE = new FOAM.Vector();
+	var LLIMIT = new FOAM.Vector();
+	var ULIMIT = new FOAM.Vector();
 
 	var self = this;
 	var mesh;
@@ -35,16 +34,24 @@ PAVO.space = new function() {
 	this.init = function() {
 		var defines = PAVO.defines.space;
 
-		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE, defines.field.scale);
-		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE, defines.color.scale);
-		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE, defines.light.scale);
+		LENGTH.copy(defines.field.size);
+		SOURCE.copy(LENGTH).div(RESOLUTION);
+		LLIMIT.set(RESOLUTION, RESOLUTION, RESOLUTION);
+		ULIMIT.copy(LENGTH).sub(LLIMIT);
+
+		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE.x, defines.field.scale.x, 
+			SOURCE.y, defines.field.scale.y, SOURCE.z, defines.field.scale.z);
+		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE.x, defines.color.scale.x, 
+			SOURCE.y, defines.color.scale.y, SOURCE.z, defines.color.scale.z);
+		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE.x, defines.light.scale.x, 
+			SOURCE.y, defines.light.scale.y, SOURCE.z, defines.light.scale.z);
 		panel = new FOAM.Prng(defines.panel.seed);
 
 		this.field = field;
 		this.light = light;
 
 		light.gets = function(x, y, z) {
-			return (y / LENGTH.y) * Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
+			return Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
 		};
 		panel.gets = function() {
 			var p = panel.get();

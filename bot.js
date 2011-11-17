@@ -8,13 +8,19 @@ PAVO.Bot = function() {
 
 	var SPIN_RATE = 0.1;
 	var BASE_SPEED = 10;
-	var PIDIV2 = Math.PI * 0.5;
+	var PITCH_LIMIT = Math.cos(Math.PI / 12);
 
 	var state = {
 		WANDERING: 0,
 		ATTENTION: 1,
 		
 		active: -1,
+		
+		wander: {
+			x: 0,
+			y: 0,
+			last: 0
+		},
 		
 		attend: {
 			timer: 0,
@@ -26,20 +32,14 @@ PAVO.Bot = function() {
 	var self = this;
 
 	var pitch = new FOAM.Thing();
-	var yaw = new FOAM.Thing();
-
-	var mesh;
 	var prng = new FOAM.Prng();
-	var turnSum = 0;
-	var turnAxis = 0;
+	var mesh;
 	var color;
 
 	var temp = {
 		pos: new FOAM.Vector(),
 		dir: new FOAM.Vector(),
-		
-		vec: new FOAM.Vector(),
-		dst: new FOAM.Vector()
+		rot: new FOAM.Quaternion()
 	};
 
 	this.init = function(defines) {
@@ -50,12 +50,6 @@ PAVO.Bot = function() {
 		this.turn(0, 0, 0);
 		state.active = state.WANDERING;
 
-		// orientation vectors will be treated as quaternions
-		// and need a w-component for copies to be meaningful		
-		pitch.orientation.right.w = 0;
-		pitch.orientation.up.w = 0;
-		pitch.orientation.front.w = 0;
-
 		//
 		// TODO: REMOVE AFTER TESTING COMPLETE		
 		//
@@ -64,6 +58,9 @@ PAVO.Bot = function() {
 				BASE_SPEED = (BASE_SPEED === 10) ? 1 : 10;
 		});
 
+		pitch.orientation.right.w = 0;
+		pitch.orientation.up.w = 0;
+		pitch.orientation.front.w = 0;
 	};
 
 	this.lookahead = function() {
@@ -74,6 +71,19 @@ PAVO.Bot = function() {
 		} while (d <= 64 && PAVO.space.inside(temp.pos.x, temp.pos.y, temp.pos.z));
 		return d;
 	}
+
+	this.spin = function(dx, dy) {
+		temp.rot.copy(pitch.rotation);
+		pitch.turn(dy, 0, 0);
+		if (pitch.rotation.w < PITCH_LIMIT) {
+			pitch.rotation.copy(temp.rot);
+			pitch.turn(0, 0, 0);
+		}
+		this.unitquat.x.copy(pitch.orientation.right);
+		this.unitquat.y.copy(pitch.orientation.up);
+		this.unitquat.z.copy(pitch.orientation.front);
+		this.turn(0, dx, 0);
+	};
 
 	this.update = function() {
 	
@@ -99,21 +109,19 @@ PAVO.Bot = function() {
 		var dist, turnf, movef;
 
 		dist = this.lookahead();
-		turnf = ((128 - dist) / 128) * 0.05;
-		if (turnAxis === 0)
-			this.turn(turnf, 0, 0);
-		else
-			this.turn(0, turnf, 0);
-		turnSum += turnf;
-		if (turnSum > PIDIV2) {
-			turnAxis = (turnAxis === 0) ? 1 : 0;
-			turnSum = 0;
+		turnf = ((128 - dist) / 128) * 0.1;
+		if (turnf > 0) {
+			if (turnf > state.wander.last) {
+				state.wander.x = (prng.get() - 0.5) * turnf;
+				state.wander.y = (prng.get() - 0.5) * turnf;
+			}
+			this.spin(state.wander.x, state.wander.y);
 		}
+		state.wander.last = turnf;
 
 		movef = dist / 128;
 		temp.dir.copy(this.orientation.front).mul(BASE_SPEED * movef * dt);
 		this.position.add(temp.dir);
-
 	};
 	
 	this.attend = function() {
@@ -132,9 +140,8 @@ PAVO.Bot = function() {
 		}
 
 		temp.dir.copy(state.attend.target).sub(this.position).norm();
-		var z = temp.dir.z > 0 ? 1 : -1;
 		temp.dir.sub(this.orientation.front);
-		this.turn(temp.dir.x * 0.1, z * temp.dir.y * 0.1, 0);
+		this.spin(temp.dir.x * 0.1, temp.dir.y * 0.1);
 
 	};
 	
@@ -146,5 +153,9 @@ PAVO.Bot = function() {
 	};
 	
 };
-PAVO.Bot.prototype = new FOAM.Thing();
+
+PAVO.makeBot = function() {
+	PAVO.Bot.prototype = new FOAM.Thing();
+	return new PAVO.Bot();
+};
 

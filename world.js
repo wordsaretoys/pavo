@@ -1,8 +1,7 @@
 /**
 
 	World Object
-	Maintains all actor, space, and narrative objects,
-	handling all interactions among them.
+	Maintains all actor, space, and narrative objects.
 
 **/
 
@@ -45,16 +44,15 @@ PAVO.world = new function() {
 		
 		var i, bot;
 		var prng = new FOAM.Prng();
-		for (i = 0; i < 25; i++) {
-			PAVO.Bot.prototype = new FOAM.Thing();
-			bot = new PAVO.Bot();
+		for (i = 0; i < 1; i++) {
+			bot = PAVO.makeBot();
 			bot.init(PAVO.defines.bots.boz);
-			PAVO.space.findFreeSpace(prng, bot.position);
+//			PAVO.space.findFreeSpace(prng, bot.position);
 			bots.push(bot);
 		}
 		
 		PAVO.player.position.copy(PAVO.defines.player.position);
-		PAVO.player.camera.turn(0, 3 * Math.PI / 2, 0);
+		PAVO.player.camera.turn(0, 7 * Math.PI / 6, 0);
 		
 		PAVO.space.generate();
 
