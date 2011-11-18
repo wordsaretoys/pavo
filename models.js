@@ -69,4 +69,96 @@ PAVO.models = new function() {
 	
 	};
 
+	this.createItem = function(mesh, c) {
+		var sz = PAVO.game.items.size;
+		var nx = nz = -sz / 2;
+		var px = pz =  sz / 2;
+		var ny = 0;
+		var py = sz;
+
+		mesh.set(c.x + px, c.y + ny, c.z + nz);
+		mesh.set(1, 0);
+		mesh.set(c.x + px, c.y + py, c.z + nz);
+		mesh.set(1, 1);
+		mesh.set(c.x + px, c.y + py, c.z + pz);
+		mesh.set(0, 1);
+
+		mesh.set(c.x + px, c.y + ny, c.z + nz);
+		mesh.set(1, 0);
+		mesh.set(c.x + px, c.y + py, c.z + pz);
+		mesh.set(0, 1);
+		mesh.set(c.x + px, c.y + ny, c.z + pz);
+		mesh.set(0, 0);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + nz);
+		mesh.set(0, 0);
+		mesh.set(c.x + nx, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+		mesh.set(c.x + nx, c.y + py, c.z + nz);
+		mesh.set(0, 1);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + nz);
+		mesh.set(0, 0);
+		mesh.set(c.x + nx, c.y + ny, c.z + pz);
+		mesh.set(1, 0);
+		mesh.set(c.x + nx, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+
+		mesh.set(c.x + nx, c.y + py, c.z + nz);
+		mesh.set(1, 0);
+		mesh.set(c.x + nx, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+		mesh.set(c.x + px, c.y + py, c.z + nz);
+		mesh.set(0, 0);
+
+		mesh.set(c.x + nx, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+		mesh.set(c.x + px, c.y + py, c.z + pz);
+		mesh.set(0, 1);
+		mesh.set(c.x + px, c.y + py, c.z + nz);
+		mesh.set(0, 0);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + nz);
+		mesh.set(1, 1);
+		mesh.set(c.x + px, c.y + ny, c.z + nz);
+		mesh.set(0, 1);
+		mesh.set(c.x + nx, c.y + ny, c.z + pz);
+		mesh.set(1, 0);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + pz);
+		mesh.set(1, 0);
+		mesh.set(c.x + px, c.y + ny, c.z + nz);
+		mesh.set(0, 1);
+		mesh.set(c.x + px, c.y + ny, c.z + pz);
+		mesh.set(0, 0);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + pz);
+		mesh.set(0, 0);
+		mesh.set(c.x + px, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+		mesh.set(c.x + nx, c.y + py, c.z + pz);
+		mesh.set(0, 1);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + pz);
+		mesh.set(0, 0);
+		mesh.set(c.x + px, c.y + ny, c.z + pz);
+		mesh.set(1, 0);
+		mesh.set(c.x + px, c.y + py, c.z + pz);
+		mesh.set(1, 1);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + nz);
+		mesh.set(1, 0);
+		mesh.set(c.x + nx, c.y + py, c.z + nz);
+		mesh.set(1, 1);
+		mesh.set(c.x + px, c.y + py, c.z + nz);
+		mesh.set(0, 1);
+
+		mesh.set(c.x + nx, c.y + ny, c.z + nz);
+		mesh.set(1, 0);
+		mesh.set(c.x + px, c.y + py, c.z + nz);
+		mesh.set(0, 1);
+		mesh.set(c.x + px, c.y + ny, c.z + nz);
+		mesh.set(0, 0);
+		
+	};
 };

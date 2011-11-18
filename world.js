@@ -39,22 +39,24 @@ PAVO.world = new function() {
 	
 		PAVO.space.init();
 		PAVO.player.init();
+		PAVO.items.init();
 		
 		PAVO.models.createBotMesh();
 		
 		var i, bot;
 		var prng = new FOAM.Prng();
-		for (i = 0; i < 1; i++) {
+		for (i = 0; i < 0; i++) {
 			bot = PAVO.makeBot();
-			bot.init(PAVO.defines.bots.boz);
+			bot.init(PAVO.game.bots.boz);
 //			PAVO.space.findFreeSpace(prng, bot.position);
 			bots.push(bot);
 		}
 		
-		PAVO.player.position.copy(PAVO.defines.player.position);
+		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.camera.turn(0, 7 * Math.PI / 6, 0);
 		
 		PAVO.space.generate();
+		PAVO.items.generate();
 
 		//
 		// TODO: REMOVE AFTER TESTING COMPLETE		
@@ -70,6 +72,12 @@ PAVO.world = new function() {
 		var i, il;
 		for (i = 0, il = bots.length; i < il; i++)
 			bots[i].update();
+		var la = PAVO.items.lookingAt();
+		if (la) {
+			PAVO.hud.setDebug(JSON.stringify(la.position));
+		} else {
+			PAVO.hud.setDebug("");
+		}
 	};
 	
 	this.draw = function() {
@@ -82,6 +90,8 @@ PAVO.world = new function() {
 			
 		if (!nospace)
 			PAVO.space.draw();
+			
+		PAVO.items.draw();
 
 		program = FOAM.shaders.activate("bot");
 		gl.enable(gl.CULL_FACE);

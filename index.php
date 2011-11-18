@@ -25,9 +25,10 @@
 		<script type="text/javascript" src="/debug/pavo/decals.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
 		<script type="text/javascript" src="/debug/pavo/bot.js"></script>
+		<script type="text/javascript" src="/debug/pavo/items.js"></script>
 		<script type="text/javascript" src="/debug/pavo/models.js"></script>
 
-		<script type="text/javascript" src="/debug/pavo/defines.js"></script>
+		<script type="text/javascript" src="/debug/pavo/game.js"></script>
 <?php
 include("pavo.glsl");
 ?>

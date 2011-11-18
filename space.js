@@ -32,26 +32,27 @@ PAVO.space = new function() {
 	};
 	
 	this.init = function() {
-		var defines = PAVO.defines.space;
+		var gspace = PAVO.game.space;
 
-		LENGTH.copy(defines.field.size);
+		LENGTH.copy(gspace.size);
 		SOURCE.copy(LENGTH).div(RESOLUTION);
 		LLIMIT.set(RESOLUTION, RESOLUTION, RESOLUTION);
 		ULIMIT.copy(LENGTH).sub(LLIMIT);
+		LLIMIT.set();	// reset floor to zero
 
-		field = new FOAM.Noise3D(defines.field.seed, 1.0, SOURCE.x, defines.field.scale.x, 
-			SOURCE.y, defines.field.scale.y, SOURCE.z, defines.field.scale.z);
-		color = new FOAM.Noise3D(defines.color.seed, 1.0, SOURCE.x, defines.color.scale.x, 
-			SOURCE.y, defines.color.scale.y, SOURCE.z, defines.color.scale.z);
-		light = new FOAM.Noise3D(defines.light.seed, 1.0, SOURCE.x, defines.light.scale.x, 
-			SOURCE.y, defines.light.scale.y, SOURCE.z, defines.light.scale.z);
-		panel = new FOAM.Prng(defines.panel.seed);
+		field = new FOAM.Noise3D(gspace.field.seed, 1.0, SOURCE.x, gspace.field.scale.x, 
+			SOURCE.y, gspace.field.scale.y, SOURCE.z, gspace.field.scale.z);
+		color = new FOAM.Noise3D(gspace.color.seed, 1.0, SOURCE.x, gspace.color.scale.x, 
+			SOURCE.y, gspace.color.scale.y, SOURCE.z, gspace.color.scale.z);
+		light = new FOAM.Noise3D(gspace.light.seed, 1.0, SOURCE.x, gspace.light.scale.x, 
+			SOURCE.y, gspace.light.scale.y, SOURCE.z, gspace.light.scale.z);
+		panel = new FOAM.Prng(gspace.panel.seed);
 
 		this.field = field;
 		this.light = light;
 
 		light.gets = function(x, y, z) {
-			return Math.pow(light.get(x, y, z), defines.light.power) + defines.light.base;
+			return Math.pow(light.get(x, y, z), gspace.light.power) + gspace.light.base;
 		};
 		panel.gets = function() {
 			var p = panel.get();
@@ -87,13 +88,13 @@ PAVO.space = new function() {
 		mesh.add(program.a_light, 1);
 		mesh.add(program.a_panel, 1);
 
-		for (x = 0; x <= LENGTH.x; x += RESOLUTION) {
+		for (x = -RESOLUTION; x <= LENGTH.x; x += RESOLUTION) {
 			nx = x;
 			px = x + RESOLUTION;
-			for (y = 0; y <= LENGTH.y; y += RESOLUTION) {
+			for (y = -RESOLUTION; y <= LENGTH.y; y += RESOLUTION) {
 				ny = y;
 				py = y + RESOLUTION;
-				for (z = 0; z <= LENGTH.z; z += RESOLUTION) {
+				for (z = -RESOLUTION; z <= LENGTH.z; z += RESOLUTION) {
 					nz = z;
 					pz = z + RESOLUTION;
 					
@@ -242,5 +243,23 @@ PAVO.space = new function() {
 			p.set(prng.get() * LENGTH.x, prng.get() * LENGTH.y, prng.get() * LENGTH.z);
 		} while (!this.pinside(p));
 	};
+	
+	this.checkFloorSpace = function(p) {
+		var above, below;
+		p.dejitter(RESOLUTION, Math.floor);
+		above = this.pinside(p);
+		while (p.y >= LLIMIT.y) {
+			p.y -= RESOLUTION;
+			below = this.pinside(p);
+			if (above && !below) {
+				p.y += RESOLUTION;
+				p.x += HALF_RES;
+				p.z += HALF_RES;
+				return true;
+			}
+			above = below;
+		}
+		return false;
+	}
 
 };
