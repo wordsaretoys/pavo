@@ -224,9 +224,6 @@ PAVO.space = new function() {
 		var cam = PAVO.player.camera;
 		var program;
 	
-		gl.enable(gl.CULL_FACE);
-		gl.cullFace(gl.BACK);
-
 		program = FOAM.shaders.activate("block");
 		
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
@@ -234,8 +231,6 @@ PAVO.space = new function() {
 		FOAM.textures.bind(0, program.palette, "block-palette");
 		FOAM.textures.bind(1, program.panels, "walls");
 		mesh.draw();
-
-		gl.disable(gl.CULL_FACE);
 	};
 
 	this.findFreeSpace = function(prng, p) {

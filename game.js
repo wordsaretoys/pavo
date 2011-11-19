@@ -1,4 +1,5 @@
 PAVO.game = {
+
 	space: {
 		size: { x: 512, y: 64, z: 512 },
 		field: { 
@@ -21,20 +22,15 @@ PAVO.game = {
 	},
 	
 	bots: {
-		boz: {
-			start: { x: 10, y: 10, z: 20 },
-			color: 0.7
-		}
-	},
-	
-	items: {
 		count: 1000,
 		size: 1,
+		viewDistance: 50,
 		base: {
-			/* put item names, properties, and normalized count here */
+			seed: 9348029384
+			/* put bot classes, properties, and normalized counts here */
 		},
 		special: {
-			/* put item names, properties, and locations here */
+			/* put bot names and properties here */
 		}
 	},
 	

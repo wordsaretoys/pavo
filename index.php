@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Pavo :: Words Are Toys</title>
+		<title>pavo</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="pavo.css">
 		<script type="text/javascript" src="/shared/jquery-1.6.2.min.js"></script>
 
@@ -19,16 +19,14 @@
 		<script type="text/javascript" src="/debug/foam/sound.js"></script>
 
 		<script type="text/javascript" src="/debug/pavo/pavo.js"></script>
+		<script type="text/javascript" src="/debug/pavo/game.js"></script>
 		<script type="text/javascript" src="/debug/pavo/hud.js"></script>
 		<script type="text/javascript" src="/debug/pavo/world.js"></script>
 		<script type="text/javascript" src="/debug/pavo/player.js"></script>
-		<script type="text/javascript" src="/debug/pavo/decals.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
-		<script type="text/javascript" src="/debug/pavo/bot.js"></script>
-		<script type="text/javascript" src="/debug/pavo/items.js"></script>
+		<script type="text/javascript" src="/debug/pavo/actors.js"></script>
 		<script type="text/javascript" src="/debug/pavo/models.js"></script>
 
-		<script type="text/javascript" src="/debug/pavo/game.js"></script>
 <?php
 include("pavo.glsl");
 ?>

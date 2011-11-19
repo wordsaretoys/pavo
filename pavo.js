@@ -31,7 +31,6 @@ var PAVO = new function() {
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
 		FOAM.resources.addImage("bots", "res/bots.png");
-		FOAM.resources.addImage("items", "res/items.png");
 		
 		FOAM.resources.onComplete = function() {
 		
@@ -44,18 +43,11 @@ var PAVO = new function() {
 			FOAM.shaders.build(
 				"bot", "vs-bot", "fs-bot",
 				["position", "texturec"],
-				["projector", "modelview", "color", "light", "center", "rotations"],
-				["palette", "panels"] );
-
-			FOAM.shaders.build(
-				"item", "vs-item", "fs-item",
-				["position", "texturec"],
-				["projector", "modelview"],
-				["palette", "panels"] );
+				["projector", "modelview", "center", "size", "rotations", "alpha"],
+				["panels"] );
 
 			FOAM.textures.build("walls");
 			FOAM.textures.build("bots");
-			FOAM.textures.build("items");
 
 			self.world.init();
 
