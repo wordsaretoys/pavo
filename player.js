@@ -4,12 +4,11 @@
 
 **/
 
-PAVO.player = new function() {
+PAVO.Player = function() {
 
 	var SPIN_RATE = -0.007;
 	var NORMAL_SPEED = 10;
 	var SPRINT_SPEED = 50;
-	var PITCH_LIMIT = Math.sqrt(2) / 2;
 
 	var self = this;
 
@@ -25,18 +24,10 @@ PAVO.player = new function() {
 	};
 
 	var temp = {
-		position: new FOAM.Vector(),
-		rotation: new FOAM.Quaternion(),
 		direction: new FOAM.Vector(),
-		velocity: new FOAM.Vector(),
-		normal: new FOAM.Vector()
+		velocity: new FOAM.Vector()
 	};
 
-	FOAM.Camera.prototype = new FOAM.Thing();
-	this.camera = new FOAM.Camera();
-	this.pitch = new FOAM.Thing();
-	
-	this.position = new FOAM.Vector();
 	this.velocity = new FOAM.Vector();
 	this.sprint = false;
 	this.debug = false;
@@ -47,14 +38,8 @@ PAVO.player = new function() {
 		jQuery("#gl").bind("mousedown", this.onMouseDown);
 		jQuery("#gl").bind("mouseup", this.onMouseUp);
 		jQuery("#gl").bind("mousemove", this.onMouseMove);
-		self.camera.nearLimit = 0.01;
-		self.camera.farLimit = 1024;
-
-		// orientation vectors will be treated as quaternions
-		// and need a w-component for copies to be meaningful		
-		self.pitch.orientation.right.w = 0;
-		self.pitch.orientation.up.w = 0;
-		self.pitch.orientation.front.w = 0;
+		this.nearLimit = 0.01;
+		this.farLimit = 1024;
 	};
 	
 	this.update = function() {
@@ -63,16 +48,16 @@ PAVO.player = new function() {
 
 		temp.direction.set();
 		if (motion.movefore) {
-			temp.direction.sub(self.camera.orientation.front);
+			temp.direction.sub(this.orientation.front);
 		}
 		if (motion.moveback) {
-			temp.direction.add(self.camera.orientation.front);
+			temp.direction.add(this.orientation.front);
 		}
 		if (motion.moveleft) {
-			temp.direction.sub(self.camera.orientation.right);
+			temp.direction.sub(this.orientation.right);
 		}
 		if (motion.moveright) {
-			temp.direction.add(self.camera.orientation.right);
+			temp.direction.add(this.orientation.right);
 		}
 		if (!this.debug)
 			temp.direction.y = 0;
@@ -86,7 +71,6 @@ PAVO.player = new function() {
 			PAVO.space.collision(this.position, this.velocity);
 		temp.velocity.copy(this.velocity).mul(dt);
 		this.position.add(temp.velocity)
-		self.camera.position.copy(this.position);
 	};
 	
 	this.onKeyDown = function(event) {
@@ -156,20 +140,7 @@ PAVO.player = new function() {
 		if (mouse.down) {
 			dx = SPIN_RATE * (event.pageX - mouse.x);
 			dy = SPIN_RATE * (event.pageY - mouse.y);
-			
-			// clumsy, but it works. rotate the first quaternion by
-			// pitch angle, then use its orientation vectors as the
-			// basis vectors for the yaw rotation. insures no roll!
-			temp.rotation.copy(self.pitch.rotation);
-			self.pitch.turn(dy, 0, 0);
-			if (self.pitch.rotation.w < PITCH_LIMIT) {
-				self.pitch.rotation.copy(temp.rotation);
-				self.pitch.turn(0, 0, 0);
-			}
-			self.camera.unitquat.x.copy(self.pitch.orientation.right);
-			self.camera.unitquat.y.copy(self.pitch.orientation.up);
-			self.camera.unitquat.z.copy(self.pitch.orientation.front);
-			self.camera.turn(0, dx, 0);
+			self.spin(dx, dy);
 		}
 		mouse.x = event.pageX;
 		mouse.y = event.pageY;
@@ -177,3 +148,8 @@ PAVO.player = new function() {
 	};
 };
 
+// for those playing along at home, the inheritance chain goes:
+// FOAM.Thing -> PAVO.Mover -> FOAM.Camera -> PAVO.Player
+FOAM.Camera.prototype = PAVO.makeMover();
+PAVO.Player.prototype = new FOAM.Camera();
+PAVO.player = new PAVO.Player();

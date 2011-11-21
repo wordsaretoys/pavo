@@ -72,12 +72,11 @@ uniform mat4 projector;
 uniform mat4 modelview;
 uniform mat4 rotations;
 uniform vec3 center;
-uniform float size;
 
 varying vec2 uv;
 
 void main(void) {
-	vec4 rotpos = rotations * vec4(position * size, 1.0) + vec4(center, 0.0);
+	vec4 rotpos = rotations * vec4(position, 1.0) + vec4(center, 0.0);
 	gl_Position = projector * modelview * rotpos;
 	uv = texturec;
 }

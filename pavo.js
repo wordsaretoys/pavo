@@ -30,7 +30,9 @@ var PAVO = new function() {
 		self.hud.wait();
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
-		FOAM.resources.addImage("bots", "res/bots.png");
+		FOAM.resources.addImage("angrybot", "res/angrybot.png");
+		FOAM.resources.addImage("ennuibot", "res/ennuibot.png");
+		FOAM.resources.addImage("happybot", "res/happybot.png");
 		
 		FOAM.resources.onComplete = function() {
 		
@@ -43,11 +45,13 @@ var PAVO = new function() {
 			FOAM.shaders.build(
 				"bot", "vs-bot", "fs-bot",
 				["position", "texturec"],
-				["projector", "modelview", "center", "size", "rotations", "alpha"],
+				["projector", "modelview", "center", "rotations", "alpha"],
 				["panels"] );
 
 			FOAM.textures.build("walls");
-			FOAM.textures.build("bots");
+			FOAM.textures.build("angrybot");
+			FOAM.textures.build("ennuibot");
+			FOAM.textures.build("happybot");
 
 			self.world.init();
 

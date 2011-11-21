@@ -221,7 +221,7 @@ PAVO.space = new function() {
 	
 	this.draw = function() {
 		var gl = FOAM.gl;
-		var cam = PAVO.player.camera;
+		var cam = PAVO.player;
 		var program;
 	
 		program = FOAM.shaders.activate("block");

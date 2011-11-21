@@ -40,8 +40,8 @@ PAVO.world = new function() {
 		PAVO.actors.init();
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
-		PAVO.player.camera.position.copy(PAVO.game.player.position);
-		PAVO.player.camera.turn(0, 7 * Math.PI / 6, 0);
+		PAVO.player.position.copy(PAVO.game.player.position);
+		PAVO.player.turn(0, 7 * Math.PI / 6, 0);
 		
 		PAVO.space.generate();
 

@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/debug/pavo/game.js"></script>
 		<script type="text/javascript" src="/debug/pavo/hud.js"></script>
 		<script type="text/javascript" src="/debug/pavo/world.js"></script>
+		<script type="text/javascript" src="/debug/pavo/mover.js"></script>
 		<script type="text/javascript" src="/debug/pavo/player.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
 		<script type="text/javascript" src="/debug/pavo/actors.js"></script>
