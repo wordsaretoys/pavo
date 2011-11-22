@@ -15,7 +15,10 @@ PAVO.Mover = function() {
 	this.pitch.orientation.right.w = 0;
 	this.pitch.orientation.up.w = 0;
 	this.pitch.orientation.front.w = 0;
-	this.spin = function(yaw, pitch) {
+};
+
+PAVO.Mover.proto = {
+	spin: function(yaw, pitch) {
 		// clumsy, but it works. rotate the first quaternion by
 		// pitch angle, then use its orientation vectors as the
 		// basis vectors for the yaw rotation. insures no roll!
@@ -29,10 +32,11 @@ PAVO.Mover = function() {
 		this.unitquat.y.copy(this.pitch.orientation.up);
 		this.unitquat.z.copy(this.pitch.orientation.front);
 		this.turn(0, yaw, 0);
-	};
+	}
 };
 
 PAVO.makeMover = function() {
 	PAVO.Mover.prototype = new FOAM.Thing();
+	jQuery.extend(PAVO.Mover.prototype, PAVO.Mover.proto);
 	return new PAVO.Mover();
 };

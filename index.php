@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="/debug/pavo/mover.js"></script>
 		<script type="text/javascript" src="/debug/pavo/player.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
+		<script type="text/javascript" src="/debug/pavo/bot.js"></script>
 		<script type="text/javascript" src="/debug/pavo/actors.js"></script>
 		<script type="text/javascript" src="/debug/pavo/models.js"></script>
 

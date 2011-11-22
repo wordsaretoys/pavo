@@ -7,13 +7,13 @@
 
 PAVO.actors = new function() {
 
-	var ENCOUNTER_RADIUS = 75;
-	var VIEW_RADIUS = 50;
-	var ENCOUNTER_BASE = 1;
+	var DELETE_RADIUS = 75;
+	var CREATE_RADIUS = 50;
+	var VIEW_RADIUS = 40;
 	var MAX_BOTS = 1;
 
 	var self = this;
-	var bot  = [];
+	var list = [];
 	var prng;
 	var mesh;
 
@@ -26,33 +26,30 @@ PAVO.actors = new function() {
 		mesh = PAVO.models.createBotMesh();
 	};
 	
-	this.makeBot = function() {
-		var b = PAVO.makeMover();
-		var i = 100;
-		b.spin(0, 0);	// generates orientation matrix
-		b.position.set(prng.get(), prng.get(), prng.get()).norm().mul(ENCOUNTER_RADIUS - 1);
-		b.position.add(PAVO.player.position);
-		b.mood = Math.floor(3 * prng.get());
-		bot.push(b);
+	this.addBot = function() {
+		var bot = PAVO.makeBot();
+		bot.spin(0, 0);	// generates orientation matrix
+		bot.position.set(prng.get(), prng.get(), prng.get()).norm().mul(CREATE_RADIUS);
+		bot.position.add(PAVO.player.position);
+		bot.mood = Math.floor(3 * prng.get());
+		list.push(bot);
 	}
 	
 	this.update = function() {
-		var cutoff = ENCOUNTER_BASE * Math.pow( (MAX_BOTS - bot.length) / MAX_BOTS, 2 );
+		var cutoff = Math.pow( (MAX_BOTS - list.length) / MAX_BOTS, 2 );
 		var p = PAVO.player.position;
-		var i;
+		var i, bot;
 		
 		if (prng.get() < cutoff) {
-			this.makeBot();
+			this.addBot();
 		}
 		
-		for (i = bot.length - 1; i >= 0; i--) {
-		
-			temp.pos.copy(p).sub(bot[i].position).norm();
-			temp.pos.cross(bot[i].orientation.front);
-//			bot[i].spin(0, -temp.pos.y * 0.1);
-		
-			if (p.distance(bot[i].position) > ENCOUNTER_RADIUS) {
-				bot.splice(i, 1);
+		for (i = list.length - 1; i >= 0; i--) {
+			bot = list[i];
+			bot.update();
+			
+			if (p.distance(bot.position) > DELETE_RADIUS) {
+				list.splice(i, 1);
 			}
 		}
 	};
@@ -61,21 +58,21 @@ PAVO.actors = new function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
 		var program = FOAM.shaders.activate("bot");
-		var i, il, p, b, a, d;
+		var i, il, p, bot, a, d;
 		
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
-		for (i = 0, il = bot.length; i < il; i++) {
-			b = bot[i];
-			p = b.position;
+		for (i = 0, il = list.length; i < il; i++) {
+			bot = list[i];
+			p = bot.position;
 			d = p.distance(PAVO.player.position);
 			a = 0.75 * (VIEW_RADIUS - d) / VIEW_RADIUS;
 			a = a > 0 ? a : 0;
 
-			switch (b.mood) {
+			switch (bot.mood) {
 			case 0: 
 				FOAM.textures.bind(0, program.panels, "angrybot");
 				break;
@@ -87,8 +84,8 @@ PAVO.actors = new function() {
 				break;
 			}
 			gl.uniform3f(program.center, p.x, p.y, p.z);
-			gl.uniform1f(program.alpha, 1);
-			gl.uniformMatrix4fv(program.rotations, false, b.matrix.transpose);
+			gl.uniform1f(program.alpha, a);
+			gl.uniformMatrix4fv(program.rotations, false, bot.matrix.transpose);
 			mesh.draw();
 		}
 
