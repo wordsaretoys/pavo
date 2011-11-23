@@ -37,7 +37,8 @@ PAVO.world = new function() {
 	
 		PAVO.space.init();
 		PAVO.player.init();
-		PAVO.actors.init();
+//		PAVO.actors.init();
+		PAVO.ghosts.init();
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.position.copy(PAVO.game.player.position);
@@ -55,7 +56,8 @@ PAVO.world = new function() {
 	};
 	
 	this.update = function() {
-		PAVO.actors.update();
+//		PAVO.actors.update();
+		PAVO.ghosts.update();
 		PAVO.player.update();
 	};
 	
@@ -72,7 +74,8 @@ PAVO.world = new function() {
 
 		if (!nospace)
 			PAVO.space.draw();
-		PAVO.actors.draw();
+//		PAVO.actors.draw();
+		PAVO.ghosts.draw();
 					
 		gl.disable(gl.CULL_FACE);
 	};

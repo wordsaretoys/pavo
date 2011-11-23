@@ -20,6 +20,25 @@ PAVO.game = {
 			seed: 209348
 		}
 	},
+
+	ghosts: [
+		{ position: { x: 4, y: 4, z: 508 } },
+		{ position: { x: 140, y: 12, z: 444 } },
+		{ position: { x: 140, y: 4, z: 472 } },
+		{ position: { x: 308, y: 44, z: 508 } },
+		{ position: { x: 460, y: 60, z: 476 } },
+		{ position: { x: 476, y: 52, z: 388 } },
+		{ position: { x: 508, y: 52, z: 324 } },
+		{ position: { x: 500, y: 52, z: 236 } },
+		{ position: { x: 500, y: 60, z: 188 } },
+		{ position: { x: 500, y: 12, z: 140 } },
+		{ position: { x: 508, y: 20, z: 4 } },
+		{ position: { x: 116, y: 28, z: 76 } },
+		{ position: { x: 36, y: 4, z: 28 } },
+		{ position: { x: 4, y: 4, z: 244 } },
+		{ position: { x: 508, y: 4, z: 300 } },
+		{ position: { x: 124, y: 4, z: 460 } }
+	],
 	
 	player: {
 		position: { x: 10, y: 10, z: 10 },

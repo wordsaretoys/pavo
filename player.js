@@ -70,7 +70,12 @@ PAVO.Player = function() {
 		if (!this.debug)
 			PAVO.space.collision(this.position, this.velocity);
 		temp.velocity.copy(this.velocity).mul(dt);
-		this.position.add(temp.velocity)
+		this.position.add(temp.velocity);
+		
+		temp.direction.copy(this.position);
+		temp.direction.dejitter(8, Math.floor);
+		temp.velocity.set(4, 4, 4).add(temp.direction);
+		PAVO.hud.setDebug(temp.velocity.x + "<br>" + temp.velocity.y + "<br>" + temp.velocity.z);
 	};
 	
 	this.onKeyDown = function(event) {
