@@ -54,13 +54,20 @@ div {
 
 /* HUD prompts */
 
+.key {
+	border: solid 1px white;
+	border-radius: 5px;
+	background: black;
+	padding-bottom: 5px;
+}
+
 .prompt {
 	position: absolute;
 	
 	background: transparent;
 	color: white;
 
-	font-size: 32pt;
+	font-size: 28pt;
 	text-align: center;
 	line-height: 150%;
 	
@@ -70,9 +77,23 @@ div {
 
 }
 
-.prompt span {
-	border: solid 1px white;
-	border-radius: 5px;
+/* HUD talk box */
+
+#talk-box {
+	position: absolute;
+	
 	background: black;
-	padding-bottom: 5px;
+	color: white;
+
+	font-size: 20pt;
+	text-align: left;
+	line-height: 150%;
+	
+	border: solid 1px white;
+	
+	padding: 1em;
+	
+	display: none;
+	
+	z-index: 5;
 }

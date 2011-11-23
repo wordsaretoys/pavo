@@ -31,6 +31,7 @@ PAVO.Player = function() {
 	this.velocity = new FOAM.Vector();
 	this.sprint = false;
 	this.debug = false;
+	this.freeze = false;
 
 	this.init = function() {
 		jQuery(window).bind("keydown", this.onKeyDown);
@@ -79,6 +80,10 @@ PAVO.Player = function() {
 	};
 	
 	this.onKeyDown = function(event) {
+
+		if (self.freeze)
+			return;
+	
 		switch(event.keyCode) {
 			case FOAM.KEY.A:
 				motion.moveleft = true;
@@ -108,6 +113,10 @@ PAVO.Player = function() {
 	};
 
 	this.onKeyUp = function(event) {
+
+		if (self.freeze)
+			return;
+
 		switch(event.keyCode) {
 		
 			case FOAM.KEY.A:
@@ -142,7 +151,8 @@ PAVO.Player = function() {
 
 	this.onMouseMove = function(event) {
 		var dx, dy;
-		if (mouse.down && FOAM.running) {
+
+		if (mouse.down && FOAM.running && !self.freeze) {
 			dx = SPIN_RATE * (event.pageX - mouse.x);
 			dy = SPIN_RATE * (event.pageY - mouse.y);
 			self.spin(dx, dy);

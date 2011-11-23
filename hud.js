@@ -6,6 +6,8 @@
 
 PAVO.hud = new function() {
 
+	var PROMPT_FADE_TIME = 250;
+
 	var self = this;
 	var dom;
 	
@@ -14,9 +16,30 @@ PAVO.hud = new function() {
 		dom = {
 			curtain: jQuery("#curtain"),
 			debug: jQuery("#debug"),
+			
 			talkPrompt: jQuery("#talk-prompt"),
-			talkPromptName: jQuery("#talk-prompt-name")
+			talkPromptName: jQuery("#talk-prompt-name"),
+			
+			talkBox: jQuery("#talk-box"),
+			talkBoxReply: jQuery("#talk-box-reply"),
+			talkBoxQ1: jQuery("talk-box-q1"),
+			talkBoxQ2: jQuery("talk-box-q2"),
+			talkBoxQ3: jQuery("talk-box-q3")
 		};
+
+		dom.talkPrompt.resize = function() {
+			dom.talkPrompt.offset( { 
+				top: 3 * (FOAM.height - dom.talkPrompt.height()) / 4,
+				left: (FOAM.width - dom.talkPrompt.width()) / 2
+			});
+		}
+		
+		dom.talkBox.resize = function() {
+			dom.talkBox.offset( { 
+				top: 3 * (FOAM.height - dom.talkBox.height()) / 4,
+				left: (FOAM.width - dom.talkBox.width()) / 2
+			});
+		}
 		
 		this.resize();
 		
@@ -31,6 +54,9 @@ PAVO.hud = new function() {
 	this.resize = function() {
 		dom.curtain.width(FOAM.width);
 		dom.curtain.height(FOAM.height);
+
+		dom.talkPrompt.resize();
+		dom.talkBox.resize();
 	};
 
 	function chop(n, d) {
@@ -51,17 +77,14 @@ PAVO.hud = new function() {
 	
 		if (PAVO.ghosts.listening) {
 			if (!dom.talkPrompt.displayed) {
-				dom.talkPrompt.css("display", "block");
-				dom.talkPrompt.offset( { 
-					top: 3 * (FOAM.height - dom.talkPrompt.height()) / 4,
-					left: (FOAM.width - dom.talkPrompt.width()) / 2
-				});
+				dom.talkPrompt.fadeIn(PROMPT_FADE_TIME);
+				dom.talkPrompt.resize();
 				dom.talkPromptName.html(PAVO.ghosts.listening.name || "anonymous");
 				dom.talkPrompt.displayed = true;
 			}
 		} else {
 			if (dom.talkPrompt.displayed) {
-				dom.talkPrompt.css("display", "none");
+				dom.talkPrompt.fadeOut(PROMPT_FADE_TIME);
 				dom.talkPrompt.displayed = false;
 			}
 		}
@@ -71,8 +94,21 @@ PAVO.hud = new function() {
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
 			case FOAM.KEY.ESCAPE:
-				self.togglePause();
+				if (dom.talkBox.displayed) {
+					dom.talkBox.fadeOut(PROMPT_FADE_TIME);
+					dom.talkBox.displayed = false;
+					PAVO.player.freeze = false;
+				} else {
+					self.togglePause();
+				}
 				break;
+			case FOAM.KEY.E:
+				if (dom.talkPrompt.displayed && !dom.talkBox.displayed) {
+					dom.talkBox.fadeIn(PROMPT_FADE_TIME);
+					dom.talkBox.resize();
+					dom.talkBox.displayed = true;
+					PAVO.player.freeze = true;
+				}
 			default:
 				//window.alert(event.keyCode);
 				break;

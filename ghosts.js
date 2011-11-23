@@ -9,7 +9,7 @@ PAVO.ghosts = new function() {
 
 	var VIEW_RADIUS = 50;
 	var TALK_RADIUS = 5;
-	var SPIN_RATE = 0.1;
+	var SPIN_RATE = 0.05;
 
 	var self = this;
 	var list = [];
