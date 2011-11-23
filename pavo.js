@@ -11,6 +11,8 @@
 var PAVO = new function() {
 	
 	var self = this;
+	
+	this.scratch = {};
 
 	this.init = function() {
 	
@@ -61,7 +63,10 @@ var PAVO = new function() {
 			FOAM.schedule(self.world.draw, 0, true);
 
 			// insure that window redraws when paused and resized			
-			jQuery(window).bind("resize", function(){ self.world.draw() });
+			jQuery(window).bind("resize", function(){
+				PAVO.hud.resize();
+				self.world.draw();
+			});
 		
 			self.hud.unwait();
 		};

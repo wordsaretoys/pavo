@@ -34,9 +34,15 @@ PAVO.game = {
 		{ position: { x: 500, y: 12, z: 140 } },
 		{ position: { x: 508, y: 20, z: 4 } },
 		{ position: { x: 116, y: 28, z: 76 } },
-		{ position: { x: 36, y: 4, z: 28 } },
+		{ 
+			position: { x: 36, y: 2, z: 28 },
+			name: "medium barley"
+		},
 		{ position: { x: 4, y: 4, z: 244 } },
 		{ position: { x: 508, y: 4, z: 300 } },
+		{ position: { x: 108, y: 12, z: 276 } },
+		{ position: { x: 364, y: 4, z: 308 } },
+		{ position: { x: 68, y: 4, z: 4 } },
 		{ position: { x: 124, y: 4, z: 460 } }
 	],
 	

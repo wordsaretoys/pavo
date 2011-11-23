@@ -1,4 +1,4 @@
-/**
+t/**
 
 	Actors Object
 	Maintains collection of actor objects.
@@ -16,10 +16,6 @@ PAVO.actors = new function() {
 	var list = [];
 	var prng;
 	var mesh;
-
-	var temp = {
-		pos: new FOAM.Vector()
-	};
 
 	this.init = function() {
 		prng = new FOAM.Prng();

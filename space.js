@@ -24,7 +24,7 @@ PAVO.space = new function() {
 	var light;
 	var panel;
 	
-	var temp = {
+	var scratch = {
 		pos0: new FOAM.Vector(),
 		pos1: new FOAM.Vector(),
 		norm: new FOAM.Vector(),
@@ -71,8 +71,8 @@ PAVO.space = new function() {
 	}
 	
 	this.inside = function(x, y, z) {
-		temp.pos0.set(x, y, z).dejitter(RESOLUTION, Math.floor);
-		return this.pinside(temp.pos0);
+		scratch.pos0.set(x, y, z).dejitter(RESOLUTION, Math.floor);
+		return this.pinside(scratch.pos0);
 	};
 	
 	this.generate = function() {
@@ -179,41 +179,41 @@ PAVO.space = new function() {
 	this.collision = function(p, v) {
 		var surf;
 		
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).x -= RESOLUTION;
-		surf = temp.pos1.x + RESOLUTION + 2;
-		if (!this.pinside(temp.pos1) && p.x <= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).x -= RESOLUTION;
+		surf = scratch.pos1.x + RESOLUTION + 2;
+		if (!this.pinside(scratch.pos1) && p.x <= surf) {
 			p.x = surf;
 			v.x = v.x > 0 ? v.x : 0;
 		}
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).x += RESOLUTION;
-		surf = temp.pos1.x - 2;
-		if (!this.pinside(temp.pos1) && p.x >= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).x += RESOLUTION;
+		surf = scratch.pos1.x - 2;
+		if (!this.pinside(scratch.pos1) && p.x >= surf) {
 			p.x = surf;
 			v.x = v.x < 0 ? v.x : 0;
 		}
 
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).y -= RESOLUTION;
-		surf = temp.pos1.y + RESOLUTION + 2;
-		if (!this.pinside(temp.pos1) && p.y <= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).y -= RESOLUTION;
+		surf = scratch.pos1.y + RESOLUTION + 2;
+		if (!this.pinside(scratch.pos1) && p.y <= surf) {
 			p.y = surf;
 			v.y = v.y > 0 ? v.y : 0;
 		}
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).y += RESOLUTION;
-		surf = temp.pos1.y - 2;
-		if (!this.pinside(temp.pos1) && p.y >= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).y += RESOLUTION;
+		surf = scratch.pos1.y - 2;
+		if (!this.pinside(scratch.pos1) && p.y >= surf) {
 			p.y = surf;
 			v.y = v.y < 0 ? v.y : 0;
 		}
 		
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).z -= RESOLUTION;
-		surf = temp.pos1.z + RESOLUTION + 2;
-		if (!this.pinside(temp.pos1) && p.z <= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).z -= RESOLUTION;
+		surf = scratch.pos1.z + RESOLUTION + 2;
+		if (!this.pinside(scratch.pos1) && p.z <= surf) {
 			p.z = surf;
 			v.z = v.z > 0 ? v.z : 0;
 		}
-		temp.pos1.copy(p).dejitter(RESOLUTION, Math.floor).z += RESOLUTION;
-		surf = temp.pos1.z - 2;
-		if (!this.pinside(temp.pos1) && p.z >= surf) {
+		scratch.pos1.copy(p).dejitter(RESOLUTION, Math.floor).z += RESOLUTION;
+		surf = scratch.pos1.z - 2;
+		if (!this.pinside(scratch.pos1) && p.z >= surf) {
 			p.z = surf;
 			v.z = v.z < 0 ? v.z : 0;
 		}

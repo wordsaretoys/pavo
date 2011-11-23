@@ -29,9 +29,9 @@ PAVO.Bot = function() {
 
 	this.prng = new FOAM.Prng();
 
-	// inherit from ancestor's temp objects, if present
-	this.temp = this.temp || {};
-	jQuery.extend(this.temp, {
+	// inherit from ancestor's scratch objects, if present
+	this.scratch = this.scratch || {};
+	jQuery.extend(this.scratch, {
 		pos: new FOAM.Vector(),
 		dir: new FOAM.Vector()
 	} );
@@ -77,12 +77,12 @@ PAVO.Bot.proto = {
 		}
 
 		this.pointTo(target);
-		this.temp.dir.copy(this.orientation.front).mul(this.BASE_SPEED * dt);
-		this.position.add(this.temp.dir);
+		this.scratch.dir.copy(this.orientation.front).mul(this.BASE_SPEED * dt);
+		this.position.add(this.scratch.dir);
 	},
 	
 	pointTo: function(p) {
-		var pos = this.temp.pos;
+		var pos = this.scratch.pos;
 		var z;
 
 		//TODO: FIX Z-AXIS INSTABILITY

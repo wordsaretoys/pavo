@@ -22,8 +22,8 @@ PAVO.Player = function() {
 		x: 0,
 		y: 0
 	};
-
-	var temp = {
+	
+	var scratch = {
 		direction: new FOAM.Vector(),
 		velocity: new FOAM.Vector()
 	};
@@ -35,9 +35,9 @@ PAVO.Player = function() {
 	this.init = function() {
 		jQuery(window).bind("keydown", this.onKeyDown);
 		jQuery(window).bind("keyup", this.onKeyUp);
-		jQuery("#gl").bind("mousedown", this.onMouseDown);
-		jQuery("#gl").bind("mouseup", this.onMouseUp);
-		jQuery("#gl").bind("mousemove", this.onMouseMove);
+		jQuery("#curtain").bind("mousedown", this.onMouseDown);
+		jQuery("#curtain").bind("mouseup", this.onMouseUp);
+		jQuery("#curtain").bind("mousemove", this.onMouseMove);
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
 	};
@@ -46,36 +46,36 @@ PAVO.Player = function() {
 		var dt = FOAM.interval * 0.001;
 		var speed = (this.sprint) ? SPRINT_SPEED : NORMAL_SPEED;
 
-		temp.direction.set();
+		scratch.direction.set();
 		if (motion.movefore) {
-			temp.direction.sub(this.orientation.front);
+			scratch.direction.sub(this.orientation.front);
 		}
 		if (motion.moveback) {
-			temp.direction.add(this.orientation.front);
+			scratch.direction.add(this.orientation.front);
 		}
 		if (motion.moveleft) {
-			temp.direction.sub(this.orientation.right);
+			scratch.direction.sub(this.orientation.right);
 		}
 		if (motion.moveright) {
-			temp.direction.add(this.orientation.right);
+			scratch.direction.add(this.orientation.right);
 		}
 		if (!this.debug)
-			temp.direction.y = 0;
-		temp.direction.norm();
+			scratch.direction.y = 0;
+		scratch.direction.norm();
 		
-		this.velocity.x = temp.direction.x * speed;
-		this.velocity.y = this.debug ? temp.direction.y * speed : this.velocity.y - 9.81 * dt;
-		this.velocity.z = temp.direction.z * speed;
+		this.velocity.x = scratch.direction.x * speed;
+		this.velocity.y = this.debug ? scratch.direction.y * speed : this.velocity.y - 9.81 * dt;
+		this.velocity.z = scratch.direction.z * speed;
 		
 		if (!this.debug)
 			PAVO.space.collision(this.position, this.velocity);
-		temp.velocity.copy(this.velocity).mul(dt);
-		this.position.add(temp.velocity);
+		scratch.velocity.copy(this.velocity).mul(dt);
+		this.position.add(scratch.velocity);
 		
-		temp.direction.copy(this.position);
-		temp.direction.dejitter(8, Math.floor);
-		temp.velocity.set(4, 4, 4).add(temp.direction);
-		PAVO.hud.setDebug(temp.velocity.x + "<br>" + temp.velocity.y + "<br>" + temp.velocity.z);
+		scratch.direction.copy(this.position);
+		scratch.direction.dejitter(8, Math.floor);
+		scratch.velocity.set(4, 4, 4).add(scratch.direction);
+		PAVO.hud.setDebug(scratch.velocity.x + "<br>" + scratch.velocity.y + "<br>" + scratch.velocity.z);
 	};
 	
 	this.onKeyDown = function(event) {
@@ -142,7 +142,7 @@ PAVO.Player = function() {
 
 	this.onMouseMove = function(event) {
 		var dx, dy;
-		if (mouse.down) {
+		if (mouse.down && FOAM.running) {
 			dx = SPIN_RATE * (event.pageX - mouse.x);
 			dy = SPIN_RATE * (event.pageY - mouse.y);
 			self.spin(dx, dy);

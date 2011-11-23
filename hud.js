@@ -13,7 +13,9 @@ PAVO.hud = new function() {
 
 		dom = {
 			curtain: jQuery("#curtain"),
-			debug: jQuery("#debug")
+			debug: jQuery("#debug"),
+			talkPrompt: jQuery("#talk-prompt"),
+			talkPromptName: jQuery("#talk-prompt-name")
 		};
 		
 		this.resize();
@@ -27,6 +29,8 @@ PAVO.hud = new function() {
 	};
 	
 	this.resize = function() {
+		dom.curtain.width(FOAM.width);
+		dom.curtain.height(FOAM.height);
 	};
 
 	function chop(n, d) {
@@ -43,6 +47,27 @@ PAVO.hud = new function() {
 		dom.debug.html(s);
 	};
 
+	this.update = function() {
+	
+		if (PAVO.ghosts.listening) {
+			if (!dom.talkPrompt.displayed) {
+				dom.talkPrompt.css("display", "block");
+				dom.talkPrompt.offset( { 
+					top: 3 * (FOAM.height - dom.talkPrompt.height()) / 4,
+					left: (FOAM.width - dom.talkPrompt.width()) / 2
+				});
+				dom.talkPromptName.html(PAVO.ghosts.listening.name || "anonymous");
+				dom.talkPrompt.displayed = true;
+			}
+		} else {
+			if (dom.talkPrompt.displayed) {
+				dom.talkPrompt.css("display", "none");
+				dom.talkPrompt.displayed = false;
+			}
+		}
+	
+	};
+
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
 			case FOAM.KEY.ESCAPE:
@@ -57,13 +82,13 @@ PAVO.hud = new function() {
 	this.togglePause = function() {
 		if (FOAM.running) {
 			FOAM.running = false;
-			dom.curtain.css("display", "block");
+			dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
 			dom.curtain.width(FOAM.width);
 			dom.curtain.height(FOAM.height);
 		}
 		else {
 			FOAM.running = true;
-			dom.curtain.css("display", "none");
+			dom.curtain.css("background-color", "transparent");
 		}
 	};
 	

@@ -59,6 +59,7 @@ PAVO.world = new function() {
 //		PAVO.actors.update();
 		PAVO.ghosts.update();
 		PAVO.player.update();
+		PAVO.hud.update();
 	};
 	
 	this.draw = function() {

@@ -7,9 +7,13 @@
 **/
 
 PAVO.Mover = function() {
-	this.t_rotation = new FOAM.Quaternion();
 	this.PITCH_LIMIT = Math.sqrt(2) / 2;
 	this.pitch = new FOAM.Thing();
+	// inherit from ancestor's scratch objects, if present
+	this.scratch = this.scratch || {};
+	jQuery.extend(this.scratch, {
+		rotation: new FOAM.Quaternion()
+	} );
 	// orientation vectors will be treated as quaternions
 	// and need a w-component for copies to be meaningful		
 	this.pitch.orientation.right.w = 0;
@@ -22,10 +26,10 @@ PAVO.Mover.proto = {
 		// clumsy, but it works. rotate the first quaternion by
 		// pitch angle, then use its orientation vectors as the
 		// basis vectors for the yaw rotation. insures no roll!
-		this.t_rotation.copy(this.pitch.rotation);
+		this.scratch.rotation.copy(this.pitch.rotation);
 		this.pitch.turn(pitch, 0, 0);
 		if (this.pitch.rotation.w < this.PITCH_LIMIT) {
-			this.pitch.rotation.copy(this.t_rotation);
+			this.pitch.rotation.copy(this.scratch.rotation);
 			this.pitch.turn(0, 0, 0);
 		}
 		this.unitquat.x.copy(this.pitch.orientation.right);
