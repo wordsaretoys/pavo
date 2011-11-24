@@ -7,37 +7,27 @@
 PAVO.hud = new function() {
 
 	var PROMPT_FADE_TIME = 250;
+	var MESSAGE_FADE_TIME = 250;
+	var MESSAGE_DELAY = 2500;
 
 	var self = this;
 	var dom;
+	
+	var prompted = false;
 	
 	this.init = function() {
 
 		dom = {
 			curtain: jQuery("#curtain"),
 			debug: jQuery("#debug"),
-			
-			talkPrompt: jQuery("#talk-prompt"),
-			talkPromptName: jQuery("#talk-prompt-name"),
-			
-			talkBox: jQuery("#talk-box"),
-			talkBoxReply: jQuery("#talk-box-reply"),
-			talkBoxQ1: jQuery("talk-box-q1"),
-			talkBoxQ2: jQuery("talk-box-q2"),
-			talkBoxQ3: jQuery("talk-box-q3")
+			messages: jQuery("#messages"),
+			prompt: jQuery("#prompt")
 		};
 
-		dom.talkPrompt.resize = function() {
-			dom.talkPrompt.offset( { 
-				top: 3 * (FOAM.height - dom.talkPrompt.height()) / 4,
-				left: (FOAM.width - dom.talkPrompt.width()) / 2
-			});
-		}
-		
-		dom.talkBox.resize = function() {
-			dom.talkBox.offset( { 
-				top: 3 * (FOAM.height - dom.talkBox.height()) / 4,
-				left: (FOAM.width - dom.talkBox.width()) / 2
+		dom.prompt.resize = function() {
+			dom.prompt.offset( { 
+				top: 3 * (FOAM.height - dom.prompt.height()) / 4,
+				left: (FOAM.width - dom.prompt.width()) / 2
 			});
 		}
 		
@@ -55,8 +45,11 @@ PAVO.hud = new function() {
 		dom.curtain.width(FOAM.width);
 		dom.curtain.height(FOAM.height);
 
-		dom.talkPrompt.resize();
-		dom.talkBox.resize();
+		dom.prompt.resize();
+
+		dom.messages.offset( { 
+			top: FOAM.height / 4
+		});
 	};
 
 	function chop(n, d) {
@@ -76,16 +69,16 @@ PAVO.hud = new function() {
 	this.update = function() {
 	
 		if (PAVO.ghosts.listening) {
-			if (!dom.talkPrompt.displayed) {
-				dom.talkPrompt.fadeIn(PROMPT_FADE_TIME);
-				dom.talkPrompt.resize();
-				dom.talkPromptName.html(PAVO.ghosts.listening.name || "anonymous");
-				dom.talkPrompt.displayed = true;
+			if (!prompted) {
+				this.addPrompt("e", "talk");
+				this.addPrompt(undefined, PAVO.ghosts.listening.name || "anonymous");
+				dom.prompt.resize();
+				prompted = true;
 			}
 		} else {
-			if (dom.talkPrompt.displayed) {
-				dom.talkPrompt.fadeOut(PROMPT_FADE_TIME);
-				dom.talkPrompt.displayed = false;
+			if (prompted) {
+				this.clearPrompts();
+				prompted = false;
 			}
 		}
 	
@@ -94,7 +87,7 @@ PAVO.hud = new function() {
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
 			case FOAM.KEY.ESCAPE:
-				if (dom.talkBox.displayed) {
+				if (false) {
 					dom.talkBox.fadeOut(PROMPT_FADE_TIME);
 					dom.talkBox.displayed = false;
 					PAVO.player.freeze = false;
@@ -103,12 +96,17 @@ PAVO.hud = new function() {
 				}
 				break;
 			case FOAM.KEY.E:
+			/*
 				if (dom.talkPrompt.displayed && !dom.talkBox.displayed) {
 					dom.talkBox.fadeIn(PROMPT_FADE_TIME);
 					dom.talkBox.resize();
 					dom.talkBox.displayed = true;
 					PAVO.player.freeze = true;
 				}
+			*/
+				break;
+			case FOAM.KEY.L:
+				PAVO.hud.addMessage("" + new Date().getTime());
 			default:
 				//window.alert(event.keyCode);
 				break;
@@ -129,10 +127,38 @@ PAVO.hud = new function() {
 	};
 	
 	this.wait = function() {
-		dom.curtain.css("cursor", "wait");
 	};
 	
 	this.unwait = function() {
-		dom.curtain.css("cursor", "move");
 	};
+	
+	this.addMessage = function(msg) {
+		var div = jQuery(document.createElement("div"));
+		div.html(msg);
+		div.css("display", "none");
+		dom.messages.append(div);
+		div.fadeIn(MESSAGE_FADE_TIME)
+			.delay(MESSAGE_DELAY)
+			.fadeOut(MESSAGE_FADE_TIME, function() {
+				div.remove();
+		});
+	};
+	
+	this.addPrompt = function(key, msg) {
+		var div = jQuery(document.createElement("div"));
+		if (key) {
+			msg = "<span class=\"key\">" + key + "</span> " + msg;
+		}
+		div.html(msg);
+		div.css("display", "none");
+		dom.prompt.append(div);
+		div.fadeIn(PROMPT_FADE_TIME)
+	};
+	
+	this.clearPrompts = function() {
+		jQuery("#prompt > *").fadeOut(PROMPT_FADE_TIME, function() {
+			dom.prompt.empty();
+		});
+	};
+	
 };

@@ -1,4 +1,4 @@
-t/**
+/**
 
 	Actors Object
 	Maintains collection of actor objects.

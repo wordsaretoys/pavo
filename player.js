@@ -11,6 +11,7 @@ PAVO.Player = function() {
 	var SPRINT_SPEED = 50;
 
 	var self = this;
+	var dom;
 
 	var motion = { 
 		moveleft: false, moveright: false,
@@ -34,13 +35,18 @@ PAVO.Player = function() {
 	this.freeze = false;
 
 	this.init = function() {
+		dom = {
+			curtain: jQuery("#curtain")
+		};
+
 		jQuery(window).bind("keydown", this.onKeyDown);
 		jQuery(window).bind("keyup", this.onKeyUp);
-		jQuery("#curtain").bind("mousedown", this.onMouseDown);
-		jQuery("#curtain").bind("mouseup", this.onMouseUp);
-		jQuery("#curtain").bind("mousemove", this.onMouseMove);
+		dom.curtain.bind("mousedown", this.onMouseDown);
+		dom.curtain.bind("mouseup", this.onMouseUp);
+		dom.curtain.bind("mousemove", this.onMouseMove);
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
+		
 	};
 	
 	this.update = function() {
@@ -141,11 +147,13 @@ PAVO.Player = function() {
 
 	this.onMouseDown = function(event) {
 		mouse.down = true;
+		dom.curtain.css("cursor", "move");
 		return false;
 	};
 	
 	this.onMouseUp = function(event) {
 		mouse.down = false;
+		dom.curtain.css("cursor", "default");
 		return false;
 	};
 

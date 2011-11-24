@@ -9,6 +9,7 @@ html, body {
 	background-color: black;
 	font-family: Helvetica;
 }
+
 canvas {
 	position: absolute;
 	top: 0px;
@@ -16,11 +17,8 @@ canvas {
 	margin: 0;
 	padding: 0;
 	z-index: 0;
-	cursor: move;
 }
-canvas:active {
-	cursor: move;
-}
+
 div {
 	cursor: default;
 }
@@ -54,46 +52,39 @@ div {
 
 /* HUD prompts */
 
-.key {
-	border: solid 1px white;
-	border-radius: 5px;
-	background: black;
-	padding-bottom: 5px;
-}
-
-.prompt {
+#prompt {
 	position: absolute;
 	
 	background: transparent;
-	color: white;
-
-	font-size: 28pt;
-	text-align: center;
-	line-height: 150%;
-	
-	display: none;
-	
-	z-index: 5;
-
-}
-
-/* HUD talk box */
-
-#talk-box {
-	position: absolute;
-	
-	background: black;
 	color: white;
 
 	font-size: 20pt;
 	text-align: left;
 	line-height: 150%;
 	
+	z-index: 5;
+
+}
+
+.key {
 	border: solid 1px white;
+	border-radius: 5px;
+	background: black;
+	padding: 0px 0.5em 5px 0.5em;
+}
+
+/* HUD messages */
+
+#messages {
+	position: absolute;
 	
-	padding: 1em;
-	
-	display: none;
+	background: transparent;
+	color: white;
+
+	font-size: 20pt;
+	text-align: center;
+
+	width: 100%;
 	
 	z-index: 5;
 }
