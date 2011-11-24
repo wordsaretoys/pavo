@@ -58,7 +58,7 @@ div {
 	background: transparent;
 	color: white;
 
-	font-size: 20pt;
+	font-size: 16pt;
 	text-align: left;
 	line-height: 150%;
 	
@@ -70,7 +70,11 @@ div {
 	border: solid 1px white;
 	border-radius: 5px;
 	background: black;
-	padding: 0px 0.5em 5px 0.5em;
+	padding: 0px 0.5em 0px 0.5em;
+}
+
+#prompt div {
+	text-shadow: black 0.1em 0.1em 0.2em;
 }
 
 /* HUD messages */
@@ -80,10 +84,11 @@ div {
 	
 	background: transparent;
 	color: white;
+	text-shadow: black 0.1em 0.1em 0.2em;
 	
 	overflow: hidden;
 
-	font-size: 20pt;
+	font-size: 16pt;
 	text-align: center;
 
 	width: 100%;

@@ -10,10 +10,12 @@ PAVO.hud = new function() {
 	var MESSAGE_FADE_TIME = 250;
 	var MESSAGE_DELAY = 2500;
 
+	var NOTHING  = 0;
+	var MAY_TALK = 1;
+	var TALKING  = 2;
+
 	var self = this;
 	var dom;
-	
-	var prompted = false;
 	
 	this.init = function() {
 
@@ -26,88 +28,56 @@ PAVO.hud = new function() {
 
 		dom.prompt.resize = function() {
 			dom.prompt.offset( { 
-				top: 3 * (FOAM.height - dom.prompt.height()) / 4,
+				top: 4 * (FOAM.height - dom.prompt.height()) / 5,
 				left: (FOAM.width - dom.prompt.width()) / 2
 			});
 		}
+		dom.prompt.state = NOTHING;
 		
 		this.resize();
 		
 		var instance = this;
 		jQuery(window).bind("resize", function(){ instance.resize() });
 		jQuery(window).bind("keydown", instance.onKeyDown);
-		
-		dom.debug.css("display", "block");
-//		FOAM.schedule(this.showDebug, 25, true);
 	};
 	
 	this.resize = function() {
 		dom.curtain.width(FOAM.width);
 		dom.curtain.height(FOAM.height);
-
 		dom.prompt.resize();
-
-		dom.messages.css("bottom", (3 * FOAM.height / 4) + "px");
+		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
 	};
 
-	function chop(n, d) {
-		var p10 = Math.pow(10, d);
-		return Math.round(n * p10) / p10;
-	}
-
-	this.showDebug = function() {
-		var s = ""
-		dom.debug.html(s);
-	};
-	
 	this.setDebug = function(s) {
+		if (dom.debug.css("display") === "none") {
+			dom.debug.css("display", "block");
+		}
 		dom.debug.html(s);
 	};
 
 	this.update = function() {
-	
-		if (PAVO.ghosts.listening) {
-			if (!prompted) {
-				dom.prompt.empty();
-				this.addPrompt("e", "talk");
-				this.addPrompt(undefined, PAVO.ghosts.listening.name || "anonymous");
-				dom.prompt.resize();
-				prompted = true;
-			}
-		} else {
-			if (prompted) {
-				this.clearPrompts();
-				prompted = false;
-			}
-		}
-	
 	};
 
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
-			case FOAM.KEY.ESCAPE:
-				if (false) {
-					dom.talkBox.fadeOut(PROMPT_FADE_TIME);
-					dom.talkBox.displayed = false;
-					PAVO.player.freeze = false;
-				} else {
-					self.togglePause();
-				}
-				break;
-			case FOAM.KEY.E:
-			/*
-				if (dom.talkPrompt.displayed && !dom.talkBox.displayed) {
-					dom.talkBox.fadeIn(PROMPT_FADE_TIME);
-					dom.talkBox.resize();
-					dom.talkBox.displayed = true;
-					PAVO.player.freeze = true;
-				}
-			*/
-				PAVO.hud.addMessage("medium barley: boo ima ghost");
-				break;
-			default:
-				//window.alert(event.keyCode);
-				break;
+		case FOAM.KEY.ESCAPE:
+			if (dom.prompt.state === TALKING) {
+				PAVO.player.freeze = false;
+				self.promptToTalk(dom.prompt.subject);
+			} else {
+				self.togglePause();
+			}
+			break;
+		case FOAM.KEY.E:
+			if (dom.prompt.state === MAY_TALK) {
+				dom.prompt.state = TALKING;
+				PAVO.player.freeze = true;
+				self.talk();
+			}
+			break;
+		default:
+			//window.alert(event.keyCode);
+			break;
 		}
 	};
 
@@ -124,12 +94,6 @@ PAVO.hud = new function() {
 		}
 	};
 	
-	this.wait = function() {
-	};
-	
-	this.unwait = function() {
-	};
-	
 	this.addMessage = function(msg) {
 		var div = jQuery(document.createElement("div"));
 		div.html(msg);
@@ -142,21 +106,45 @@ PAVO.hud = new function() {
 		});
 	};
 	
-	this.addPrompt = function(key, msg) {
-		var div = jQuery(document.createElement("div"));
-		if (key) {
-			msg = "<span class=\"key\">" + key + "</span> " + msg;
+	this.setPrompt = function(lines) {
+		var i, il, ln, div, s;
+		lines = lines || [];
+		dom.prompt.empty();
+		for (i = 0, il = lines.length; i < il; i++) {
+			ln = lines[i];
+			div = jQuery(document.createElement("div"));
+			s = (ln.key) ? "<span class=\"key\">" + ln.key + "</span> " : "";
+			s = s + ln.msg;
+			div.html(s);
+			dom.prompt.append(div);
 		}
-		div.html(msg);
-		div.css("display", "none");
-		dom.prompt.append(div);
-		div.fadeIn(PROMPT_FADE_TIME)
+		dom.prompt.resize();
 	};
 	
-	this.clearPrompts = function() {
-		jQuery("#prompt > *").fadeOut(PROMPT_FADE_TIME, function() {
-			dom.prompt.empty();
-		});
+	this.promptToTalk = function(ghost) {
+		if (ghost) {
+			this.setPrompt( [
+				{ key: "E", msg: "talk" },
+				{ msg: ghost.name || "anonymous" }
+			] );
+			dom.prompt.state = MAY_TALK;
+		} else {
+			this.setPrompt();
+			dom.prompt.state = NOTHING;
+		}
+		dom.prompt.subject = ghost;
 	};
+
+	this.talk = function(response) {
+		self.setPrompt( [
+			{ msg: dom.prompt.subject.name + ": boo i am a ghost" },
+			{ msg: "&nbsp;" },
+			{ key: "1", msg: "ghost is bullshit" },
+			{ key: "2", msg: "where am i?" },
+			{ key: "3", msg: "these are ugly colors" },
+			{ key: "Esc", msg: "never mind" }
+		] );
+	
+	};	
 	
 };

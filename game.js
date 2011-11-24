@@ -47,8 +47,7 @@ PAVO.game = {
 	],
 	
 	player: {
-		position: { x: 10, y: 10, z: 10 },
-		rotation: { x: 0, y: 1, z: 0, w: 2 }
+		position: { x: 20, y: 12, z: 4 }
 	}
 };
 

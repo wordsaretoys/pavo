@@ -20,8 +20,8 @@ PAVO.ghosts = new function() {
 		pos: new FOAM.Vector()
 	};
 	
-	this.listening = null;
-
+	var listening = null;
+	
 	this.init = function() {
 		var gl = PAVO.game.ghosts;
 		var i, il, g;
@@ -67,8 +67,7 @@ PAVO.ghosts = new function() {
 		var cam = PAVO.player;
 		var program = FOAM.shaders.activate("ghost");
 		var i, il, g, a, d, t;
-		
-		this.listening = null;
+		var lt = null;
 		
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -87,7 +86,7 @@ PAVO.ghosts = new function() {
 					scratch.pos.copy(cam.position).sub(g.position).norm();
 					t = scratch.pos.dot(cam.orientation.front);
 					if (t > 0.95) {
-						this.listening = g;
+						lt = g;
 					}
 				}
 			
@@ -100,6 +99,11 @@ PAVO.ghosts = new function() {
 		}
 
 		gl.disable(gl.BLEND);
+		
+		if (lt !== listening) {
+			PAVO.hud.promptToTalk(lt);
+			listening = lt;
+		}
 	};
 	
 };

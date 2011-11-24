@@ -29,7 +29,6 @@ var PAVO = new function() {
 		gl.enable(gl.DEPTH_TEST);
 		
 		self.hud.init();
-		self.hud.wait();
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
 		FOAM.resources.addImage("ghost", "res/ghost.png");
@@ -68,7 +67,6 @@ var PAVO = new function() {
 				self.world.draw();
 			});
 		
-			self.hud.unwait();
 		};
 		
 		FOAM.resources.load();
