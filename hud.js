@@ -47,9 +47,7 @@ PAVO.hud = new function() {
 
 		dom.prompt.resize();
 
-		dom.messages.offset( { 
-			top: FOAM.height / 4
-		});
+		dom.messages.css("bottom", (3 * FOAM.height / 4) + "px");
 	};
 
 	function chop(n, d) {
@@ -70,6 +68,7 @@ PAVO.hud = new function() {
 	
 		if (PAVO.ghosts.listening) {
 			if (!prompted) {
+				dom.prompt.empty();
 				this.addPrompt("e", "talk");
 				this.addPrompt(undefined, PAVO.ghosts.listening.name || "anonymous");
 				dom.prompt.resize();
@@ -104,9 +103,8 @@ PAVO.hud = new function() {
 					PAVO.player.freeze = true;
 				}
 			*/
+				PAVO.hud.addMessage("medium barley: boo ima ghost");
 				break;
-			case FOAM.KEY.L:
-				PAVO.hud.addMessage("" + new Date().getTime());
 			default:
 				//window.alert(event.keyCode);
 				break;
