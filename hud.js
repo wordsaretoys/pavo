@@ -13,6 +13,8 @@ PAVO.hud = new function() {
 	var NOTHING  = 0;
 	var MAY_TALK = 1;
 	var TALKING  = 2;
+	var MAY_EXAMINE = 3;
+	var EXAMINING   = 4;
 
 	var self = this;
 	var dom;
@@ -23,7 +25,8 @@ PAVO.hud = new function() {
 			curtain: jQuery("#curtain"),
 			debug: jQuery("#debug"),
 			messages: jQuery("#messages"),
-			prompt: jQuery("#prompt")
+			prompt: jQuery("#prompt"),
+			crosshair: jQuery("#crosshair")
 		};
 
 		dom.prompt.resize = function() {
@@ -46,6 +49,10 @@ PAVO.hud = new function() {
 		dom.curtain.height(FOAM.height);
 		dom.prompt.resize();
 		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
+		dom.crosshair.offset({
+			top: (FOAM.height - dom.crosshair.height()) / 2,
+			left: (FOAM.width - dom.crosshair.width()) / 2
+		});
 	};
 
 	this.setDebug = function(s) {
@@ -60,13 +67,17 @@ PAVO.hud = new function() {
 
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
-		case FOAM.KEY.ESCAPE:
+		case FOAM.KEY.TAB:
 			if (dom.prompt.state === TALKING) {
 				PAVO.player.freeze = false;
 				self.promptToTalk(dom.prompt.subject);
-			} else {
-				self.togglePause();
 			}
+			// we have to avoid default behavior (tab to URL entry bar)
+			// or we lose keyboard focus, and key commands are dropped
+			return false;
+			break;
+		case FOAM.KEY.ESCAPE:
+			self.togglePause();
 			break;
 		case FOAM.KEY.E:
 			if (dom.prompt.state === MAY_TALK) {
@@ -142,9 +153,23 @@ PAVO.hud = new function() {
 			{ key: "1", msg: "ghost is bullshit" },
 			{ key: "2", msg: "where am i?" },
 			{ key: "3", msg: "these are ugly colors" },
-			{ key: "Esc", msg: "never mind" }
+			{ key: "Tab", msg: "never mind" }
 		] );
 	
 	};	
+	
+	this.promptToExamine = function(debris) {
+		if (debris) {
+			this.setPrompt( [
+				{ key: "E", msg: "examine" },
+				{ msg: "debris" }
+			] );
+			dom.prompt.state = MAY_EXAMINE;
+		} else {
+			this.setPrompt();
+			dom.prompt.state = NOTHING;
+		}
+		dom.prompt.subject = debris;
+	};
 	
 };

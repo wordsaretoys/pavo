@@ -154,3 +154,48 @@ void main(void) {
 
 </script>
 
+<script id="vs-debris" type="x-shader/x-vertex">
+
+/**
+	debris vertex shader
+	O' = P * M * V * O transformation, plus texture coordinates
+**/
+
+attribute vec3 position;
+attribute vec2 texturec;
+
+uniform mat4 projector;
+uniform mat4 modelview;
+uniform vec3 center;
+
+varying vec2 uv;
+
+void main(void) {
+	gl_Position = projector * modelview * vec4(position + center, 1.0);
+	uv = texturec;
+}
+
+</script>
+
+<script id="fs-debris" type="x-shader/x-fragment">
+
+/**
+	debris fragment shader
+**/
+
+#ifdef GL_ES
+precision highp float;
+#endif
+ 
+varying vec2 uv;
+
+uniform sampler2D panels;
+uniform float alpha;
+
+void main(void) {
+	vec4 tex = texture2D(panels, uv);
+	gl_FragColor = vec4(tex.rgb, alpha * tex.a);
+}
+
+</script>
+

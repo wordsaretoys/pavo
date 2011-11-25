@@ -6,10 +6,10 @@
 
 PAVO.models = new function() {
 
-	this.createBotMesh = function() {
+	this.createGhostMesh = function() {
 		var nx = ny = nz = -0.5;
 		var px = py = pz =  0.5;
-		var program = FOAM.shaders.get("bot");
+		var program = FOAM.shaders.get("ghost");
 		var mesh = new FOAM.Mesh();
 
 		mesh.add(program.position, 3);
@@ -67,5 +67,37 @@ PAVO.models = new function() {
 		
 		return mesh;
 	
+	};
+	
+	this.createDebrisMesh = function() {
+		var step = 0.05;
+		var x0 = z0 = -2.0;
+		var z1 = x1 =  2.0;
+		var dl = 4;
+		var x, xs, y, ys, z;
+		var rx, rxs, rz;
+		
+		var program = FOAM.shaders.get("debris");
+		var mesh = new FOAM.Mesh(gl.TRIANGLE_STRIP);
+		var shape = new FOAM.Vector();
+
+		mesh.add(program.position, 3);
+		mesh.add(program.texturec, 2);
+
+		for (x = x0; x <= x1; x += step) {
+			xs = x + step;
+			rx = (x - x0) / dl;
+			rxs = (xs - x0) / dl;
+			for (z = z0; z <= z1; z += step) {
+				rz = (z - z0) / dl;
+				shape.set(xs, 1, z).norm();
+				mesh.set(xs, shape.y, z, rxs, rz);
+				shape.set(x, 1, z).norm();
+				mesh.set(x, shape.y, z, rx, rz);
+			}
+		}
+		mesh.build();
+		
+		return mesh;
 	};
 };

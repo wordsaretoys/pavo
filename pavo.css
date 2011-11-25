@@ -95,3 +95,16 @@ div {
 	
 	z-index: 5;
 }
+
+/* HUD crosshair */
+
+#crosshair {
+	position: absolute;
+	
+	background: transparent;
+	color: white;
+	
+	font-size: 16pt;
+	
+	z-index: 5;
+}

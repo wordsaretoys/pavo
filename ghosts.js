@@ -8,6 +8,7 @@
 PAVO.ghosts = new function() {
 
 	var VIEW_RADIUS = 50;
+	var FADE_RADIUS =  5;
 	var TALK_RADIUS = 5;
 	var SPIN_RATE = 0.05;
 
@@ -27,11 +28,12 @@ PAVO.ghosts = new function() {
 		var i, il, g;
 	
 		prng = new FOAM.Prng();
-		mesh = PAVO.models.createBotMesh();
+		mesh = PAVO.models.createGhostMesh();
 
 		for (i = 0, il = gl.length; i < il; i++) {
 			g = PAVO.makeMover();
 			g.position.copy(gl[i].position);
+			g.position.y += 3;
 			g.name = gl[i].name;
 			g.timer = 0;
 			g.target = new FOAM.Vector();
@@ -90,7 +92,7 @@ PAVO.ghosts = new function() {
 					}
 				}
 			
-				a = 0.5 * (VIEW_RADIUS - d) / VIEW_RADIUS;
+				a = 0.5 * Math.clamp((VIEW_RADIUS - d) / FADE_RADIUS, 0, 1);
 				gl.uniform3f(program.center, g.position.x, g.position.y, g.position.z);
 				gl.uniform1f(program.alpha, a);
 				gl.uniformMatrix4fv(program.rotations, false, g.matrix.transpose);

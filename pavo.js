@@ -12,8 +12,6 @@ var PAVO = new function() {
 	
 	var self = this;
 	
-	this.scratch = {};
-
 	this.init = function() {
 	
 		// initialize the Foam API
@@ -22,6 +20,10 @@ var PAVO = new function() {
 			return;
 		}
 		gl = FOAM.gl;
+
+		Math.clamp = function(x, lo, hi) {
+			return Math.min(Math.max(x, lo), hi);
+		}
 
 		// set up any webgl stuff that's not likely to change
 		gl.clearDepth(1.0);
@@ -32,6 +34,7 @@ var PAVO = new function() {
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
 		FOAM.resources.addImage("ghost", "res/ghost.png");
+		FOAM.resources.addImage("debris", "res/debris.png");
 		
 		FOAM.resources.onComplete = function() {
 		
@@ -42,19 +45,20 @@ var PAVO = new function() {
 				["palette", "panels"] );
 
 			FOAM.shaders.build(
-				"bot", "vs-bot", "fs-bot",
-				["position", "texturec"],
-				["projector", "modelview", "center", "rotations", "alpha"],
-				["panels"] );
-
-			FOAM.shaders.build(
 				"ghost", "vs-ghost", "fs-ghost",
 				["position", "texturec"],
 				["projector", "modelview", "center", "rotations", "alpha"],
 				["panels"] );
 
+			FOAM.shaders.build(
+				"debris", "vs-debris", "fs-debris",
+				["position", "texturec"],
+				["projector", "modelview", "center", "alpha"],
+				["panels"] );
+
 			FOAM.textures.build("walls");
 			FOAM.textures.build("ghost");
+			FOAM.textures.build("debris");
 
 			self.world.init();
 
