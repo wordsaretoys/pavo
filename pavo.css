@@ -23,6 +23,10 @@ div {
 	cursor: default;
 }
 
+.clear {
+	clear: both;
+}
+
 /* HUD curtain */
 
 #curtain {
@@ -107,4 +111,35 @@ div {
 	font-size: 16pt;
 	
 	z-index: 5;
+}
+
+/* talk dialog */
+
+#talk {
+
+	position: absolute;
+
+	background: rgba(0, 0, 0, 0.75);
+	color: white;
+	
+	width: 23em;
+	
+	border: double 5px white;
+
+	display: none;
+	z-index: 30;
+}
+
+#talk-dialogue-frame, #talk-keyword-frame, #talk-control-frame {
+	padding: 5px;
+}
+
+.talk-keyword {
+	float: left;
+	width: 5em;
+	border-radius: 5px;
+	background-color: white;
+	color: black;
+	text-align: center;
+	margin: 5px;
 }

@@ -67,24 +67,19 @@ PAVO.hud = new function() {
 
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
-		case FOAM.KEY.TAB:
-			if (dom.prompt.state === TALKING) {
-				PAVO.player.freeze = false;
-				self.promptToTalk(dom.prompt.subject);
-			}
-			// we have to avoid default behavior (tab to URL entry bar)
-			// or we lose keyboard focus, and key commands are dropped
-			return false;
-			break;
 		case FOAM.KEY.ESCAPE:
 			self.togglePause();
 			break;
 		case FOAM.KEY.E:
 			if (dom.prompt.state === MAY_TALK) {
 				dom.prompt.state = TALKING;
-				PAVO.player.freeze = true;
-				self.talk();
+				self.setPrompt();
+				PAVO.dialogue.show();
 			}
+			break;
+		case FOAM.KEY.TAB:
+			// prevent tab focus change
+			return false;
 			break;
 		default:
 			//window.alert(event.keyCode);
@@ -146,18 +141,6 @@ PAVO.hud = new function() {
 		dom.prompt.subject = ghost;
 	};
 
-	this.talk = function(response) {
-		self.setPrompt( [
-			{ msg: dom.prompt.subject.name + ": boo i am a ghost" },
-			{ msg: "&nbsp;" },
-			{ key: "1", msg: "ghost is bullshit" },
-			{ key: "2", msg: "where am i?" },
-			{ key: "3", msg: "these are ugly colors" },
-			{ key: "Tab", msg: "never mind" }
-		] );
-	
-	};	
-	
 	this.promptToExamine = function(debris) {
 		if (debris) {
 			this.setPrompt( [

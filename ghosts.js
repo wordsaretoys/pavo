@@ -21,7 +21,7 @@ PAVO.ghosts = new function() {
 		pos: new FOAM.Vector()
 	};
 	
-	var listening = null;
+	this.listening = null;
 	
 	this.init = function() {
 		var gl = PAVO.game.ghosts;
@@ -102,9 +102,9 @@ PAVO.ghosts = new function() {
 
 		gl.disable(gl.BLEND);
 		
-		if (lt !== listening) {
+		if (lt !== this.listening) {
 			PAVO.hud.promptToTalk(lt);
-			listening = lt;
+			this.listening = lt;
 		}
 	};
 	
