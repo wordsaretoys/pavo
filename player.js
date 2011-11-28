@@ -21,29 +21,39 @@ PAVO.Player = function() {
 	var mouse = {
 		down: false,
 		x: 0,
-		y: 0
+		y: 0,
+		invalid: false
 	};
 	
 	var scratch = {
 		direction: new FOAM.Vector(),
 		velocity: new FOAM.Vector()
 	};
-
+	
 	this.velocity = new FOAM.Vector();
 	this.sprint = false;
 	this.debug = false;
 	this.freeze = false;
 
 	this.init = function() {
+	
 		dom = {
+			mouseTracker: jQuery("#mouse-tracker"),
 			curtain: jQuery("#curtain")
 		};
+		dom.mouseTracker.resize = function() {
+			dom.mouseTracker.width(FOAM.width);
+			dom.mouseTracker.height(FOAM.height);
+		}
+		dom.mouseTracker.resize();
+		jQuery(window).bind("resize", dom.mouseTracker.resize);
 
 		jQuery(window).bind("keydown", this.onKeyDown);
 		jQuery(window).bind("keyup", this.onKeyUp);
-		dom.curtain.bind("mousedown", this.onMouseDown);
-		dom.curtain.bind("mouseup", this.onMouseUp);
-		dom.curtain.bind("mousemove", this.onMouseMove);
+		dom.mouseTracker.bind("mousedown", this.onMouseDown);
+		dom.mouseTracker.bind("mouseup", this.onMouseUp);
+		dom.mouseTracker.bind("mousemove", this.onMouseMove);
+
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
 		
@@ -147,28 +157,34 @@ PAVO.Player = function() {
 
 	this.onMouseDown = function(event) {
 		mouse.down = true;
-		dom.curtain.css("cursor", "move");
+		dom.mouseTracker.css("cursor", "move");
 		return false;
 	};
 	
 	this.onMouseUp = function(event) {
 		mouse.down = false;
-		dom.curtain.css("cursor", "default");
+		dom.mouseTracker.css("cursor", "default");
 		return false;
 	};
 
 	this.onMouseMove = function(event) {
 		var dx, dy;
 
-		if (mouse.down && FOAM.running && !self.freeze) {
+		if (mouse.down && !self.freeze && !mouse.invalid) {
 			dx = SPIN_RATE * (event.pageX - mouse.x);
 			dy = SPIN_RATE * (event.pageY - mouse.y);
 			self.spin(dx, dy);
 		}
 		mouse.x = event.pageX;
 		mouse.y = event.pageY;
+		if (mouse.invalid)
+			mouse.invalid = false;
 		return false;
 	};
+	
+	this.invalidateMouse = function() {
+		mouse.invalid = true;
+	}
 };
 
 // for those playing along at home, the inheritance chain goes:

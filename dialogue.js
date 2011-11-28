@@ -24,7 +24,8 @@ PAVO.dialogue = new function() {
 		dom = {
 			talk: jQuery("#talk"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
-			dialogueFrame: jQuery("#talk-dialogue-frame")
+			dialogueFrame: jQuery("#talk-dialogue-frame"),
+			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
 		};
 	
 		dom.talk.resize = function() {
@@ -72,7 +73,8 @@ PAVO.dialogue = new function() {
 			div.html(kw);
 			div.addClass("talk-keyword");
 			div.bind("mousedown", function() {
-				self.onKeywordSelect(div.html());
+				self.onKeywordSelect(this.innerHTML);
+				dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
 			} );
 			dom.keywordFrame.append(div);
 		}

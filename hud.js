@@ -6,7 +6,6 @@
 
 PAVO.hud = new function() {
 
-	var PROMPT_FADE_TIME = 250;
 	var MESSAGE_FADE_TIME = 250;
 	var MESSAGE_DELAY = 2500;
 
@@ -42,6 +41,11 @@ PAVO.hud = new function() {
 		var instance = this;
 		jQuery(window).bind("resize", function(){ instance.resize() });
 		jQuery(window).bind("keydown", instance.onKeyDown);
+		
+		// disable mouse selection behavior
+		dom.curtain.bind("mousedown", function() {
+			return false;
+		} );
 	};
 	
 	this.resize = function() {
@@ -75,6 +79,7 @@ PAVO.hud = new function() {
 				dom.prompt.state = TALKING;
 				self.setPrompt();
 				PAVO.dialogue.show();
+				PAVO.player.invalidateMouse();
 			}
 			break;
 		case FOAM.KEY.TAB:
@@ -82,7 +87,7 @@ PAVO.hud = new function() {
 			return false;
 			break;
 		default:
-			//window.alert(event.keyCode);
+			//console.log(event.keyCode);
 			break;
 		}
 	};
@@ -90,13 +95,14 @@ PAVO.hud = new function() {
 	this.togglePause = function() {
 		if (FOAM.running) {
 			FOAM.running = false;
-			dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
+			dom.curtain.css("display", "block");
 			dom.curtain.width(FOAM.width);
 			dom.curtain.height(FOAM.height);
+			PAVO.player.invalidateMouse();
 		}
 		else {
 			FOAM.running = true;
-			dom.curtain.css("background-color", "transparent");
+			dom.curtain.css("display", "none");
 		}
 	};
 	
