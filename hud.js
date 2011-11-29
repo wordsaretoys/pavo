@@ -9,6 +9,8 @@ PAVO.hud = new function() {
 	var MESSAGE_FADE_TIME = 250;
 	var MESSAGE_DELAY = 2500;
 
+	var KW_LIST_SIZE = 8;
+
 	var NOTHING  = 0;
 	var MAY_TALK = 1;
 	var TALKING  = 2;
@@ -25,7 +27,11 @@ PAVO.hud = new function() {
 			debug: jQuery("#debug"),
 			messages: jQuery("#messages"),
 			prompt: jQuery("#prompt"),
-			crosshair: jQuery("#crosshair")
+			crosshair: jQuery("#crosshair"),
+			talk: jQuery("#talk"),
+			keywordFrame: jQuery("#talk-keyword-frame"),
+			dialogueFrame: jQuery("#talk-dialogue-frame"),
+			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
 		};
 
 		dom.prompt.resize = function() {
@@ -35,17 +41,28 @@ PAVO.hud = new function() {
 			});
 		}
 		dom.prompt.state = NOTHING;
+
+		dom.talk.resize = function() {
+			dom.talk.offset({
+				top: 3 * (FOAM.height - dom.talk.height()) / 4,
+				left: (FOAM.width - dom.talk.width()) / 2
+			});
+		};
 		
-		this.resize();
+		jQuery(window).bind("resize", function() { 
+			self.resize();
+		});
+		jQuery(window).bind("keydown", this.onKeyDown);
 		
-		var instance = this;
-		jQuery(window).bind("resize", function(){ instance.resize() });
-		jQuery(window).bind("keydown", instance.onKeyDown);
-		
-		// disable mouse selection behavior
+		// disable mouse selection behaviors
+		dom.talk.bind("mousedown", function() {
+			return false;
+		} );
 		dom.curtain.bind("mousedown", function() {
 			return false;
 		} );
+
+		this.resize();
 	};
 	
 	this.resize = function() {
@@ -57,6 +74,7 @@ PAVO.hud = new function() {
 			top: (FOAM.height - dom.crosshair.height()) / 2,
 			left: (FOAM.width - dom.crosshair.width()) / 2
 		});
+		dom.talk.resize() 
 	};
 
 	this.setDebug = function(s) {
@@ -75,14 +93,23 @@ PAVO.hud = new function() {
 			self.togglePause();
 			break;
 		case FOAM.KEY.E:
-			if (dom.prompt.state === MAY_TALK) {
+			if (FOAM.running && dom.prompt.state === MAY_TALK) {
 				dom.prompt.state = TALKING;
 				self.setPrompt();
-				PAVO.dialogue.show();
+				self.showDialogue();
 				PAVO.player.invalidateMouse();
 			}
 			break;
 		case FOAM.KEY.TAB:
+			if (FOAM.running && dom.talk.visible) {
+				self.hideDialogue();
+				// a bit of a hack: setting this flag
+				// to null requires the ghosts object
+				// to reset it thus throwing an event
+				// over to the HUD object, which then
+				// redisplays the talk prompt
+				PAVO.ghosts.listening = null;
+			}
 			// prevent tab focus change
 			return false;
 			break;
@@ -160,5 +187,44 @@ PAVO.hud = new function() {
 		}
 		dom.prompt.subject = debris;
 	};
+
+	this.showDialogue = function() {
+		PAVO.player.freeze = true;
+		this.listKeywords();
+		dom.dialogueFrame.empty();
+		dom.talk.css("display", "block");
+		dom.talk.resize();
+		dom.talk.visible = true;
+	};
 	
+	this.listKeywords = function(head) {
+		var list = PAVO.dialogue.listKeywords(KW_LIST_SIZE, head);
+		var i, il, div, kw;
+		dom.keywordFrame.empty();
+		for (i = 0, il = list.length; i < il; i++) {
+			div = jQuery(document.createElement("div"));
+			kw = list[i];
+			div.html(kw);
+			div.addClass("talk-keyword");
+			div.bind("mousedown", function() {
+				self.onKeywordSelect(this.innerHTML);
+				dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+			} );
+			dom.keywordFrame.append(div);
+		}
+	};
+
+	this.hideDialogue = function() {
+		PAVO.player.freeze = false;
+		dom.talk.css("display", "none");
+		dom.talk.visible = false;
+	}
+
+	this.onKeywordSelect = function(kw) {
+		div = jQuery(document.createElement("div"));
+		div.html(PAVO.dialogue.generateStatement());
+		div.addClass("talk-player");
+		dom.dialogueFrame.append(div);
+		self.listKeywords(kw);
+	};
 };
