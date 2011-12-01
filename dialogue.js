@@ -22,7 +22,7 @@ PAVO.dialogue = new function() {
 		return a.statement - b.statement;
 	}
 	
-	var histogram_sort = function(a, b) {
+	var count_sort = function(a, b) {
 		return a.count - b.count;
 	}
 	
@@ -71,12 +71,13 @@ PAVO.dialogue = new function() {
 		return list;
 	};
 
-	this.selectNext = function(kw) {
+	this.selectNext = function(kw, ulist) {
 		var list = [];
 		var i, il;
-		for (i = 0, il = table.length - 1; i < il; i++) {
-			if (kw === table[i].keyword) {
-				list.push(table[i + 1]);
+		ulist = ulist || table;
+		for (i = 0, il = ulist.length - 1; i < il; i++) {
+			if (kw === ulist[i].keyword) {
+				list.push(ulist[i + 1]);
 			}
 		}
 		return list;
@@ -103,13 +104,14 @@ PAVO.dialogue = new function() {
 	};
 
 	this.respond = function(stmt) {
-		var hist = [];
+		var counter = [];
+		var uselist = [];
 		var i, il, j, jl, count, stid;
 		statement = jQuery.trim(stmt).split(" ");
 		for (i = 0, il = table.length; i < il; i++) {
 			if (stid !== table[i].statement) {
 				if (count) {
-					hist.push({
+					counter.push({
 						statement: stid,
 						count: count
 					});
@@ -125,17 +127,33 @@ PAVO.dialogue = new function() {
 			}
 		}
 
-		hist.sort(histogram_sort);
-
-		debugger;
+		counter.sort(count_sort);
+		il = counter.length;
+		cutoff = Math.round((counter[il - 1].count - counter[0].count) / 2);
+		for (i = 0; i < il; i++) {
+			if (counter[i].count > cutoff) {
+				stid = counter[i].statement + 1;
+				if (stid > table[table.length - 1].statement)
+					stid = 0;
+				for (j = 0, jl = table.length; j < jl; j++) {
+					if (table[j].statement === stid) {
+						uselist.push(table[j]);
+					}
+				}
+			}
+		}
+		
+		return this.generateStatement(uselist);
 
 	};
 
-	this.generateStatement = function() {
+	this.generateStatement = function(ulist) {
 	
 		var token = TERMINATOR;
 		var stmt = "";
 		var group, target;
+		
+		ulist = ulist || table;
 
 		do {
 			group = this.selectNext(token);

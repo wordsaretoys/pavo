@@ -223,6 +223,7 @@ PAVO.hud = new function() {
 	}
 
 	this.onKeywordSelect = function(kw) {
+		var temp;
 		if (!dom.statement) {
 			dom.statement = jQuery(document.createElement("div"));
 			dom.statement.addClass("talk-statement talk-player");
@@ -231,11 +232,10 @@ PAVO.hud = new function() {
 		dom.statement.html(dom.statement.html() + " " + kw);
 		
 		if (kw === ".") {
-			PAVO.dialogue.respond(dom.statement.html());
-			dom.statement = jQuery(document.createElement("div"));
-			dom.statement.addClass("talk-statement talk-ghost");
-			dom.dialogueFrame.append(dom.statement);
-			dom.statement.html(PAVO.dialogue.generateStatement());
+			temp = jQuery(document.createElement("div"));
+			temp.addClass("talk-statement talk-ghost");
+			dom.dialogueFrame.append(temp);
+			temp.html(PAVO.dialogue.respond(dom.statement.html()));
 			delete dom.statement;
 		}
 		

@@ -92,7 +92,7 @@ PAVO.Player = function() {
 		scratch.direction.copy(this.position);
 		scratch.direction.dejitter(8, Math.floor);
 		scratch.velocity.set(4, 0, 4).add(scratch.direction);
-		PAVO.hud.setDebug(scratch.velocity.x + "<br>" + scratch.velocity.y + "<br>" + scratch.velocity.z);
+//		PAVO.hud.setDebug(scratch.velocity.x + "<br>" + scratch.velocity.y + "<br>" + scratch.velocity.z);
 	};
 	
 	this.onKeyDown = function(event) {
