@@ -19,7 +19,7 @@ PAVO.hud = new function() {
 
 	var self = this;
 	var dom;
-	
+
 	this.init = function() {
 
 		dom = {
@@ -90,17 +90,6 @@ PAVO.hud = new function() {
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
 		case FOAM.KEY.ESCAPE:
-			self.togglePause();
-			break;
-		case FOAM.KEY.E:
-			if (FOAM.running && dom.prompt.state === MAY_TALK) {
-				dom.prompt.state = TALKING;
-				self.setPrompt();
-				self.showDialogue();
-				PAVO.player.invalidateMouse();
-			}
-			break;
-		case FOAM.KEY.TAB:
 			if (FOAM.running && dom.talk.visible) {
 				self.hideDialogue();
 				// a bit of a hack: setting this flag
@@ -109,7 +98,19 @@ PAVO.hud = new function() {
 				// over to the HUD object, which then
 				// redisplays the talk prompt
 				PAVO.ghosts.listening = null;
+				PAVO.player.invalidateMouse();
+			} else {
+				self.togglePause();
 			}
+			break;
+		case FOAM.KEY.E:
+			if (FOAM.running && dom.prompt.state === MAY_TALK) {
+				dom.prompt.state = TALKING;
+				self.setPrompt();
+				self.showDialogue();
+			} else 
+			break;
+		case FOAM.KEY.TAB:
 			// prevent tab focus change
 			return false;
 			break;
@@ -192,6 +193,7 @@ PAVO.hud = new function() {
 		PAVO.player.freeze = true;
 		this.listKeywords();
 		dom.dialogueFrame.empty();
+		delete dom.statement;
 		dom.talk.css("display", "block");
 		dom.talk.resize();
 		dom.talk.visible = true;
@@ -221,10 +223,22 @@ PAVO.hud = new function() {
 	}
 
 	this.onKeywordSelect = function(kw) {
-		div = jQuery(document.createElement("div"));
-		div.html(PAVO.dialogue.generateStatement());
-		div.addClass("talk-player");
-		dom.dialogueFrame.append(div);
+		if (!dom.statement) {
+			dom.statement = jQuery(document.createElement("div"));
+			dom.statement.addClass("talk-statement talk-player");
+			dom.dialogueFrame.append(dom.statement);
+		}
+		dom.statement.html(dom.statement.html() + " " + kw);
+		
+		if (kw === ".") {
+			PAVO.dialogue.respond(dom.statement.html());
+			dom.statement = jQuery(document.createElement("div"));
+			dom.statement.addClass("talk-statement talk-ghost");
+			dom.dialogueFrame.append(dom.statement);
+			dom.statement.html(PAVO.dialogue.generateStatement());
+			delete dom.statement;
+		}
+		
 		self.listKeywords(kw);
 	};
 };

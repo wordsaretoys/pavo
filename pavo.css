@@ -150,6 +150,18 @@ div {
 	margin: 5px;
 }
 
+.talk-statement {
+	margin-bottom: 5px;
+}
+
+.talk-player {
+	color: #faa;
+}
+
+.talk-ghost {
+	color: #afa;
+}
+
 /* pause curtain */
 
 #curtain {
