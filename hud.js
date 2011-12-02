@@ -235,7 +235,7 @@ PAVO.hud = new function() {
 			temp = jQuery(document.createElement("div"));
 			temp.addClass("talk-statement talk-ghost");
 			dom.dialogueFrame.append(temp);
-			temp.html(PAVO.dialogue.respond(dom.statement.html()));
+			temp.html(PAVO.dialogue.generateStatement());
 			delete dom.statement;
 		}
 		
