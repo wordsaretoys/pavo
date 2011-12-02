@@ -37,9 +37,7 @@ void main(void) {
 	texture plus light and color
 **/
 
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
  
 varying vec2 uv;
 varying float color;
@@ -88,9 +86,7 @@ void main(void) {
 	bot fragment shader
 **/
 
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
  
 varying vec2 uv;
 
@@ -136,9 +132,7 @@ void main(void) {
 	ghost fragment shader
 **/
 
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
  
 varying vec2 uv;
 
@@ -183,9 +177,7 @@ void main(void) {
 	debris fragment shader
 **/
 
-#ifdef GL_ES
-precision highp float;
-#endif
+precision mediump float;
  
 varying vec2 uv;
 
