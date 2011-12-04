@@ -236,6 +236,11 @@ PAVO.hud = new function() {
 			temp.addClass("talk-statement talk-ghost");
 			dom.dialogueFrame.append(temp);
 			temp.html(PAVO.dialogue.generateStatement());
+			
+			var g = PAVO.dialogue.scoreStatement(temp.html());
+			var p = PAVO.dialogue.scoreStatement(dom.statement.html());
+			console.log(p, g);
+			
 			delete dom.statement;
 		}
 		

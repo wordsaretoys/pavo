@@ -90,4 +90,27 @@ PAVO.dialogue = new function() {
 		return stmt;
 	};
 
+	this.scoreStatement = function(stmt) {
+		var statement = stmt.split(" ");
+		var count = 0, score = 0;
+		var i, il, j;
+		
+		for (i = 1, j = 0, il = table.length; i < il; i++, j++) {
+
+			if (table[i] === TERMINATOR || statement[j] === TERMINATOR) {
+				score = Math.max(score, count);
+				count = 0;
+				j = 0;
+				while (table[i] !== TERMINATOR)
+					i++;
+			} else {
+				if (table[i] === statement[j]) {
+					count++;
+				}
+			}
+		}
+		
+		return score;
+	};
+
 };
