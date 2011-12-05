@@ -30,7 +30,8 @@ PAVO.hud = new function() {
 			talk: jQuery("#talk"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
-			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
+			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
+			dialogueScore: jQuery("#talk-player-score")
 		};
 
 		dom.prompt.resize = function() {
@@ -190,6 +191,7 @@ PAVO.hud = new function() {
 		dom.dialogueFrame.empty();
 		delete dom.statement;
 		dom.talk.css("display", "block");
+		dom.dialogueScore.html(PAVO.player.score);
 		dom.talk.resize();
 		dom.talk.visible = true;
 	};
@@ -218,7 +220,7 @@ PAVO.hud = new function() {
 	}
 
 	this.onKeywordSelect = function(kw) {
-		var temp;
+		var temp, p, g;
 		if (!dom.statement) {
 			dom.statement = jQuery(document.createElement("div"));
 			dom.statement.addClass("talk-statement talk-player");
@@ -232,9 +234,11 @@ PAVO.hud = new function() {
 			dom.dialogueFrame.append(temp);
 			temp.html(PAVO.dialogue.generateStatement());
 			
-			var g = PAVO.dialogue.scoreStatement(temp.html());
-			var p = PAVO.dialogue.scoreStatement(dom.statement.html());
-			console.log(p, g);
+			g = PAVO.dialogue.scoreStatement(temp.html());
+			p = PAVO.dialogue.scoreStatement(dom.statement.html());
+			PAVO.player.updateScore(p - g);
+			
+			dom.dialogueScore.html(PAVO.player.score);
 			
 			delete dom.statement;
 		}

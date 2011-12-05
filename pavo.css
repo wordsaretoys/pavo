@@ -22,7 +22,12 @@ canvas {
 div {
 	cursor: default;
 }
-
+.left {
+	float: left;
+}
+.right {
+	float: right;
+}
 .clear {
 	clear: both;
 }

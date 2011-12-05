@@ -34,6 +34,7 @@ PAVO.Player = function() {
 	this.sprint = false;
 	this.debug = false;
 	this.freeze = false;
+	this.score = 0;
 
 	this.init = function() {
 	
@@ -184,7 +185,11 @@ PAVO.Player = function() {
 	
 	this.invalidateMouse = function() {
 		mouse.invalid = true;
-	}
+	};
+	
+	this.updateScore = function(s) {
+		this.score = Math.max(0, this.score + s);
+	};
 };
 
 // for those playing along at home, the inheritance chain goes:
