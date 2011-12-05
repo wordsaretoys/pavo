@@ -27,7 +27,6 @@ PAVO.hud = new function() {
 			debug: jQuery("#debug"),
 			messages: jQuery("#messages"),
 			prompt: jQuery("#prompt"),
-			crosshair: jQuery("#crosshair"),
 			talk: jQuery("#talk"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
@@ -70,10 +69,6 @@ PAVO.hud = new function() {
 		dom.curtain.height(FOAM.height);
 		dom.prompt.resize();
 		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
-		dom.crosshair.offset({
-			top: (FOAM.height - dom.crosshair.height()) / 2,
-			left: (FOAM.width - dom.crosshair.width()) / 2
-		});
 		dom.talk.resize() 
 	};
 
