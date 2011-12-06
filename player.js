@@ -22,7 +22,7 @@ PAVO.Player = function() {
 		down: false,
 		x: 0,
 		y: 0,
-		invalid: false
+		invalid: true
 	};
 	
 	var scratch = {

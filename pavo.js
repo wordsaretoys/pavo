@@ -34,7 +34,6 @@ var PAVO = new function() {
 		
 		FOAM.resources.addImage("walls", "res/walls.png");
 		FOAM.resources.addImage("ghost", "res/ghost.png");
-		FOAM.resources.addImage("debris", "res/debris.png");
 		FOAM.resources.addImage("signs", "res/signs.png");
 		
 		FOAM.resources.onComplete = function() {
@@ -43,7 +42,7 @@ var PAVO = new function() {
 				"block", "vs-block", "fs-block",
 				["position", "texturec", "a_color", "a_light", "a_panel"],
 				["projector", "modelview"],
-				["palette", "panels"] );
+				["palette", "panels", "noise"] );
 
 			FOAM.shaders.build(
 				"ghost", "vs-ghost", "fs-ghost",
@@ -54,8 +53,8 @@ var PAVO = new function() {
 			FOAM.shaders.build(
 				"debris", "vs-debris", "fs-debris",
 				["position", "texturec"],
-				["projector", "modelview", "center", "alpha"],
-				["panels"] );
+				["projector", "modelview"],
+				["noise"] );
 
 			FOAM.shaders.build(
 				"signs", "vs-signs", "fs-signs",
@@ -65,7 +64,6 @@ var PAVO = new function() {
 
 			FOAM.textures.build("walls");
 			FOAM.textures.build("ghost");
-			FOAM.textures.build("debris");
 			FOAM.textures.build("signs");
 
 			self.world.init();

@@ -15,6 +15,7 @@ attribute float a_panel;
 uniform mat4 projector;
 uniform mat4 modelview;
 
+varying vec3 opos;
 varying vec2 uv;
 varying float color;
 varying float light;
@@ -22,6 +23,7 @@ varying float panel;
 
 void main(void) {
 	gl_Position = projector * modelview * vec4(position, 1.0);
+	opos = position;
 	uv = texturec;
 	color = a_color;
 	light = a_light;
@@ -39,6 +41,7 @@ void main(void) {
 
 precision mediump float;
  
+varying vec3 opos;
 varying vec2 uv;
 varying float color;
 varying float light;
@@ -46,12 +49,18 @@ varying float panel;
 
 uniform sampler2D palette;
 uniform sampler2D panels;
+uniform sampler2D noise;
 
 void main(void) {
 	vec2 st = vec2((uv.x + panel) / 8.0, uv.y);
 	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
 	vec4 tex1 = texture2D(panels, st);
 	gl_FragColor = vec4(light * mix(tex0, tex1.rgb, tex1.a), 1.0);
+
+	st = vec2(opos.x / 256.0, opos.z / 256.0);
+	vec4 dust = texture2D(noise, st * 512.0) - texture2D(noise, st * 32.0);
+	float alpha = clamp(dust.a, 0.0, 1.0);
+	gl_FragColor = vec4(light * mix(gl_FragColor.rgb, dust.rgb, alpha), 1.0);
 }
 
 </script>
@@ -114,12 +123,13 @@ attribute vec2 texturec;
 
 uniform mat4 projector;
 uniform mat4 modelview;
-uniform vec3 center;
 
+varying vec3 opos;
 varying vec2 uv;
 
 void main(void) {
-	gl_Position = projector * modelview * vec4(position + center, 1.0);
+	gl_Position = projector * modelview * vec4(position, 1.0);
+	opos = position;
 	uv = texturec;
 }
 
@@ -133,14 +143,17 @@ void main(void) {
 
 precision mediump float;
  
+varying vec3 opos;
 varying vec2 uv;
 
-uniform sampler2D panels;
-uniform float alpha;
+uniform sampler2D noise;
 
 void main(void) {
-	vec4 tex = texture2D(panels, uv);
-	gl_FragColor = vec4(tex.rgb, alpha * tex.a);
+	float gradient = 1.0 - 2.0 * sqrt(pow(uv.x - 0.5, 2.0) + pow(uv.y - 0.5, 2.0));
+	vec2 st = vec2(opos.x / 256.0, opos.z / 256.0);
+	vec4 dust = texture2D(noise, st * 512.0) - texture2D(noise, st * 32.0);
+	float alpha = gradient * clamp(dust.a, 0.0, 1.0);
+	gl_FragColor = vec4(dust.r, dust.r, dust.r, alpha);
 }
 
 </script>

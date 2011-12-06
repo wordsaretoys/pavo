@@ -230,6 +230,7 @@ PAVO.space = new function() {
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
 		FOAM.textures.bind(0, program.palette, "block-palette");
 		FOAM.textures.bind(1, program.panels, "walls");
+		FOAM.textures.bind(2, program.noise, "noise");
 		mesh.draw();
 	};
 

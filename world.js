@@ -7,10 +7,12 @@
 
 PAVO.world = new function() {
 
+	var NOISE_SIZE = 64;
+
 	var self = this;
 	var nospace = false;
 	
-	this.createPalette = function() {
+	this.generateTextures = function() {
 		var pastels = [
 			224, 224, 224, 255,
 			224, 224, 255, 255,
@@ -23,17 +25,28 @@ PAVO.world = new function() {
 		];
 		var canvas = document.createElement("canvas");
 		var context = canvas.getContext("2d");
+		
 		var palette = context.createImageData(1, pastels.length / 4);
+
+		var noise = context.createImageData(NOISE_SIZE, NOISE_SIZE);
+		var prng = new FOAM.Prng();
+		
 		var i, il;
+		
 		for (i = 0, il = pastels.length; i < il; i++)
 			palette.data[i] = pastels[i];
 		FOAM.textures.buildFromImageData("block-palette", palette);
+		
+		for (i = 0, il = 4 * NOISE_SIZE * NOISE_SIZE; i < il; i++) {
+			noise.data[i] = 256 * (prng.get() + prng.get() + prng.get() + prng.get()) / 4;
+		}
+		FOAM.textures.buildFromImageData("noise", noise);
 	};
 
 	this.init = function() {
 		var r;
 		
-		this.createPalette();
+		this.generateTextures();
 	
 		PAVO.space.init();
 		PAVO.player.init();
@@ -58,7 +71,6 @@ PAVO.world = new function() {
 	};
 	
 	this.update = function() {
-		PAVO.debris.update();
 		PAVO.ghosts.update();
 		PAVO.signs.update();
 		PAVO.player.update();
@@ -78,7 +90,7 @@ PAVO.world = new function() {
 
 		if (!nospace)
 			PAVO.space.draw();
-		PAVO.debris.draw();
+//		PAVO.debris.draw();
 		PAVO.ghosts.draw();
 					
 		gl.disable(gl.CULL_FACE);
