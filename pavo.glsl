@@ -56,52 +56,6 @@ void main(void) {
 
 </script>
 
-<script id="vs-bot" type="x-shader/x-vertex">
-
-/**
-	bot vertex shader
-**/
-
-attribute vec3 position;
-attribute vec2 texturec;
-
-uniform mat4 projector;
-uniform mat4 modelview;
-uniform mat4 rotations;
-uniform vec3 center;
-
-varying vec2 uv;
-
-void main(void) {
-	vec4 rotpos = rotations * vec4(position, 1.0) + vec4(center, 0.0);
-	gl_Position = projector * modelview * rotpos;
-	uv = texturec;
-}
-
-</script>
-
-<script id="fs-bot" type="x-shader/x-fragment">
-
-/**
-	bot fragment shader
-**/
-
-precision mediump float;
- 
-varying vec2 uv;
-
-uniform sampler2D panels;
-uniform float alpha;
-
-void main(void) {
-	vec2 st = vec2(uv.x / 4.0, uv.y);
-	vec3 base = vec3(1.0, 1.0, 1.0);
-	vec4 tex = texture2D(panels, st);
-	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);
-}
-
-</script>
-
 <script id="vs-ghost" type="x-shader/x-vertex">
 
 /**
@@ -187,6 +141,51 @@ uniform float alpha;
 void main(void) {
 	vec4 tex = texture2D(panels, uv);
 	gl_FragColor = vec4(tex.rgb, alpha * tex.a);
+}
+
+</script>
+
+<script id="vs-signs" type="x-shader/x-vertex">
+
+/**
+	signs vertex shader
+**/
+
+attribute vec3 position;
+attribute vec2 texturec;
+
+uniform mat4 projector;
+uniform mat4 modelview;
+uniform mat4 rotations;
+uniform vec3 center;
+
+varying vec2 uv;
+
+void main(void) {
+	vec4 rotpos = rotations * vec4(position, 1.0) + vec4(center, 0.0);
+	gl_Position = projector * modelview * rotpos;
+	uv = texturec;
+}
+
+</script>
+
+<script id="fs-signs" type="x-shader/x-fragment">
+
+/**
+	signs fragment shader
+**/
+
+precision mediump float;
+ 
+varying vec2 uv;
+
+uniform sampler2D panels;
+uniform float alpha;
+
+void main(void) {
+	vec2 st = vec2(uv.x, uv.y);
+	vec4 tex = texture2D(panels, st);
+	gl_FragColor = vec4(tex.rgb, tex.a * alpha);
 }
 
 </script>

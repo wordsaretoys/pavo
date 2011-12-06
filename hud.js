@@ -62,6 +62,8 @@ PAVO.hud = new function() {
 			return false;
 		} );
 
+		dom.debug.css("display", "block");
+
 		this.resize();
 	};
 	

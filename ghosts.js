@@ -24,17 +24,17 @@ PAVO.ghosts = new function() {
 	this.listening = null;
 	
 	this.init = function() {
-		var gl = PAVO.game.ghosts;
+		var gs = PAVO.game.ghosts;
 		var i, il, g;
 	
 		prng = new FOAM.Prng();
 		mesh = PAVO.models.createGhostMesh();
 
-		for (i = 0, il = gl.length; i < il; i++) {
+		for (i = 0, il = gs.length; i < il; i++) {
 			g = PAVO.makeMover();
-			g.position.copy(gl[i].position);
+			g.position.copy(gs[i].position);
 			g.position.y += 3;
-			g.name = gl[i].name;
+			g.name = gs[i].name;
 			g.timer = 0;
 			g.target = new FOAM.Vector();
 			g.lastPos = new FOAM.Vector();

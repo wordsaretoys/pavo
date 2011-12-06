@@ -100,4 +100,27 @@ PAVO.models = new function() {
 		
 		return mesh;
 	};
+	
+	this.createSignMesh = function() {
+		var nx = ny = -4.0;
+		var px = py =  4.0;
+		var z = 0;
+		var program = FOAM.shaders.get("signs");
+		var mesh = new FOAM.Mesh();
+
+		mesh.add(program.position, 3);
+		mesh.add(program.texturec, 2);
+	
+		mesh.set(nx, ny, z, 0, 0);
+		mesh.set(px, py, z, 1, 1);
+		mesh.set(nx, py, z, 0, 1);
+
+		mesh.set(nx, ny, z, 0, 0);
+		mesh.set(px, ny, z, 1, 0);
+		mesh.set(px, py, z, 1, 1);
+		
+		mesh.build();
+		
+		return mesh;
+	};
 };
