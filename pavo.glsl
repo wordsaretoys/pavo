@@ -56,11 +56,6 @@ void main(void) {
 	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
 	vec4 tex1 = texture2D(panels, st);
 	gl_FragColor = vec4(light * mix(tex0, tex1.rgb, tex1.a), 1.0);
-
-	st = vec2(opos.x / 256.0, opos.z / 256.0);
-	vec4 dust = texture2D(noise, st * 512.0) - texture2D(noise, st * 32.0);
-	float alpha = clamp(dust.a, 0.0, 1.0);
-	gl_FragColor = vec4(light * mix(gl_FragColor.rgb, dust.rgb, alpha), 1.0);
 }
 
 </script>
@@ -107,53 +102,6 @@ void main(void) {
 	vec3 base = vec3(1.0, 1.0, 1.0);
 	vec4 tex = texture2D(panels, st);
 	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);
-}
-
-</script>
-
-<script id="vs-debris" type="x-shader/x-vertex">
-
-/**
-	debris vertex shader
-	O' = P * M * V * O transformation, plus texture coordinates
-**/
-
-attribute vec3 position;
-attribute vec2 texturec;
-
-uniform mat4 projector;
-uniform mat4 modelview;
-
-varying vec3 opos;
-varying vec2 uv;
-
-void main(void) {
-	gl_Position = projector * modelview * vec4(position, 1.0);
-	opos = position;
-	uv = texturec;
-}
-
-</script>
-
-<script id="fs-debris" type="x-shader/x-fragment">
-
-/**
-	debris fragment shader
-**/
-
-precision mediump float;
- 
-varying vec3 opos;
-varying vec2 uv;
-
-uniform sampler2D noise;
-
-void main(void) {
-	float gradient = 1.0 - 2.0 * sqrt(pow(uv.x - 0.5, 2.0) + pow(uv.y - 0.5, 2.0));
-	vec2 st = vec2(opos.x / 256.0, opos.z / 256.0);
-	vec4 dust = texture2D(noise, st * 512.0) - texture2D(noise, st * 32.0);
-	float alpha = gradient * clamp(dust.a, 0.0, 1.0);
-	gl_FragColor = vec4(dust.r, dust.r, dust.r, alpha);
 }
 
 </script>

@@ -51,12 +51,6 @@ var PAVO = new function() {
 				["panels"] );
 
 			FOAM.shaders.build(
-				"debris", "vs-debris", "fs-debris",
-				["position", "texturec"],
-				["projector", "modelview"],
-				["noise"] );
-
-			FOAM.shaders.build(
 				"signs", "vs-signs", "fs-signs",
 				["position", "texturec"],
 				["projector", "modelview", "center", "rotations", "alpha"],
