@@ -103,17 +103,47 @@ div {
 	text-shadow: black 0.1em 0.1em 0.2em;
 }
 
+/* HUD love bar */
+
+#love-frame {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+
+	background-color: transparent;
+}
+
+#love-icon {
+	margin-right: 6px;
+	float: left;
+	color: red;
+	font-size: 24px;
+}
+
+#love-box {
+	width: 200px;
+	height: 25px;
+	background-color: rgba(127, 127, 127, 0.5);
+	overflow: hidden;
+	float: left;
+	border: solid 1px white;
+}
+
+#love-bar {
+	width: 100%;
+	height: 25px;
+	background-color: #090;
+}
+
 /* mouse tracking surface */
 
 #mouse-tracker {
 
 	position: absolute;
-
 	top: 0px;
 	left: 0px;
 	
 	background: transparent;
-	
 	z-index: 10;
 	
 	cursor: default;

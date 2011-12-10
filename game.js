@@ -54,7 +54,10 @@ PAVO.game = {
 	],
 	
 	signs: [
-		{ position: { x: 60, y: 12, z: 76 } }
+		{ 
+			position: { x: 60, y: 12, z: 76 },
+			index: 0
+		}
 	],
 	
 	player: {

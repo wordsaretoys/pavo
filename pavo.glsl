@@ -142,11 +142,12 @@ varying vec2 uv;
 
 uniform sampler2D panels;
 uniform float alpha;
+uniform float index;
 
 void main(void) {
-	vec2 st = vec2(uv.x, uv.y);
+	vec2 st = vec2((uv.x + index) / 16.0, uv.y);
 	vec4 tex = texture2D(panels, st);
-	gl_FragColor = vec4(tex.rgb, tex.a * alpha);
+	gl_FragColor = vec4(tex.rgb, tex.r * alpha);
 }
 
 </script>

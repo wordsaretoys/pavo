@@ -26,6 +26,7 @@ PAVO.signs = new function() {
 		for (i = 0, il = ss.length; i < il; i++) {
 			s = new FOAM.Thing();
 			s.position.copy(ss[i].position);
+			s.index = ss[i].index;
 			list.push(s);
 		}
 	};
@@ -57,6 +58,7 @@ PAVO.signs = new function() {
 				a = Math.clamp((VIEW_RADIUS - d) / FADE_RADIUS, 0, 1);
 				gl.uniform3f(program.center, s.position.x, s.position.y, s.position.z);
 				gl.uniform1f(program.alpha, a);
+				gl.uniform1f(program.index, s.index);
 				gl.uniformMatrix4fv(program.rotations, false, s.matrix.transpose);
 				mesh.draw();
 			}

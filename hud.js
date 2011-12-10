@@ -31,7 +31,9 @@ PAVO.hud = new function() {
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
 			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
-			dialogueScore: jQuery("#talk-player-score")
+			dialogueScore: jQuery("#talk-player-score"),
+			loveBar: jQuery("#love-bar"),
+			loveBox: jQuery("#love-box")
 		};
 
 		dom.prompt.resize = function() {
@@ -62,8 +64,6 @@ PAVO.hud = new function() {
 			return false;
 		} );
 
-		dom.debug.css("display", "block");
-
 		this.resize();
 	};
 	
@@ -76,10 +76,10 @@ PAVO.hud = new function() {
 	};
 
 	this.setDebug = function(s) {
-		if (dom.debug.css("display") === "none") {
+/*		if (dom.debug.css("display") === "none") {
 			dom.debug.css("display", "block");
 		}
-		dom.debug.html(s);
+		dom.debug.html(s); */
 	};
 
 	this.update = function() {
@@ -238,13 +238,18 @@ PAVO.hud = new function() {
 			
 			g = PAVO.dialogue.scoreStatement(temp.html());
 			p = PAVO.dialogue.scoreStatement(dom.statement.html());
-			PAVO.player.updateScore(p - g);
-			
-			dom.dialogueScore.html(PAVO.player.score);
+			PAVO.player.updateLove(p - g);
 			
 			delete dom.statement;
 		}
 		
 		self.listKeywords(kw);
+	};
+	
+	this.setLoveBar = function(value, total) {
+		var pc = Math.round(100 * value / total);
+		var bw = total * 10;
+		dom.loveBar.width(pc + "%");
+		dom.loveBox.width(bw + "px");
 	};
 };

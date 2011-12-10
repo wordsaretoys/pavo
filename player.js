@@ -25,6 +25,11 @@ PAVO.Player = function() {
 		invalid: true
 	};
 	
+	var love = {
+		value: 2,
+		total: 10
+	};
+	
 	var scratch = {
 		direction: new FOAM.Vector(),
 		velocity: new FOAM.Vector()
@@ -57,6 +62,8 @@ PAVO.Player = function() {
 
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
+		
+		PAVO.hud.setLoveBar(love.value, love.total);
 		
 	};
 	
@@ -188,8 +195,14 @@ PAVO.Player = function() {
 		mouse.invalid = true;
 	};
 	
-	this.updateScore = function(s) {
-		this.score = Math.max(0, this.score + s);
+	this.updateLove = function(l) {
+		love.value = Math.max(0, love.value + l);
+		PAVO.hud.setLove(love.value, love.total);
+	};
+
+	this.updateLoveCapacity = function(c) {
+		love.total = Math.max(0, love.total + c);
+		PAVO.hud.setLove(love.value, love.total);
 	};
 };
 
