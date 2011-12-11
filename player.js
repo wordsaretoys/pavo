@@ -197,6 +197,7 @@ PAVO.Player = function() {
 	
 	this.updateLove = function(l) {
 		love.value = Math.max(0, love.value + l);
+		love.value = Math.min(love.total, love.value);
 		PAVO.hud.setLove(love.value, love.total);
 	};
 

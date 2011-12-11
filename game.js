@@ -46,17 +46,16 @@ PAVO.game = {
 		{ position: { x: 124, y: 0, z: 460 } }
 	],
 	
-	debris: [
-		{ 
-			p0: { x: 12, y: 0, z: 4 }, 
-			p1: { x: 34, y: 0, z: 36 }
-		}
-	],
-	
 	signs: [
 		{ 
 			position: { x: 60, y: 12, z: 76 },
 			index: 0
+		}
+	],
+	
+	consoles: [
+		{
+			position: { x: 28, y: 0, z: 28 }
 		}
 	],
 	

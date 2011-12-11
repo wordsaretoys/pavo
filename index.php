@@ -28,6 +28,7 @@
 		<script type="text/javascript" src="/debug/pavo/models.js"></script>
 		<script type="text/javascript" src="/debug/pavo/signs.js"></script>
 		<script type="text/javascript" src="/debug/pavo/ghosts.js"></script>
+		<script type="text/javascript" src="/debug/pavo/consoles.js"></script>
 		<script type="text/javascript" src="/debug/pavo/dialogue.js"></script>
 
 <?php

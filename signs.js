@@ -43,7 +43,7 @@ PAVO.signs = new function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
 		var program = FOAM.shaders.activate("signs");
-		var i, il, s, a, d, t;
+		var i, il, s, a, d;
 		
 		gl.enable(gl.BLEND);
 		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);

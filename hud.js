@@ -14,8 +14,8 @@ PAVO.hud = new function() {
 	var NOTHING  = 0;
 	var MAY_TALK = 1;
 	var TALKING  = 2;
-	var MAY_EXAMINE = 3;
-	var EXAMINING   = 4;
+	var MAY_USE  = 3;
+	var USING    = 4;
 
 	var self = this;
 	var dom;
@@ -76,10 +76,10 @@ PAVO.hud = new function() {
 	};
 
 	this.setDebug = function(s) {
-/*		if (dom.debug.css("display") === "none") {
+		if (dom.debug.css("display") === "none") {
 			dom.debug.css("display", "block");
 		}
-		dom.debug.html(s); */
+		dom.debug.html(s);
 	};
 
 	this.update = function() {
@@ -106,7 +106,7 @@ PAVO.hud = new function() {
 				dom.prompt.state = TALKING;
 				self.setPrompt();
 				self.showDialogue();
-			} else 
+			}
 			break;
 		case FOAM.KEY.TAB:
 			// prevent tab focus change
@@ -173,18 +173,18 @@ PAVO.hud = new function() {
 		dom.prompt.subject = ghost;
 	};
 
-	this.promptToExamine = function(debris) {
-		if (debris) {
+	this.promptToUse = function(console) {
+		if (console) {
 			this.setPrompt( [
-				{ key: "E", msg: "examine" },
-				{ msg: "debris" }
+				{ key: "E", msg: "use" },
+				{ msg: "console" }
 			] );
-			dom.prompt.state = MAY_EXAMINE;
+			dom.prompt.state = MAY_USE;
 		} else {
 			this.setPrompt();
 			dom.prompt.state = NOTHING;
 		}
-		dom.prompt.subject = debris;
+		dom.prompt.subject = console;
 	};
 
 	this.showDialogue = function() {

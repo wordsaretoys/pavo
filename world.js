@@ -24,10 +24,15 @@ PAVO.world = new function() {
 		var canvas = document.createElement("canvas");
 		var context = canvas.getContext("2d");
 		var palette = context.createImageData(1, pastels.length / 4);
+		var noise = context.createImageData(32, 32);
+		var prng = new FOAM.Prng();
 		var i, il;
 		for (i = 0, il = pastels.length; i < il; i++)
 			palette.data[i] = pastels[i];
 		FOAM.textures.buildFromImageData("block-palette", palette);
+		for (i = 0, il = 32 * 32 * 4; i < il; i++)
+			noise.data[i] = Math.floor(prng.get() * 256);
+		FOAM.textures.buildFromImageData("noise", noise);
 	};
 
 	this.init = function() {
@@ -39,6 +44,7 @@ PAVO.world = new function() {
 		PAVO.player.init();
 		PAVO.ghosts.init();
 		PAVO.signs.init();
+		PAVO.consoles.init();
 		PAVO.dialogue.init();
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
@@ -76,6 +82,7 @@ PAVO.world = new function() {
 		if (!nospace)
 			PAVO.space.draw();
 		PAVO.ghosts.draw();
+		PAVO.consoles.draw();
 					
 		gl.disable(gl.CULL_FACE);
 
