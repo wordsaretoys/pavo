@@ -25,8 +25,8 @@ PAVO.Player = function() {
 		invalid: true
 	};
 	
-	var love = {
-		value: 2,
+	var pavo = {
+		level: 2,
 		total: 10
 	};
 	
@@ -63,7 +63,7 @@ PAVO.Player = function() {
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
 		
-		PAVO.hud.setLoveBar(love.value, love.total);
+		PAVO.hud.setLevel(pavo.level, pavo.total);
 		
 	};
 	
@@ -195,15 +195,15 @@ PAVO.Player = function() {
 		mouse.invalid = true;
 	};
 	
-	this.updateLove = function(l) {
-		love.value = Math.max(0, love.value + l);
-		love.value = Math.min(love.total, love.value);
-		PAVO.hud.setLove(love.value, love.total);
+	this.updatePavoLevel = function(l) {
+		pavo.level = Math.max(0, pavo.level + l);
+		pavo.level = Math.min(pavo.total, pavo.level);
+		PAVO.hud.setLevel(pavo.level, pavo.total);
 	};
 
-	this.updateLoveCapacity = function(c) {
-		love.total = Math.max(0, love.total + c);
-		PAVO.hud.setLove(love.value, love.total);
+	this.updatePavoCapacity = function(c) {
+		pavo.total = Math.max(0, pavo.total + c);
+		PAVO.hud.setLevel(pavo.level, pavo.total);
 	};
 };
 

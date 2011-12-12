@@ -190,7 +190,7 @@ uniform float alpha;
 
 void main(void) {
 	vec2 st = vec2(uv.x / 4.0, uv.y);
-	vec3 base = vec3(0.5, 0.5, 1.0);
+	vec3 base = vec3(0.75, 0.75, 1.0);
 	vec4 tex = texture2D(panels, st);
 	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);
 }

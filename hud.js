@@ -32,8 +32,8 @@ PAVO.hud = new function() {
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
 			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
 			dialogueScore: jQuery("#talk-player-score"),
-			loveBar: jQuery("#love-bar"),
-			loveBox: jQuery("#love-box")
+			levelBar: jQuery("#level-bar"),
+			levelBox: jQuery("#level-box")
 		};
 
 		dom.prompt.resize = function() {
@@ -163,7 +163,7 @@ PAVO.hud = new function() {
 		if (ghost) {
 			this.setPrompt( [
 				{ key: "E", msg: "talk" },
-				{ msg: ghost.name || "anonymous" }
+				{ msg: "ghost" }
 			] );
 			dom.prompt.state = MAY_TALK;
 		} else {
@@ -246,10 +246,10 @@ PAVO.hud = new function() {
 		self.listKeywords(kw);
 	};
 	
-	this.setLoveBar = function(value, total) {
-		var pc = Math.round(100 * value / total);
+	this.setLevel = function(level, total) {
+		var pc = Math.round(100 * level / total);
 		var bw = total * 10;
-		dom.loveBar.width(pc + "%");
-		dom.loveBox.width(bw + "px");
+		dom.levelBar.width(pc + "%");
+		dom.levelBox.width(bw + "px");
 	};
 };

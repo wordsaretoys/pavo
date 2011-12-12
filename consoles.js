@@ -29,7 +29,7 @@ PAVO.consoles = new function() {
 			c = new FOAM.Thing();
 			c.position.copy(cs[i].position);
 			c.position.y += 1;
-			c.turn(0, 0, 0);
+			c.turn(0, cs[i].rotation, 0);
 			list.push(c);
 		}
 	};
