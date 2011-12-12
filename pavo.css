@@ -44,19 +44,6 @@ div {
 	z-index: 5;
 }
 
-/* HUD crosshair */
-
-#crosshair {
-	position: absolute;
-	
-	background: transparent;
-	color: white;
-	
-	font-size: 16pt;
-	
-	z-index: 5;
-}
-
 /* HUD messages */
 
 #messages {
@@ -111,6 +98,8 @@ div {
 	left: 20px;
 
 	background-color: transparent;
+
+	z-index: 5;
 }
 
 #level-icon {
@@ -207,11 +196,9 @@ div {
 	top: 0px;
 	left: 0px;
 	
-	background: rgba(0, 0, 0, 0.75);
+	background: rgba(0, 0, 0, 1);
 	
 	z-index: 20;
-	
-	display: none;
 	
 	cursor: default;
 }

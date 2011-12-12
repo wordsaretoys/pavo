@@ -252,4 +252,9 @@ PAVO.hud = new function() {
 		dom.levelBar.width(pc + "%");
 		dom.levelBox.width(bw + "px");
 	};
+	
+	this.start = function() {
+		dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
+		dom.curtain.css("display", "none");
+	};
 };

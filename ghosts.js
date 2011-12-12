@@ -86,8 +86,8 @@ PAVO.ghosts = new function() {
 
 				if (d <= TALK_RADIUS) {
 					scratch.pos.copy(cam.position).sub(g.position).norm();
-					t = scratch.pos.dot(cam.orientation.front);
-					if (t > 0.95) {
+					t = TALK_RADIUS * scratch.pos.dot(cam.orientation.front) / d;
+					if (t > 1) {
 						lt = g;
 					}
 				}

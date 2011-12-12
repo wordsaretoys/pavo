@@ -26,7 +26,7 @@ PAVO.Player = function() {
 	};
 	
 	var pavo = {
-		level: 2,
+		level: 1,
 		total: 10
 	};
 	
