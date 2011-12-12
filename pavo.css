@@ -142,7 +142,6 @@ div {
 /* talk dialog */
 
 #talk {
-
 	position: absolute;
 
 	background: rgba(0, 0, 0, 0.75);
@@ -158,6 +157,10 @@ div {
 
 #talk-dialogue-frame, #talk-keyword-frame, #talk-control-frame {
 	padding: 5px;
+}
+
+#talk-keyword-frame, #talk-control-frame {
+	border-top: solid 1px white;
 }
 
 #talk-dialogue-wrapper {
@@ -185,6 +188,38 @@ div {
 
 .talk-ghost {
 	color: #afa;
+}
+
+/* flip dialog */
+
+#flip {
+	position: absolute;
+
+	background: rgba(0, 0, 0, 0.75);
+	color: white;
+	
+	border: double 5px white;
+
+	display: none;
+	z-index: 15;
+}
+
+#flip-board {
+	padding: 5px;
+	background: rgba(0, 0, 0, 1);
+}
+
+#flip-board td {
+	height: 32px;
+	width: 32px;
+	margin: 0px;
+	padding: 0px;
+	border: solid 1px #777;
+}
+
+#flip-control-frame {
+	padding: 5px;
+	border-top: solid 1px white;
 }
 
 /* pause curtain */

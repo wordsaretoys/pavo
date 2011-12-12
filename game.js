@@ -16,7 +16,7 @@ PAVO.game = {
 			power: 2,
 			base: 0
 		},
-		panel: {
+		image: {
 			seed: 209348
 		}
 	},
@@ -50,7 +50,7 @@ PAVO.game = {
 		}
 	],
 	
-	consoles: [
+	panels: [
 		{
 			position: { x: 20, y: 0, z: 12 },
 			rotation: Math.PI
@@ -58,7 +58,12 @@ PAVO.game = {
 	],
 	
 	player: {
-		position: { x: 20, y: 12, z: 4 }
+		position: { x: 20, y: 12, z: 4 },
+		rotation: 7 * Math.PI / 6
+	},
+	
+	board: {
+		size: 8
 	}
 };
 

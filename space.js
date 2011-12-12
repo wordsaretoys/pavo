@@ -22,7 +22,7 @@ PAVO.space = new function() {
 	var field;
 	var color;
 	var light;
-	var panel;
+	var image;
 	
 	var scratch = {
 		pos0: new FOAM.Vector(),
@@ -46,7 +46,7 @@ PAVO.space = new function() {
 			SOURCE.y, gspace.color.scale.y, SOURCE.z, gspace.color.scale.z);
 		light = new FOAM.Noise3D(gspace.light.seed, 1.0, SOURCE.x, gspace.light.scale.x, 
 			SOURCE.y, gspace.light.scale.y, SOURCE.z, gspace.light.scale.z);
-		panel = new FOAM.Prng(gspace.panel.seed);
+		image = new FOAM.Prng(gspace.image.seed);
 
 		this.field = field;
 		this.light = light;
@@ -54,12 +54,12 @@ PAVO.space = new function() {
 		light.gets = function(x, y, z) {
 			return Math.pow(light.get(x, y, z), gspace.light.power) + gspace.light.base;
 		};
-		panel.gets = function() {
-			var p = panel.get();
-			if (p > 0.03)
+		image.gets = function() {
+			var i = image.get();
+			if (i > 0.03)
 				return 0;
 			else
-				return Math.floor(7 * panel.get()) + 1;
+				return Math.floor(7 * image.get()) + 1;
 		};
 	};
 
@@ -86,7 +86,7 @@ PAVO.space = new function() {
 		mesh.add(program.texturec, 2);
 		mesh.add(program.a_color, 1);
 		mesh.add(program.a_light, 1);
-		mesh.add(program.a_panel, 1);
+		mesh.add(program.a_image, 1);
 
 		for (x = -RESOLUTION; x <= LENGTH.x; x += RESOLUTION) {
 			nx = x;
@@ -102,7 +102,7 @@ PAVO.space = new function() {
 					p = this.inside(x + RESOLUTION, y, z);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(px, ny, nz, 1, 0, c, light.gets(px, ny, nz), w);
 						mesh.set(px, py, nz, 1, 1, c, light.gets(px, py, nz), w);
 						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
@@ -113,7 +113,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(px, ny, nz, 0, 0, c, light.gets(px, ny, nz), w);
 						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
 						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
@@ -126,7 +126,7 @@ PAVO.space = new function() {
 					p = this.inside(x, y + RESOLUTION, z);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(nx, py, nz, 1, 0, c, light.gets(nx, py, nz), w);
 						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
 						mesh.set(px, py, nz, 0, 0, c, light.gets(px, py, nz), w);
@@ -137,7 +137,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(nx, py, nz, 1, 1, c, light.gets(nx, py, nz), w);
 						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
 						mesh.set(nx, py, pz, 1, 0, c, light.gets(nx, py, pz), w);
@@ -150,7 +150,7 @@ PAVO.space = new function() {
 					p = this.inside(x, y, z + RESOLUTION);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(nx, ny, pz, 0, 0, c, light.gets(nx, ny, pz), w);
 						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
 						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
@@ -161,7 +161,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = panel.gets();
+						w = image.gets();
 						mesh.set(nx, ny, pz, 1, 0, c, light.gets(nx, ny, pz), w);
 						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
 						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
@@ -229,7 +229,7 @@ PAVO.space = new function() {
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
 		FOAM.textures.bind(0, program.palette, "block-palette");
-		FOAM.textures.bind(1, program.panels, "walls");
+		FOAM.textures.bind(1, program.images, "walls");
 		FOAM.textures.bind(2, program.noise, "noise");
 		mesh.draw();
 	};

@@ -1,11 +1,11 @@
 /**
 
-	Consoles Object
-	Maintains collection of consoles.
+	Panels Object
+	Maintains collection of control panels.
 	
 **/
 
-PAVO.consoles = new function() {
+PAVO.panels = new function() {
 
 	var VIEW_RADIUS = 100;
 	var FADE_RADIUS = 5;
@@ -22,14 +22,15 @@ PAVO.consoles = new function() {
 	this.listening = null;
 	
 	this.init = function() {
-		var cs = PAVO.game.consoles;
+		var cs = PAVO.game.panels;
 		var i, il, c;
-		mesh = PAVO.models.createConsoleMesh();
+		mesh = PAVO.models.createPanelMesh();
 		for (i = 0, il = cs.length; i < il; i++) {
 			c = new FOAM.Thing();
 			c.position.copy(cs[i].position);
 			c.position.y += 1;
 			c.turn(0, cs[i].rotation, 0);
+			c.board = PAVO.puzzle.generate();
 			list.push(c);
 		}
 	};
@@ -37,7 +38,7 @@ PAVO.consoles = new function() {
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
-		var program = FOAM.shaders.activate("console");
+		var program = FOAM.shaders.activate("panel");
 		var i, il, c, a, d, t;
 		var lt = null;
 		
@@ -46,7 +47,7 @@ PAVO.consoles = new function() {
 		
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
-		FOAM.textures.bind(0, program.panels, "console");
+		FOAM.textures.bind(0, program.images, "panel");
 		for (i = 0, il = list.length; i < il; i++) {
 			c = list[i];
 			d = c.position.distance(cam.position);

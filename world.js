@@ -39,11 +39,11 @@ PAVO.world = new function() {
 		PAVO.player.init();
 		PAVO.ghosts.init();
 		PAVO.signs.init();
-		PAVO.consoles.init();
+		PAVO.panels.init();
 		PAVO.dialogue.init();
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
-		PAVO.player.turn(0, 7 * Math.PI / 6, 0);
+		PAVO.player.turn(0, PAVO.game.player.rotation, 0);
 		
 		PAVO.space.generate();
 		
@@ -79,7 +79,7 @@ PAVO.world = new function() {
 		if (!nospace)
 			PAVO.space.draw();
 		PAVO.ghosts.draw();
-		PAVO.consoles.draw();
+		PAVO.panels.draw();
 					
 		gl.disable(gl.CULL_FACE);
 

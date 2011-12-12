@@ -50,7 +50,7 @@ PAVO.signs = new function() {
 
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
-		FOAM.textures.bind(0, program.panels, "signs");
+		FOAM.textures.bind(0, program.images, "signs");
 		for (i = 0, il = list.length; i < il; i++) {
 			s = list[i];
 			d = s.position.distance(cam.position);

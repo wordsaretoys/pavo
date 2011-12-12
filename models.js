@@ -92,11 +92,11 @@ PAVO.models = new function() {
 		return mesh;
 	};
 
-	this.createConsoleMesh = function() {
+	this.createPanelMesh = function() {
 		var nx = ny = nz = -1.0;
 		var px = py = pz =  1.0;
 		var hy = 0;
-		var program = FOAM.shaders.get("console");
+		var program = FOAM.shaders.get("panel");
 		var mesh = new FOAM.Mesh();
 
 		mesh.add(program.position, 3);

@@ -31,9 +31,10 @@ PAVO.hud = new function() {
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
 			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
-			dialogueScore: jQuery("#talk-player-score"),
 			levelBar: jQuery("#level-bar"),
-			levelBox: jQuery("#level-box")
+			levelBox: jQuery("#level-box"),
+			flip: jQuery("#flip"),
+			flipBoard: jQuery("#flip-board")
 		};
 
 		dom.prompt.resize = function() {
@@ -51,6 +52,13 @@ PAVO.hud = new function() {
 			});
 		};
 		
+		dom.flip.resize = function() {
+			dom.flip.offset({
+				top: 3 * (FOAM.height - dom.flip.height()) / 4,
+				left: (FOAM.width - dom.flip.width()) / 2
+			});
+		}
+		
 		jQuery(window).bind("resize", function() { 
 			self.resize();
 		});
@@ -67,12 +75,18 @@ PAVO.hud = new function() {
 		this.resize();
 	};
 	
+	this.start = function() {
+		dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
+		dom.curtain.css("display", "none");
+	};
+
 	this.resize = function() {
 		dom.curtain.width(FOAM.width);
 		dom.curtain.height(FOAM.height);
 		dom.prompt.resize();
 		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
-		dom.talk.resize() 
+		dom.talk.resize();
+		dom.flip.resize();
 	};
 
 	this.setDebug = function(s) {
@@ -97,6 +111,11 @@ PAVO.hud = new function() {
 				// redisplays the talk prompt
 				PAVO.ghosts.listening = null;
 				PAVO.player.invalidateMouse();
+			} else if(FOAM.running && dom.flip.visible) {
+				self.hidePuzzle();
+				// a bit of a hack: see above
+				PAVO.panels.listening = null;
+				PAVO.player.invalidateMouse();
 			} else {
 				self.togglePause();
 			}
@@ -106,6 +125,11 @@ PAVO.hud = new function() {
 				dom.prompt.state = TALKING;
 				self.setPrompt();
 				self.showDialogue();
+			}
+			if (FOAM.running && dom.prompt.state === MAY_USE) {
+				dom.prompt.state = USING;
+				self.setPrompt();
+				self.showPuzzle();
 			}
 			break;
 		case FOAM.KEY.TAB:
@@ -173,18 +197,18 @@ PAVO.hud = new function() {
 		dom.prompt.subject = ghost;
 	};
 
-	this.promptToUse = function(console) {
-		if (console) {
+	this.promptToUse = function(panel) {
+		if (panel) {
 			this.setPrompt( [
 				{ key: "E", msg: "use" },
-				{ msg: "console" }
+				{ msg: "panel" }
 			] );
 			dom.prompt.state = MAY_USE;
 		} else {
 			this.setPrompt();
 			dom.prompt.state = NOTHING;
 		}
-		dom.prompt.subject = console;
+		dom.prompt.subject = panel;
 	};
 
 	this.showDialogue = function() {
@@ -193,7 +217,6 @@ PAVO.hud = new function() {
 		dom.dialogueFrame.empty();
 		delete dom.statement;
 		dom.talk.css("display", "block");
-		dom.dialogueScore.html(PAVO.player.score);
 		dom.talk.resize();
 		dom.talk.visible = true;
 	};
@@ -238,7 +261,7 @@ PAVO.hud = new function() {
 			
 			g = PAVO.dialogue.scoreStatement(temp.html());
 			p = PAVO.dialogue.scoreStatement(dom.statement.html());
-			PAVO.player.updateLove(p - g);
+			PAVO.player.updatePavoLevel(p - g);
 			
 			delete dom.statement;
 		}
@@ -253,8 +276,41 @@ PAVO.hud = new function() {
 		dom.levelBox.width(bw + "px");
 	};
 	
-	this.start = function() {
-		dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
-		dom.curtain.css("display", "none");
+	this.showPuzzle = function() {
+		var panel = dom.prompt.subject;
+		PAVO.player.freeze = true;
+		this.makeBoard(panel);
+		dom.flip.css("display", "block");
+		dom.flip.resize();
+		dom.flip.visible = true;
 	};
+
+	this.hidePuzzle = function() {
+		PAVO.player.freeze = false;
+		dom.flip.css("display", "none");
+		dom.flip.visible = false;
+	};
+	
+	this.makeBoard = function(panel) {
+		var size = PAVO.game.board.size;
+		var row, col, pos, tr, td;
+		dom.flipBoard.empty();
+		for (row = 0; row < size; row++) {
+			tr = jQuery(document.createElement("tr"));
+			for (col = 0; col < size; col++) {
+				pos = row * size + col;
+				td = jQuery(document.createElement("td"));
+				td.css("background-color", panel.board[pos] ? "white" : "black");
+				td[0].pos = pos;
+				td.bind("click", function() {
+					var c = !panel.board[this.pos];
+					jQuery(this).css("background-color", c ? "white" : "black");
+					panel.board[this.pos] = c;
+				} );
+				tr.append(td);
+			}
+			dom.flipBoard.append(tr);
+		}
+	};
+
 };

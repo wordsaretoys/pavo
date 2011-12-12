@@ -76,7 +76,7 @@ PAVO.ghosts = new function() {
 
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
-		FOAM.textures.bind(0, program.panels, "ghost");
+		FOAM.textures.bind(0, program.images, "ghost");
 		for (i = 0, il = list.length; i < il; i++) {
 			g = list[i];
 			d = g.position.distance(cam.position);

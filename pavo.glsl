@@ -10,7 +10,7 @@ attribute vec3 position;
 attribute vec2 texturec;
 attribute float a_color;
 attribute float a_light;
-attribute float a_panel;
+attribute float a_image;
 
 uniform mat4 projector;
 uniform mat4 modelview;
@@ -19,7 +19,7 @@ varying vec3 opos;
 varying vec2 uv;
 varying float color;
 varying float light;
-varying float panel;
+varying float image;
 
 void main(void) {
 	gl_Position = projector * modelview * vec4(position, 1.0);
@@ -27,7 +27,7 @@ void main(void) {
 	uv = texturec;
 	color = a_color;
 	light = a_light;
-	panel = a_panel;
+	image = a_image;
 }
 
 </script>
@@ -45,15 +45,15 @@ varying vec3 opos;
 varying vec2 uv;
 varying float color;
 varying float light;
-varying float panel;
+varying float image;
 
 uniform sampler2D palette;
-uniform sampler2D panels;
+uniform sampler2D images;
 
 void main(void) {
-	vec2 st = vec2((uv.x + panel) / 8.0, uv.y);
+	vec2 st = vec2((uv.x + image) / 8.0, uv.y);
 	vec3 tex0 = texture2D(palette, vec2(0.0, color)).rgb;
-	vec4 tex1 = texture2D(panels, st);
+	vec4 tex1 = texture2D(images, st);
 	gl_FragColor = vec4(light * mix(tex0, tex1.rgb, tex1.a), 1.0);
 }
 
@@ -93,13 +93,13 @@ precision mediump float;
  
 varying vec2 uv;
 
-uniform sampler2D panels;
+uniform sampler2D images;
 uniform float alpha;
 
 void main(void) {
 	vec2 st = vec2(uv.x / 4.0, uv.y);
 	vec3 base = vec3(1.0, 1.0, 1.0);
-	vec4 tex = texture2D(panels, st);
+	vec4 tex = texture2D(images, st);
 	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);
 }
 
@@ -139,22 +139,22 @@ precision mediump float;
  
 varying vec2 uv;
 
-uniform sampler2D panels;
+uniform sampler2D images;
 uniform float alpha;
 uniform float index;
 
 void main(void) {
 	vec2 st = vec2((uv.x + index) / 16.0, uv.y);
-	vec4 tex = texture2D(panels, st);
-	gl_FragColor = vec4(tex.rgb, tex.r * alpha);
+	vec4 tex = texture2D(images, st);
+	gl_FragColor = vec4(1.0, 1.0, 1.0, tex.r * alpha);
 }
 
 </script>
 
-<script id="vs-console" type="x-shader/x-vertex">
+<script id="vs-panel" type="x-shader/x-vertex">
 
 /**
-	console vertex shader
+	panel vertex shader
 **/
 
 attribute vec3 position;
@@ -175,23 +175,23 @@ void main(void) {
 
 </script>
 
-<script id="fs-console" type="x-shader/x-fragment">
+<script id="fs-panel" type="x-shader/x-fragment">
 
 /**
-	consoles fragment shader
+	panel fragment shader
 **/
 
 precision mediump float;
  
 varying vec2 uv;
 
-uniform sampler2D panels;
+uniform sampler2D images;
 uniform float alpha;
 
 void main(void) {
 	vec2 st = vec2(uv.x / 4.0, uv.y);
 	vec3 base = vec3(0.25, 0.25, 0.3);
-	vec4 tex = texture2D(panels, st);
+	vec4 tex = texture2D(images, st);
 	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);
 }
 
