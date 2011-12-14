@@ -34,7 +34,14 @@ PAVO.world = new function() {
 		var r;
 		
 		this.generateTextures();
-	
+/*	
+		var prng = new FOAM.Prng();
+		var space = PAVO.game.space;
+		space.field.seed = Math.round(prng.get() * prng.modu);
+		space.color.seed = Math.round(prng.get() * prng.modu);
+		space.light.seed = Math.round(prng.get() * prng.modu);
+		space.image.seed = Math.round(prng.get() * prng.modu);
+*/		
 		PAVO.space.init();
 		PAVO.player.init();
 		PAVO.ghosts.init();
@@ -44,6 +51,8 @@ PAVO.world = new function() {
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.turn(0, PAVO.game.player.rotation, 0);
+
+//		PAVO.space.findFreeSpace(prng, PAVO.player.position);
 		
 		PAVO.space.generate();
 		

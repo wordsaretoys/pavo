@@ -52,7 +52,7 @@ PAVO.space = new function() {
 		this.light = light;
 
 		light.gets = function(x, y, z) {
-			return Math.pow(light.get(x, y, z), gspace.light.power) + gspace.light.base;
+			return Math.pow(light.get(x, y, z), 2);
 		};
 		image.gets = function() {
 			var i = image.get();
@@ -237,6 +237,7 @@ PAVO.space = new function() {
 	this.findFreeSpace = function(prng, p) {
 		do {		
 			p.set(prng.get() * LENGTH.x, prng.get() * LENGTH.y, prng.get() * LENGTH.z);
+			p.dejitter(RESOLUTION, Math.floor);
 		} while (!this.pinside(p));
 	};
 	

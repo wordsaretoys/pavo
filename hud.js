@@ -31,8 +31,6 @@ PAVO.hud = new function() {
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
 			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
-			levelBar: jQuery("#level-bar"),
-			levelBox: jQuery("#level-box"),
 			flip: jQuery("#flip"),
 			flipBoard: jQuery("#flip-board")
 		};
@@ -245,7 +243,7 @@ PAVO.hud = new function() {
 	}
 
 	this.onKeywordSelect = function(kw) {
-		var temp, p, g;
+		var temp;
 		if (!dom.statement) {
 			dom.statement = jQuery(document.createElement("div"));
 			dom.statement.addClass("talk-statement talk-player");
@@ -258,22 +256,10 @@ PAVO.hud = new function() {
 			temp.addClass("talk-statement talk-ghost");
 			dom.dialogueFrame.append(temp);
 			temp.html(PAVO.dialogue.generateStatement());
-			
-			g = PAVO.dialogue.scoreStatement(temp.html());
-			p = PAVO.dialogue.scoreStatement(dom.statement.html());
-			PAVO.player.updatePavoLevel(p - g);
-			
 			delete dom.statement;
 		}
 		
 		self.listKeywords(kw);
-	};
-	
-	this.setLevel = function(level, total) {
-		var pc = Math.round(100 * level / total);
-		var bw = total * 10;
-		dom.levelBar.width(pc + "%");
-		dom.levelBox.width(bw + "px");
 	};
 	
 	this.showPuzzle = function() {

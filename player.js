@@ -25,11 +25,6 @@ PAVO.Player = function() {
 		invalid: true
 	};
 	
-	var pavo = {
-		level: 1,
-		total: 10
-	};
-	
 	var scratch = {
 		direction: new FOAM.Vector(),
 		velocity: new FOAM.Vector()
@@ -62,9 +57,6 @@ PAVO.Player = function() {
 
 		this.nearLimit = 0.01;
 		this.farLimit = 1024;
-		
-		PAVO.hud.setLevel(pavo.level, pavo.total);
-		
 	};
 	
 	this.update = function() {
@@ -195,16 +187,6 @@ PAVO.Player = function() {
 		mouse.invalid = true;
 	};
 	
-	this.updatePavoLevel = function(l) {
-		pavo.level = Math.max(0, pavo.level + l);
-		pavo.level = Math.min(pavo.total, pavo.level);
-		PAVO.hud.setLevel(pavo.level, pavo.total);
-	};
-
-	this.updatePavoCapacity = function(c) {
-		pavo.total = Math.max(0, pavo.total + c);
-		PAVO.hud.setLevel(pavo.level, pavo.total);
-	};
 };
 
 // for those playing along at home, the inheritance chain goes:

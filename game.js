@@ -12,9 +12,7 @@ PAVO.game = {
 		},
 		light: {
 			seed: 583939094,
-			scale: { x: 0.02, y: 0.02, z: 0.02 },
-			power: 2,
-			base: 0
+			scale: { x: 0.02, y: 0.02, z: 0.02 }
 		},
 		image: {
 			seed: 209348
