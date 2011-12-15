@@ -49,10 +49,12 @@ PAVO.game = {
 	],
 	
 	panels: [
+/*
 		{
 			position: { x: 20, y: 0, z: 12 },
 			rotation: Math.PI
 		}
+*/
 	],
 	
 	player: {

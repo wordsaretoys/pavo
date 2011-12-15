@@ -9,6 +9,7 @@ PAVO.signs = new function() {
 
 	var VIEW_RADIUS = 50;
 	var FADE_RADIUS =  5;
+	var JUMP_RADIUS =  1;
 	var SPIN_RATE = 0.01;
 
 	var self = this;
@@ -18,6 +19,8 @@ PAVO.signs = new function() {
 	var scratch = {
 		pos: new FOAM.Vector()
 	};
+	
+	var jumped = false;
 	
 	this.init = function() {
 		var ss = PAVO.game.signs;
@@ -61,6 +64,16 @@ PAVO.signs = new function() {
 				gl.uniform1f(program.index, s.index);
 				gl.uniformMatrix4fv(program.rotations, false, s.matrix.transpose);
 				mesh.draw();
+				
+				if (d <= JUMP_RADIUS) {
+					if (!jumped) {
+						jumped = true;
+						PAVO.hud.addMessage("WAY TO GO CHAMP");
+					}
+				} else {
+					jumped = false;
+				}
+				
 			}
 		}
 

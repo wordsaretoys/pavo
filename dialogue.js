@@ -7,110 +7,54 @@
 
 PAVO.dialogue = new function() {
 
-	var TERMINATOR = ".";
-
-	var table = [];
-
 	var self = this;
-	var prng = new FOAM.Prng();
 
-	var random_sort = function(a, b) {
-		return Math.round(prng.get() - prng.get());
-	};
-	
+	var word = [
+		"woman", "man", "child", "fire", "tree", "house", "sun", "cloud",
+		"not",
+		"happy", "angry",
+		"walk", "sleep", "dream", "love", "kill",
+		"pavo"
+	];
+
+	var hash = {};
+	var lgen = new FOAM.Prng();
+
 	this.init = function() {
-		var statement, keyword;
-		var i, il, j, jl;
-
-		table.push(TERMINATOR);
-				
-		statement = jQuery.trim(jQuery("#narratives").html()).split(".");
-		for (i = 0, il = statement.length; i < il; i++) {
-
-			statement[i] = jQuery.trim(statement[i]);
-			if (statement[i].length) {
-		
-				keyword = jQuery.trim(statement[i]).split(" ");
-				for (j = 0, jl = keyword.length; j < jl; j++) {
-				
-					keyword[j] = jQuery.trim(keyword[j]);
-					table.push(keyword[j]);
-				}
-				
-				table.push(TERMINATOR);
-
-			}
-		}
-	};
-	
-	this.selectNext = function(kw) {
-		var list = [];
 		var i, il;
-		for (i = 0, il = table.length - 1; i < il; i++) {
-			if (kw === table[i]) {
-				list.push(table[i + 1]);
-			}
+		for (i = 0, il = word.length; i < il; i++) {
+			hash[word[i]] = i;
 		}
-		return list;
-	};
-	
-	this.listKeywords = function(len, head) {
-		var lookup = {};
-		var kwords = [];
-		var i, j, il, kw, next;
-		head = head || TERMINATOR;
-		next = this.selectNext(head);
-		next.sort(random_sort);
-		
-		for (i = 0, j = 0, il = next.length; i < il && j < len; i++) {
-			kw = next[i];
-			if (!lookup[kw]) {
-				kwords.push(kw);
-				lookup[kw] = true;
-				j++;
-			}
-		}
-
-		return kwords;
 	};
 
-	this.generateStatement = function() {
-	
-		var token = TERMINATOR;
-		var stmt = "";
-		var group, target;
-		
-		do {
-			group = this.selectNext(token);
-			target = Math.floor(prng.get() * group.length);
-			token = group[target];
-			stmt = stmt + token + " ";
-		} while (token !== TERMINATOR);
-		
-		return stmt;
-	};
-
-	this.scoreStatement = function(stmt) {
-		var statement = stmt.split(" ");
-		var count = 0, score = 0;
-		var i, il, j;
-		
-		for (i = 1, j = 0, il = table.length; i < il; i++, j++) {
-
-			if (table[i] === TERMINATOR || statement[j] === TERMINATOR) {
-				score = Math.max(score, count);
-				count = 0;
-				j = 0;
-				while (table[i] !== TERMINATOR)
-					i++;
-			} else {
-				if (table[i] === statement[j]) {
-					count++;
+	this.generateWordMap = function(seed) {
+		var prng = new FOAM.Prng(seed);
+		var wmap = [];
+		var i, j, l = word.length;
+		for (i = 0; i < l; i++) {
+			for (j = 0; j < l; j++) {
+				if (i != j) {
+					wmap.push( {
+						i: i,
+						j: j,
+						c: prng.get()
+					} );
 				}
 			}
 		}
-		
-		return score;
+		return wmap;
+	};
+	
+	this.listWords = function(start, len) {
+		var wlist = [];
+		var i, w, l;
+		l = Math.min(word.length, start + len);
+		for (i = start; i < l; i++)
+			wlist.push(word[i]);
+		return wlist;
 	};
 
+	this.respond = function(map, stmt) {
+	
+	};
 };

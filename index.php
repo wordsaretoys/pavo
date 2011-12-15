@@ -44,6 +44,5 @@ include("pavo.glsl");
 	<body>
 		<canvas id="gl"></canvas>
 		<?php include("hud.html"); ?>
-		<?php include("narratives.html"); ?>
 	</body>
 </html>

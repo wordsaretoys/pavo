@@ -143,6 +143,14 @@ div {
 	margin: 5px;
 }
 
+.talk-spacer {
+	float: left;
+	width: 5em;
+	border-radius: 5px;
+	background-color: transparent;
+	margin: 5px;
+}
+
 .talk-statement {
 	margin-bottom: 5px;
 }

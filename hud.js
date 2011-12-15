@@ -9,13 +9,20 @@ PAVO.hud = new function() {
 	var MESSAGE_FADE_TIME = 250;
 	var MESSAGE_DELAY = 2500;
 
-	var KW_LIST_SIZE = 8;
+	var KW_LIST_SIZE = 10;
 
 	var NOTHING  = 0;
 	var MAY_TALK = 1;
 	var TALKING  = 2;
 	var MAY_USE  = 3;
 	var USING    = 4;
+
+	var prompting = {
+		state: NOTHING,
+		subject: null
+	};
+
+	var wordHead = 0;
 
 	var self = this;
 	var dom;
@@ -41,7 +48,6 @@ PAVO.hud = new function() {
 				left: (FOAM.width - dom.prompt.width()) / 2
 			});
 		}
-		dom.prompt.state = NOTHING;
 
 		dom.talk.resize = function() {
 			dom.talk.offset({
@@ -119,13 +125,13 @@ PAVO.hud = new function() {
 			}
 			break;
 		case FOAM.KEY.E:
-			if (FOAM.running && dom.prompt.state === MAY_TALK) {
-				dom.prompt.state = TALKING;
+			if (FOAM.running && prompting.state === MAY_TALK) {
+				prompting.state = TALKING;
 				self.setPrompt();
 				self.showDialogue();
 			}
-			if (FOAM.running && dom.prompt.state === MAY_USE) {
-				dom.prompt.state = USING;
+			if (FOAM.running && prompting.state === MAY_USE) {
+				prompting.state = USING;
 				self.setPrompt();
 				self.showPuzzle();
 			}
@@ -187,12 +193,12 @@ PAVO.hud = new function() {
 				{ key: "E", msg: "talk" },
 				{ msg: "ghost" }
 			] );
-			dom.prompt.state = MAY_TALK;
+			prompting.state = MAY_TALK;
 		} else {
 			this.setPrompt();
-			dom.prompt.state = NOTHING;
+			prompting.state = NOTHING;
 		}
-		dom.prompt.subject = ghost;
+		prompting.subject = ghost;
 	};
 
 	this.promptToUse = function(panel) {
@@ -201,17 +207,22 @@ PAVO.hud = new function() {
 				{ key: "E", msg: "use" },
 				{ msg: "panel" }
 			] );
-			dom.prompt.state = MAY_USE;
+			prompting.state = MAY_USE;
 		} else {
 			this.setPrompt();
-			dom.prompt.state = NOTHING;
+			prompting.state = NOTHING;
 		}
-		dom.prompt.subject = panel;
+		prompting.subject = panel;
 	};
 
 	this.showDialogue = function() {
 		PAVO.player.freeze = true;
-		this.listKeywords();
+		wordHead = 0;
+		if (!prompting.subject.wordMap) {
+			prompting.subject.wordMap = 
+				PAVO.dialogue.generateWordMap(prompting.subject.seed);
+		}
+		this.listWords();
 		dom.dialogueFrame.empty();
 		delete dom.statement;
 		dom.talk.css("display", "block");
@@ -219,21 +230,54 @@ PAVO.hud = new function() {
 		dom.talk.visible = true;
 	};
 	
-	this.listKeywords = function(head) {
-		var list = PAVO.dialogue.listKeywords(KW_LIST_SIZE, head);
-		var i, il, div, kw;
-		dom.keywordFrame.empty();
-		for (i = 0, il = list.length; i < il; i++) {
-			div = jQuery(document.createElement("div"));
-			kw = list[i];
-			div.html(kw);
+	this.listWords = function() {
+		var list = PAVO.dialogue.listWords(wordHead, KW_LIST_SIZE);
+		var llen = list.length;
+		var i;
+		
+		function addWordButton(w, f) {
+			var div = jQuery(document.createElement("div"));
+			div.html(w);
 			div.addClass("talk-keyword");
-			div.bind("mousedown", function() {
-				self.onKeywordSelect(this.innerHTML);
-				dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-			} );
+			div.bind("mousedown", f);
 			dom.keywordFrame.append(div);
 		}
+		
+		function addSpacer() {
+			var div = jQuery(document.createElement("div"));
+			div.html("&nbsp;");
+			div.addClass("talk-spacer");
+			dom.keywordFrame.append(div);
+		}
+		
+		dom.keywordFrame.empty();
+		for (i = 0; i < KW_LIST_SIZE; i++) {
+			if (list[i]) {
+				addWordButton(list[i], function() {
+					if (!dom.statement) {
+						dom.statement = jQuery(document.createElement("div"));
+						dom.statement.addClass("talk-statement talk-player");
+						dom.dialogueFrame.append(dom.statement);
+					}
+					dom.statement.html(dom.statement.html() + " " + this.innerHTML);
+					dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+				} );
+			} else {
+				addSpacer();
+			}
+		}
+		
+		addWordButton("...", self.listWords);
+		addWordButton(".", function() {
+			var temp = jQuery(document.createElement("div"));
+			temp.addClass("talk-statement talk-ghost");
+			dom.dialogueFrame.append(temp);
+			temp.html(PAVO.dialogue.respond( prompting.subject.wordMap, dom.statement.html() ));
+			delete dom.statement;
+			dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+		} );
+
+		wordHead = (llen < KW_LIST_SIZE) ? 0 : wordHead + llen;
 	};
 
 	this.hideDialogue = function() {
@@ -241,29 +285,9 @@ PAVO.hud = new function() {
 		dom.talk.css("display", "none");
 		dom.talk.visible = false;
 	}
-
-	this.onKeywordSelect = function(kw) {
-		var temp;
-		if (!dom.statement) {
-			dom.statement = jQuery(document.createElement("div"));
-			dom.statement.addClass("talk-statement talk-player");
-			dom.dialogueFrame.append(dom.statement);
-		}
-		dom.statement.html(dom.statement.html() + " " + kw);
-		
-		if (kw === ".") {
-			temp = jQuery(document.createElement("div"));
-			temp.addClass("talk-statement talk-ghost");
-			dom.dialogueFrame.append(temp);
-			temp.html(PAVO.dialogue.generateStatement());
-			delete dom.statement;
-		}
-		
-		self.listKeywords(kw);
-	};
 	
 	this.showPuzzle = function() {
-		var panel = dom.prompt.subject;
+		var panel = prompting.subject;
 		PAVO.player.freeze = true;
 		this.makeBoard(panel);
 		dom.flip.css("display", "block");

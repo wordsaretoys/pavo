@@ -34,7 +34,6 @@ PAVO.ghosts = new function() {
 			g = PAVO.makeMover();
 			g.position.copy(gs[i].position);
 			g.position.y += 3;
-			g.name = gs[i].name;
 			g.timer = 0;
 			g.target = new FOAM.Vector();
 			g.lastPos = new FOAM.Vector();
