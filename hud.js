@@ -133,7 +133,7 @@ PAVO.hud = new function() {
 			if (FOAM.running && prompting.state === MAY_USE) {
 				prompting.state = USING;
 				self.setPrompt();
-				self.showPuzzle();
+				self.showDialogue();
 			}
 			break;
 		case FOAM.KEY.TAB:
@@ -191,7 +191,7 @@ PAVO.hud = new function() {
 		if (ghost) {
 			this.setPrompt( [
 				{ key: "E", msg: "talk" },
-				{ msg: "ghost" }
+				{ msg: ghost.name }
 			] );
 			prompting.state = MAY_TALK;
 		} else {
@@ -205,7 +205,7 @@ PAVO.hud = new function() {
 		if (panel) {
 			this.setPrompt( [
 				{ key: "E", msg: "use" },
-				{ msg: "panel" }
+				{ msg: panel.name }
 			] );
 			prompting.state = MAY_USE;
 		} else {
@@ -216,111 +216,57 @@ PAVO.hud = new function() {
 	};
 
 	this.showDialogue = function() {
+
+		var div = jQuery(document.createElement("div"));
+		div.addClass("talk-name");
+		div.html(prompting.subject.name);
+		dom.dialogueFrame.append(div);
+
 		PAVO.player.freeze = true;
-		wordHead = 0;
-		if (!prompting.subject.wordMap) {
-			prompting.subject.wordMap = 
-				PAVO.dialogue.generateWordMap(prompting.subject.seed);
-		}
+
+		this.addResponse(PAVO.dialogue.respond());
 		this.listWords();
-		dom.dialogueFrame.empty();
-		delete dom.statement;
+
 		dom.talk.css("display", "block");
 		dom.talk.resize();
 		dom.talk.visible = true;
 	};
 	
 	this.listWords = function() {
-		var list = PAVO.dialogue.listWords(wordHead, KW_LIST_SIZE);
+		var list = PAVO.dialogue.getWords();
 		var llen = list.length;
-		var i;
-		
-		function addWordButton(w, f) {
-			var div = jQuery(document.createElement("div"));
-			div.html(w);
-			div.addClass("talk-keyword");
-			div.bind("mousedown", f);
-			dom.keywordFrame.append(div);
-		}
-		
-		function addSpacer() {
-			var div = jQuery(document.createElement("div"));
-			div.html("&nbsp;");
-			div.addClass("talk-spacer");
-			dom.keywordFrame.append(div);
-		}
+		var i, div;
 		
 		dom.keywordFrame.empty();
-		for (i = 0; i < KW_LIST_SIZE; i++) {
-			if (list[i]) {
-				addWordButton(list[i], function() {
-					if (!dom.statement) {
-						dom.statement = jQuery(document.createElement("div"));
-						dom.statement.addClass("talk-statement talk-player");
-						dom.dialogueFrame.append(dom.statement);
-					}
-					dom.statement.html(dom.statement.html() + " " + this.innerHTML);
-					dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-				} );
-			} else {
-				addSpacer();
-			}
+		for (i = 0; i < llen; i++) {
+			div = jQuery(document.createElement("div"));
+			div.html(list[i]);
+			div.addClass("talk-keyword");
+			dom.keywordFrame.append(div);
+			div.bind("mousedown", function() {
+				if (!this.clicked) {
+					jQuery(this).addClass("talk-keyword-clicked");
+					this.clicked = true;
+				} else {
+					jQuery(this).removeClass("talk-keyword-clicked");
+					this.clicked = false;
+				}
+			});
 		}
-		
-		addWordButton("...", self.listWords);
-		addWordButton(".", function() {
-			var temp = jQuery(document.createElement("div"));
-			temp.addClass("talk-statement talk-ghost");
-			dom.dialogueFrame.append(temp);
-			temp.html(PAVO.dialogue.respond( prompting.subject.wordMap, dom.statement.html() ));
-			delete dom.statement;
-			dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-		} );
-
-		wordHead = (llen < KW_LIST_SIZE) ? 0 : wordHead + llen;
+	};
+	
+	this.addResponse = function(text) {
+		var div = jQuery(document.createElement("div"));
+		div.addClass("talk-response");
+		div.html(text);
+		dom.dialogueFrame.append(div);
+		dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
 	};
 
 	this.hideDialogue = function() {
 		PAVO.player.freeze = false;
 		dom.talk.css("display", "none");
 		dom.talk.visible = false;
-	}
-	
-	this.showPuzzle = function() {
-		var panel = prompting.subject;
-		PAVO.player.freeze = true;
-		this.makeBoard(panel);
-		dom.flip.css("display", "block");
-		dom.flip.resize();
-		dom.flip.visible = true;
-	};
-
-	this.hidePuzzle = function() {
-		PAVO.player.freeze = false;
-		dom.flip.css("display", "none");
-		dom.flip.visible = false;
-	};
-	
-	this.makeBoard = function(panel) {
-		var size = PAVO.game.board.size;
-		var row, col, pos, tr, td;
-		dom.flipBoard.empty();
-		for (row = 0; row < size; row++) {
-			tr = jQuery(document.createElement("tr"));
-			for (col = 0; col < size; col++) {
-				pos = row * size + col;
-				td = jQuery(document.createElement("td"));
-				td.css("background-color", panel.board[pos] ? "white" : "black");
-				td[0].pos = pos;
-				td.bind("click", function() {
-					var c = !panel.board[this.pos];
-					jQuery(this).css("background-color", c ? "white" : "black");
-					panel.board[this.pos] = c;
-				} );
-				tr.append(td);
-			}
-			dom.flipBoard.append(tr);
-		}
 	};
 
 };

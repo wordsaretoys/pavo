@@ -143,23 +143,18 @@ div {
 	margin: 5px;
 }
 
-.talk-spacer {
-	float: left;
-	width: 5em;
-	border-radius: 5px;
-	background-color: transparent;
-	margin: 5px;
+.talk-keyword-clicked {
+	background-color: green;
 }
 
-.talk-statement {
+.talk-name {
+	border-top: solid 1px white;
+	border-bottom: solid 1px white;
+	margin: 20px 0px;
+}
+
+.talk-response {
 	margin-bottom: 5px;
-}
-
-.talk-player {
-	color: #faa;
-}
-
-.talk-ghost {
 	color: #afa;
 }
 

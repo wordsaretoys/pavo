@@ -34,7 +34,6 @@ PAVO.Player = function() {
 	this.sprint = false;
 	this.debug = false;
 	this.freeze = false;
-	this.score = 0;
 
 	this.init = function() {
 	

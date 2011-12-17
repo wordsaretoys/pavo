@@ -20,6 +20,10 @@ PAVO.game = {
 	},
 
 	ghosts: [
+		{ 
+			position: { x: 36, y: 0, z: 28 },
+			name: "medium barley"
+		},
 		{ position: { x: 4, y: 0, z: 508 } },
 		{ position: { x: 140, y: 8, z: 444 } },
 		{ position: { x: 140, y: 0, z: 472 } },
@@ -32,7 +36,6 @@ PAVO.game = {
 		{ position: { x: 500, y: 8, z: 140 } },
 		{ position: { x: 508, y: 16, z: 4 } },
 		{ position: { x: 116, y: 24, z: 76 } },
-		{ position: { x: 36, y: 0, z: 28 } },
 		{ position: { x: 4, y: 0, z: 244 } },
 		{ position: { x: 508, y: 0, z: 300 } },
 		{ position: { x: 108, y: 8, z: 276 } },
@@ -42,19 +45,9 @@ PAVO.game = {
 	],
 	
 	signs: [
-		{ 
-			position: { x: 60, y: 12, z: 76 },
-			index: 0
-		}
 	],
 	
 	panels: [
-/*
-		{
-			position: { x: 20, y: 0, z: 12 },
-			rotation: Math.PI
-		}
-*/
 	],
 	
 	player: {

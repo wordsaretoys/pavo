@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>pavo</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="pavo.css">
-		<script type="text/javascript" src="/shared/jquery-1.6.2.min.js"></script>
+		<script type="text/javascript" src="/shared/jquery-1.7.1.min.js"></script>
 
 		<script type="text/javascript" src="/debug/foam/foam.js"></script>
 		<script type="text/javascript" src="/debug/foam/resources.js"></script>
@@ -44,5 +44,6 @@ include("pavo.glsl");
 	<body>
 		<canvas id="gl"></canvas>
 		<?php include("hud.html"); ?>
+		<?php include("vignettes.html"); ?>
 	</body>
 </html>
