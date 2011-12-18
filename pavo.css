@@ -153,6 +153,11 @@ div {
 	margin: 20px 0px;
 }
 
+.talk-player {
+	margin-bottom: 5px;
+	color: #aaf;
+}
+
 .talk-response {
 	margin-bottom: 5px;
 	color: #afa;

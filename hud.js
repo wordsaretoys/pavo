@@ -22,7 +22,10 @@ PAVO.hud = new function() {
 		subject: null
 	};
 
-	var wordHead = 0;
+	var selecting = {
+		key: [],
+		div: null
+	};
 
 	var self = this;
 	var dom;
@@ -216,7 +219,6 @@ PAVO.hud = new function() {
 	};
 
 	this.showDialogue = function() {
-
 		var div = jQuery(document.createElement("div"));
 		div.addClass("talk-name");
 		div.html(prompting.subject.name);
@@ -224,12 +226,33 @@ PAVO.hud = new function() {
 
 		PAVO.player.freeze = true;
 
-		this.addResponse(PAVO.dialogue.respond());
-		this.listWords();
-
 		dom.talk.css("display", "block");
 		dom.talk.resize();
 		dom.talk.visible = true;
+
+		this.addResponse(PAVO.dialogue.greet(prompting.subject.name));
+		this.listWords();
+	};
+	
+	this.wordClicked = function() {
+		var stmt, word;
+		
+		if (!this.clicked) {
+			word = this.innerHTML;
+			if (!selecting.key[0]) {
+				selecting.key[0] = word;
+				selecting.div.html(word);
+				this.clicked = true;
+				dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+			} else {
+				selecting.key[1] = word;
+				selecting.div.html(selecting.div.html() + " " + word);
+				stmt = PAVO.dialogue.respond(prompting.subject.name, selecting.key);
+				self.addResponse(stmt);
+				self.listWords();
+			}
+		}
+		
 	};
 	
 	this.listWords = function() {
@@ -243,27 +266,32 @@ PAVO.hud = new function() {
 			div.html(list[i]);
 			div.addClass("talk-keyword");
 			dom.keywordFrame.append(div);
-			div.bind("mousedown", function() {
-				if (!this.clicked) {
-					jQuery(this).addClass("talk-keyword-clicked");
-					this.clicked = true;
-				} else {
-					jQuery(this).removeClass("talk-keyword-clicked");
-					this.clicked = false;
-				}
-			});
+			div.bind("mousedown", this.wordClicked);
 		}
 	};
 	
 	this.addResponse = function(text) {
+	
 		var div = jQuery(document.createElement("div"));
 		div.addClass("talk-response");
 		div.html(text);
 		dom.dialogueFrame.append(div);
 		dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+
+		selecting.div = jQuery(document.createElement("div"));
+		selecting.div.addClass("talk-player");
+		dom.dialogueFrame.append(selecting.div);
+		selecting.key = [];
+		
 	};
 
 	this.hideDialogue = function() {
+	
+		// wipe out any half-finished query
+		if (selecting.key[0] && !selecting.key[1]) {
+			selecting.div.html("");
+		}
+	
 		PAVO.player.freeze = false;
 		dom.talk.css("display", "none");
 		dom.talk.visible = false;
