@@ -13,7 +13,7 @@ PAVO.dialogue = new function() {
 	var state = [];
 	
 	var rankSort = function(a, b) {
-		return a.rank > b.rank;
+		return a.rank < b.rank;
 	};
 	
 	this.init = function() {
@@ -66,11 +66,12 @@ PAVO.dialogue = new function() {
 
 	};
 	
-	this.getWords = function() {
+	this.getWords = function(len) {
 		var words = [];
 		var i, il;
 		state.sort(rankSort);
-		for (i = 0, il = state.length; i < il; i++) {
+		il = Math.min(len, state.length);
+		for (i = 0; i < il; i++) {
 			words.push(state[i].word);
 		}
 		return words;
@@ -95,13 +96,41 @@ PAVO.dialogue = new function() {
 	};
 
 	this.greet = function(subject) {
-		var select = root[subject]["*"];
-		var record = select.selectRandom();
+		var record = root[subject]["*"].selectRandom();
 		this.addToState(record.postwords);
 		return record.statement;
 	};
 
 	this.respond = function(subject, words) {
-		return "boner";
+		var c0 = root[subject][words[0]];
+		var c1 = root[subject][words[1]];
+		var record, intersect, i, il, j, jl;
+		if (!c0) {
+			record = c1.selectRandom();
+		} else if (!c1) {
+			record = c0.selectRandom();
+		} else if (!c0 && !c1) {
+			record = root[subject]["*"].selectRandom();
+		} else {
+			intersect = [];
+			for (i = 0, il = c0.length; i < il; i++) {
+				for (j = 0, jl = c1.length; j < jl; j++) {
+					if (c0[i] === c1[j]) {
+						intersect.push(c0[i]);
+					}
+				}
+			}
+			if (intersect.length > 0) {
+				record = intersect.selectRandom();
+			} else {
+				if (Math.random() > 0.5) {
+					record = c0.selectRandom();
+				} else {
+					record = c1.selectRandom();
+				}
+			}
+		}
+		this.addToState(record.postwords);
+		return record.statement;
 	};
 };

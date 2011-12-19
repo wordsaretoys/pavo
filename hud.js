@@ -9,7 +9,7 @@ PAVO.hud = new function() {
 	var MESSAGE_FADE_TIME = 250;
 	var MESSAGE_DELAY = 2500;
 
-	var KW_LIST_SIZE = 10;
+	var KW_LIST_SIZE = 12;
 
 	var NOTHING  = 0;
 	var MAY_TALK = 1;
@@ -256,7 +256,7 @@ PAVO.hud = new function() {
 	};
 	
 	this.listWords = function() {
-		var list = PAVO.dialogue.getWords();
+		var list = PAVO.dialogue.getWords(KW_LIST_SIZE);
 		var llen = list.length;
 		var i, div;
 		
