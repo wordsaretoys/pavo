@@ -34,42 +34,23 @@ PAVO.world = new function() {
 		var r;
 		
 		this.generateTextures();
-/*	
-		var prng = new FOAM.Prng();
-		var space = PAVO.game.space;
-		space.field.seed = Math.round(prng.get() * prng.modu);
-		space.color.seed = Math.round(prng.get() * prng.modu);
-		space.light.seed = Math.round(prng.get() * prng.modu);
-		space.image.seed = Math.round(prng.get() * prng.modu);
-*/		
+
 		PAVO.space.init();
 		PAVO.player.init();
 		PAVO.ghosts.init();
-		PAVO.signs.init();
 		PAVO.panels.init();
 		PAVO.dialogue.init();
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.turn(0, PAVO.game.player.rotation, 0);
 
-//		PAVO.space.findFreeSpace(prng, PAVO.player.position);
-		
 		PAVO.space.generate();
 		
 		PAVO.hud.start();
-
-		//
-		// TODO: REMOVE AFTER TESTING COMPLETE		
-		//
-		window.addEventListener("keydown", function(e) {
-			if (e.keyCode === FOAM.KEY.N)
-				nospace = !nospace;
-		});		
 	};
 	
 	this.update = function() {
 		PAVO.ghosts.update();
-		PAVO.signs.update();
 		PAVO.player.update();
 		PAVO.hud.update();
 	};
@@ -91,7 +72,5 @@ PAVO.world = new function() {
 		PAVO.panels.draw();
 					
 		gl.disable(gl.CULL_FACE);
-
-		PAVO.signs.draw();
 	};
 };

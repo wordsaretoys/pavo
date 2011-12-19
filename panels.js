@@ -29,8 +29,8 @@ PAVO.panels = new function() {
 			c = new FOAM.Thing();
 			c.position.copy(cs[i].position);
 			c.position.y += 1;
-			c.turn(0, cs[i].rotation, 0);
-			c.board = PAVO.puzzle.generate();
+			c.turn(0, cs[i].rotation * Math.PI, 0);
+			c.name = cs[i].name;
 			list.push(c);
 		}
 	};
