@@ -32,18 +32,14 @@ PAVO.dialogue = new function() {
 				} else {
 					switch(phase) {
 					case 0:
-						condition = ln.split(" ");
-						phase++;
+						condition = ln.split(",");
+						postwords = condition[1].split(" ");
+						condition = condition[0].split(" ");
+						phase = 1;
 						break;
 					case 1:
-						statement = ln;
-						phase++;
-						break;
-					case 2:
-						postwords = ln.split(" ");
-						
 						record = {
-							statement: statement,
+							statement: ln,
 							postwords: postwords
 						};
 						
