@@ -53,7 +53,7 @@ var PAVO = new function() {
 			FOAM.shaders.build(
 				"panel", "vs-panel", "fs-panel",
 				["position", "texturec"],
-				["projector", "modelview", "center", "rotations", "alpha"],
+				["projector", "modelview", "center", "rotations", "alpha", "phase"],
 				["images"] );
 
 			FOAM.textures.build("walls");

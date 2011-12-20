@@ -95,13 +95,15 @@ PAVO.models = new function() {
 		mesh.set(nx, ny, pz, 3, 2);
 		mesh.set(nx, hy, pz, 3, 2.5);
 
-		mesh.set(nx, py, nz, 4, 3);
-		mesh.set(nx, hy, pz, 4, 4);
-		mesh.set(px, py, nz, 3, 3);
+		// negative texture coordinates
+		// a hack to indicate top panel
+		mesh.set(nx, py, nz, -4, -3);
+		mesh.set(nx, hy, pz, -4, -4);
+		mesh.set(px, py, nz, -3, -3);
 
-		mesh.set(nx, hy, pz, 4, 4);
-		mesh.set(px, hy, pz, 3, 4);
-		mesh.set(px, py, nz, 3, 3);
+		mesh.set(nx, hy, pz, -4, -4);
+		mesh.set(px, hy, pz, -3, -4);
+		mesh.set(px, py, nz, -3, -3);
 
 		mesh.set(nx, ny, nz, 1, 1);
 		mesh.set(px, ny, nz, 0, 1);

@@ -39,7 +39,7 @@ PAVO.panels = new function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
 		var program = FOAM.shaders.activate("panel");
-		var i, il, c, a, d, t;
+		var i, il, c, a, d, t, p;
 		var lt = null;
 		
 		gl.enable(gl.BLEND);
@@ -48,6 +48,8 @@ PAVO.panels = new function() {
 		gl.uniformMatrix4fv(program.projector, false, cam.projector());
 		gl.uniformMatrix4fv(program.modelview, false, cam.modelview());
 		FOAM.textures.bind(0, program.images, "panel");
+		p = Math.floor(FOAM.elapsedTime * 0.001) % 5;
+		gl.uniform1f(program.phase, p);
 		for (i = 0, il = list.length; i < il; i++) {
 			c = list[i];
 			d = c.position.distance(cam.position);

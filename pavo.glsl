@@ -120,11 +120,18 @@ uniform mat4 rotations;
 uniform vec3 center;
 
 varying vec2 uv;
+varying float top;
 
 void main(void) {
 	vec4 rotpos = rotations * vec4(position, 1.0) + vec4(center, 0.0);
 	gl_Position = projector * modelview * rotpos;
 	uv = texturec;
+	if (uv.x < 0.0 || uv.y < 0.0) {
+		top = 1.0;
+		uv = -uv;
+	} else {
+		top = 0.0;
+	}
 }
 
 </script>
@@ -138,12 +145,19 @@ void main(void) {
 precision mediump float;
  
 varying vec2 uv;
+varying float top;
 
 uniform sampler2D images;
 uniform float alpha;
+uniform float phase;
 
 void main(void) {
-	vec2 st = vec2(uv.x / 4.0, uv.y);
+	vec2 st;
+	if (top > 0.0) {
+		st = vec2((uv.x + phase) / 8.0, uv.y);
+	} else {
+		st = vec2(uv.x / 8.0, uv.y);
+	}
 	vec3 base = vec3(0.25, 0.25, 0.3);
 	vec4 tex = texture2D(images, st);
 	gl_FragColor = vec4(mix(base, tex.rgb, tex.a), alpha);

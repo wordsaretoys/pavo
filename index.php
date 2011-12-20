@@ -26,7 +26,6 @@
 		<script type="text/javascript" src="/debug/pavo/player.js"></script>
 		<script type="text/javascript" src="/debug/pavo/space.js"></script>
 		<script type="text/javascript" src="/debug/pavo/models.js"></script>
-		<script type="text/javascript" src="/debug/pavo/signs.js"></script>
 		<script type="text/javascript" src="/debug/pavo/ghosts.js"></script>
 		<script type="text/javascript" src="/debug/pavo/panels.js"></script>
 		<script type="text/javascript" src="/debug/pavo/dialogue.js"></script>
@@ -43,6 +42,5 @@ include("pavo.glsl");
 	<body>
 		<canvas id="gl"></canvas>
 		<?php include("hud.html"); ?>
-		<?php include("vignettes.html"); ?>
 	</body>
 </html>

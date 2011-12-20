@@ -28,7 +28,7 @@ PAVO.game = {
 	
 	panels: [
 		{ 
-			position: { x: 36, y: 0, z: 52 },
+			position: { x: 36, y: 0, z: 54 },
 			rotation: 1,
 			name: "panel alpha"
 		},
