@@ -40,9 +40,7 @@ PAVO.hud = new function() {
 			talk: jQuery("#talk"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			dialogueFrame: jQuery("#talk-dialogue-frame"),
-			dialogueWrapper: jQuery("#talk-dialogue-wrapper"),
-			flip: jQuery("#flip"),
-			flipBoard: jQuery("#flip-board")
+			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
 		};
 
 		dom.prompt.resize = function() {
@@ -58,13 +56,6 @@ PAVO.hud = new function() {
 				left: (FOAM.width - dom.talk.width()) / 2
 			});
 		};
-		
-		dom.flip.resize = function() {
-			dom.flip.offset({
-				top: 3 * (FOAM.height - dom.flip.height()) / 4,
-				left: (FOAM.width - dom.flip.width()) / 2
-			});
-		}
 		
 		jQuery(window).bind("resize", function() { 
 			self.resize();
@@ -93,7 +84,6 @@ PAVO.hud = new function() {
 		dom.prompt.resize();
 		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
 		dom.talk.resize();
-		dom.flip.resize();
 	};
 
 	this.setDebug = function(s) {
@@ -117,11 +107,6 @@ PAVO.hud = new function() {
 				// over to the HUD object, which then
 				// redisplays the talk prompt
 				PAVO.ghosts.listening = null;
-				PAVO.player.invalidateMouse();
-			} else if(FOAM.running && dom.flip.visible) {
-				self.hidePuzzle();
-				// a bit of a hack: see above
-				PAVO.panels.listening = null;
 				PAVO.player.invalidateMouse();
 			} else {
 				self.togglePause();
