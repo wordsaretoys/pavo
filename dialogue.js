@@ -101,9 +101,9 @@ PAVO.dialogue = new function() {
 		var c0 = root[subject][words[0]];
 		var c1 = root[subject][words[1]];
 		var record, intersect, i, il, j, jl;
-		if (!c0) {
+		if (!c0 && c1) {
 			record = c1.selectRandom();
-		} else if (!c1) {
+		} else if (c0 && !c1) {
 			record = c0.selectRandom();
 		} else if (!c0 && !c1) {
 			record = root[subject]["*"].selectRandom();
