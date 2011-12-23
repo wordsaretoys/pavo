@@ -247,11 +247,13 @@ PAVO.hud = new function() {
 		
 		dom.keywordFrame.empty();
 		for (i = 0; i < llen; i++) {
-			div = jQuery(document.createElement("div"));
-			div.html(list[i]);
-			div.addClass("talk-keyword");
-			dom.keywordFrame.append(div);
-			div.bind("mousedown", this.wordClicked);
+			if (PAVO.dialogue.check(prompting.subject.name, list[i]) {
+				div = jQuery(document.createElement("div"));
+				div.html(list[i]);
+				div.addClass("talk-keyword");
+				dom.keywordFrame.append(div);
+				div.bind("mousedown", this.wordClicked);
+			}
 		}
 	};
 	

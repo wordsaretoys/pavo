@@ -97,33 +97,29 @@ PAVO.dialogue = new function() {
 		return record.statement;
 	};
 
+	this.check = function(subject, word) {
+		return root[subject][word];
+	};
+
 	this.respond = function(subject, words) {
 		var c0 = root[subject][words[0]];
 		var c1 = root[subject][words[1]];
-		var record, intersect, i, il, j, jl;
-		if (!c0 && c1) {
-			record = c1.selectRandom();
-		} else if (c0 && !c1) {
-			record = c0.selectRandom();
-		} else if (!c0 && !c1) {
-			record = root[subject]["*"].selectRandom();
-		} else {
-			intersect = [];
-			for (i = 0, il = c0.length; i < il; i++) {
-				for (j = 0, jl = c1.length; j < jl; j++) {
-					if (c0[i] === c1[j]) {
-						intersect.push(c0[i]);
-					}
+		var record, intersect = [];
+		var i, il, j, jl;
+		for (i = 0, il = c0.length; i < il; i++) {
+			for (j = 0, jl = c1.length; j < jl; j++) {
+				if (c0[i] === c1[j]) {
+					intersect.push(c0[i]);
 				}
 			}
-			if (intersect.length > 0) {
-				record = intersect.selectRandom();
+		}
+		if (intersect.length > 0) {
+			record = intersect.selectRandom();
+		} else {
+			if (Math.random() > 0.5) {
+				record = c0.selectRandom();
 			} else {
-				if (Math.random() > 0.5) {
-					record = c0.selectRandom();
-				} else {
-					record = c1.selectRandom();
-				}
+				record = c1.selectRandom();
 			}
 		}
 		this.addToState(record.postwords);
