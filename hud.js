@@ -247,7 +247,7 @@ PAVO.hud = new function() {
 		
 		dom.keywordFrame.empty();
 		for (i = 0; i < llen; i++) {
-			if (PAVO.dialogue.check(prompting.subject.name, list[i]) {
+			if (PAVO.dialogue.check(prompting.subject.name, list[i])) {
 				div = jQuery(document.createElement("div"));
 				div.html(list[i]);
 				div.addClass("talk-keyword");

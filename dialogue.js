@@ -59,6 +59,31 @@ PAVO.dialogue = new function() {
 		Array.prototype.selectRandom = function() {
 			return this[Math.floor(Math.random() * this.length)];
 		};
+		
+		Array.prototype.intersect = function(a) {
+			var i, il, j, jl;
+			var result = [];
+			for (i = 0, il = this.length; i < il; i++) {
+				for (j = 0, jl = a.length; j < jl; j++) {
+					if (this[i] === a[j]) {
+						result.push(this[i]);
+					}
+				}
+			}
+			return result;
+		};
+
+		Array.prototype.union = function(a) {
+			var i, il;
+			var result = [];
+			for (i = 0, il = this.length; i < il; i++) {
+				result.push(this[i]);
+			}
+			for (i = 0, il = a.length; i < il; i++) {
+				result.push(a[i]);
+			}
+			return result;
+		};
 
 	};
 	
@@ -102,26 +127,27 @@ PAVO.dialogue = new function() {
 	};
 
 	this.respond = function(subject, words) {
-		var c0 = root[subject][words[0]];
-		var c1 = root[subject][words[1]];
-		var record, intersect = [];
-		var i, il, j, jl;
-		for (i = 0, il = c0.length; i < il; i++) {
-			for (j = 0, jl = c1.length; j < jl; j++) {
-				if (c0[i] === c1[j]) {
-					intersect.push(c0[i]);
-				}
+		var result, key, c0, c1, record;
+	
+		// search based on strong AND
+		key = words[0] + "+" + words[1];
+		result = root[subject][key];
+		if (!result) {
+		
+			// try weak AND
+			c0 = root[subject][words[0]];
+			c1 = root[subject][words[1]];
+			result = c0.intersect(c1);
+			
+			if (result.length === 0) {
+			
+				// default to OR
+				result = c0.union(c1);
+				
 			}
 		}
-		if (intersect.length > 0) {
-			record = intersect.selectRandom();
-		} else {
-			if (Math.random() > 0.5) {
-				record = c0.selectRandom();
-			} else {
-				record = c1.selectRandom();
-			}
-		}
+			
+		record = result.selectRandom();
 		this.addToState(record.postwords);
 		return record.statement;
 	};
