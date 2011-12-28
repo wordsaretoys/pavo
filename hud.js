@@ -22,11 +22,6 @@ PAVO.hud = new function() {
 		subject: null
 	};
 
-	var selecting = {
-		key: [],
-		div: null
-	};
-
 	var self = this;
 	var dom;
 
@@ -204,7 +199,8 @@ PAVO.hud = new function() {
 	};
 
 	this.showDialogue = function() {
-		var div = jQuery(document.createElement("div"));
+		var div, response;
+		div = jQuery(document.createElement("div"));
 		div.addClass("talk-name");
 		div.html(prompting.subject.name);
 		dom.dialogueFrame.append(div);
@@ -215,68 +211,63 @@ PAVO.hud = new function() {
 		dom.talk.resize();
 		dom.talk.visible = true;
 
-		this.addResponse(PAVO.dialogue.greet(prompting.subject.name));
-		this.listWords();
+		response = PAVO.dialogue.handle(prompting.subject, "*");
+		this.addResponse(response.statement);
+		response = PAVO.dialogue.handle(prompting.subject);
+		this.showWordList(response.nextwords);
 	};
 	
 	this.wordClicked = function() {
-		var stmt, word;
+		var word, response;
 		
-		if (!this.clicked) {
-			word = this.innerHTML;
-			if (!selecting.key[0]) {
-				selecting.key[0] = word;
-				selecting.div.html(word);
-				this.clicked = true;
-				dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-			} else {
-				selecting.key[1] = word;
-				selecting.div.html(selecting.div.html() + " " + word);
-				stmt = PAVO.dialogue.respond(prompting.subject.name, selecting.key);
-				self.addResponse(stmt);
-				self.listWords();
-			}
+		word = this.innerHTML;
+		if (!dom.entry) {
+			dom.entry = jQuery(document.createElement("div"));
+			dom.entry.addClass("talk-player");
+			dom.dialogueFrame.append(dom.entry);
+			dom.entry.html(word);
+			dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
+		} else {
+			dom.entry.html( dom.entry.html() + " " + word );
+		}			
+
+		response = PAVO.dialogue.handle(prompting.subject, dom.entry.html());
+		if (response.statement) {
+			self.addResponse(response.statement);
+			response = PAVO.dialogue.handle(prompting.subject);
 		}
-		
+		self.showWordList(response.nextwords);
 	};
 	
-	this.listWords = function() {
-		var list = PAVO.dialogue.getWords(KW_LIST_SIZE);
+	this.showWordList = function(list) {
 		var llen = list.length;
 		var i, div;
 		
 		dom.keywordFrame.empty();
 		for (i = 0; i < llen; i++) {
-			if (PAVO.dialogue.check(prompting.subject.name, list[i])) {
-				div = jQuery(document.createElement("div"));
-				div.html(list[i]);
-				div.addClass("talk-keyword");
-				dom.keywordFrame.append(div);
-				div.bind("mousedown", this.wordClicked);
-			}
+			div = jQuery(document.createElement("div"));
+			div.html(list[i]);
+			div.addClass("talk-keyword");
+			dom.keywordFrame.append(div);
+			div.bind("mousedown", this.wordClicked);
 		}
 	};
 	
 	this.addResponse = function(text) {
-	
 		var div = jQuery(document.createElement("div"));
 		div.addClass("talk-response");
 		div.html(text);
 		dom.dialogueFrame.append(div);
 		dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-
-		selecting.div = jQuery(document.createElement("div"));
-		selecting.div.addClass("talk-player");
-		dom.dialogueFrame.append(selecting.div);
-		selecting.key = [];
-		
+		delete dom.entry;
 	};
 
 	this.hideDialogue = function() {
 	
 		// wipe out any half-finished query
-		if (selecting.key[0] && !selecting.key[1]) {
-			selecting.div.html("");
+		if (dom.entry) {
+			dom.entry.html("");
+			delete dom.entry;
 		}
 	
 		PAVO.player.freeze = false;

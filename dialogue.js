@@ -7,148 +7,163 @@
 
 PAVO.dialogue = new function() {
 
-	var self = this;
-	var lgen = new FOAM.Prng();
-	var root = {};
-	var state = [];
-	
-	var rankSort = function(a, b) {
-		return a.rank < b.rank;
+	var set = {
+		create: function() {
+			var s = [];
+			jQuery.extend(s, set);
+			return s;
+		},
+		add: function(e) {
+			if (!this.contains(e)) {
+				this.push(e);
+			}
+		},
+		del: function(e) {
+			var i, il;
+			for (i = 0, il = this.length; i < il; i++) {
+				if (this[i] === e) {
+					this.splice(i, 1);
+					return;
+				}
+			}
+		},
+		copy: function(a) {
+			var i, il;
+			for (i = 0, il = a.length; i < il; i++) {
+				this.add(a[i]);
+			}
+		},
+		contains: function(e) {
+			var i, il;
+			for (i = 0, il = this.length; i < il; i++) {
+				if (this[i] === e) {
+					return true;
+				}
+			}
+			return false;
+		},
+		punt: function() {
+			return this[Math.floor(Math.random() * this.length)];
+		},
+		union: function(s) {
+			var result = set.create();
+			result.copy(this);
+			result.copy(s);
+			return result;
+		},
+		intersect: function(s) {
+			var i, il, j, jl;
+			var result = set.create();
+			for (i = 0, il = this.length; i < il; i++) {
+				if (s.contains(this[i])) {
+					result.add(this[i]);
+				}
+			}
+			return result;
+		},
+		complement: function(s) {
+			var result = set.create();
+			var i, il;
+			result.copy(this);
+			for (i = 0, il = s.length; i < il; i++) {
+				result.del(s[i]);
+			}
+			return result;
+		}
 	};
+
+	var self = this;
+	var root = {};
+	var state = set.create();
 	
-	this.init = function() {
-		var text = jQuery("#vignettes").html();
+	this.init = function(id) {
+		var text = jQuery(id).html();
 		var line = text.split("\n");
-		var character, condition, statement, postwords;
-		var i, il, j, jl, ln, phase, record, keyword;
+		var character, header, name, state, nextstate, condition, phase;
+		var i, il, j, jl, ln, nm;
 		
 		for (i = 0, il = line.length, phase = 0; i < il; i++) {
 			ln = jQuery.trim(line[i]);
 			if (ln != "") {
 				if (ln.charAt(0) === "@") {
-					nm = ln.substr(1, ln.length);
-					root[nm] = root[nm] || {};
-					character = root[nm];
+					header = ln.substr(1, ln.length).split(",");
+					name = header[0];
+					state = header[1] || "";
+					root[name] = root[name] || {};
+					root[name][state] = root[name][state] || [];
+					character = root[name][state];
 				} else {
 					switch(phase) {
 					case 0:
-						condition = ln.split(",");
-						postwords = condition[1].split(" ");
-						condition = condition[0].split(" ");
+						condition = set.create();
+						header = ln.split(" ");
+						for (j = 0, jl = header.length; j < jl; j++) {
+							if (header[j].charAt(0) === "#") {
+								nextstate = header[j];
+							} else {
+								condition.add(header[j]);
+							}
+						}
 						phase = 1;
 						break;
 					case 1:
-						record = {
+						character.push( {
 							statement: ln,
-							postwords: postwords
-						};
-						
-						for (j = 0, jl = condition.length; j < jl; j++) {
-							keyword = condition[j];
-							character[keyword] = character[keyword] || [];
-							character[keyword].push(record);
-						}
-						
+							condition: condition,
+							nextstate: nextstate
+						} );
 						phase = 0;
 						break;
 					}
 				}
 			}
 		}
-
-		Array.prototype.selectRandom = function() {
-			return this[Math.floor(Math.random() * this.length)];
-		};
-		
-		Array.prototype.intersect = function(a) {
-			var i, il, j, jl;
-			var result = [];
-			for (i = 0, il = this.length; i < il; i++) {
-				for (j = 0, jl = a.length; j < jl; j++) {
-					if (this[i] === a[j]) {
-						result.push(this[i]);
-					}
-				}
-			}
-			return result;
-		};
-
-		Array.prototype.union = function(a) {
-			var i, il;
-			var result = [];
-			for (i = 0, il = this.length; i < il; i++) {
-				result.push(this[i]);
-			}
-			for (i = 0, il = a.length; i < il; i++) {
-				result.push(a[i]);
-			}
-			return result;
-		};
-
 	};
 	
-	this.getWords = function(len) {
-		var words = [];
-		var i, il;
-		state.sort(rankSort);
-		il = Math.min(len, state.length);
-		for (i = 0; i < il; i++) {
-			words.push(state[i].word);
+	this.handle = function(subject, request) {
+		var search = set.create();
+		var result = set.create();
+		var topics = set.create();
+		var states = set.create();
+		var record = root[subject.name][subject.state];
+		var i, il, len, st;
+
+		if (request) {		
+			search.copy(request.split(" "));
+		} else {
+			search = set.create();
 		}
-		return words;
-	};
-
-	this.addToState = function(words) {
-		var i, il, j, jl;
-		for (i = 0, il = words.length; i < il; i++) {
-			for (j = 0, jl = state.length; j < jl; j++) {
-				if (state[j].word === words[i]) {
-					state[j].rank++;
-					break;
-				}
-			}
-			if (j === jl) {
-				state.push( { 
-					word: words[i], 
-					rank: 0
-				} );
-			}
-		}
-	};
-
-	this.greet = function(subject) {
-		var record = root[subject]["*"].selectRandom();
-		this.addToState(record.postwords);
-		return record.statement;
-	};
-
-	this.check = function(subject, word) {
-		return root[subject][word];
-	};
-
-	this.respond = function(subject, words) {
-		var result, key, c0, c1, record;
-	
-		// search based on strong AND
-		key = words[0] + "+" + words[1];
-		result = root[subject][key];
-		if (!result) {
+		len = search.length;
 		
-			// try weak AND
-			c0 = root[subject][words[0]];
-			c1 = root[subject][words[1]];
-			result = c0.intersect(c1);
-			
-			if (result.length === 0) {
-			
-				// default to OR
-				result = c0.union(c1);
-				
+		for (i = 0, il = record.length; i < il; i++) {
+			if (record[i].condition.intersect(search).length === len) {
+				result.add(record[i]);
+				topics.copy(record[i].condition);
 			}
 		}
-			
-		record = result.selectRandom();
-		this.addToState(record.postwords);
-		return record.statement;
+
+		states = topics.intersect(state).complement(search);
+		
+		if (result.length === 1) {
+			record = result[0];
+			state.copy(record.condition);
+			state.del("*");
+			return {
+				statement: record.statement
+			};
+		} else if (states.length === 0) {
+			record = result.punt();
+			state.copy(record.condition);
+			state.del("*");
+			return {
+				statement: record.statement
+			};
+		} else {
+			return {
+				nextwords: states
+			};
+		}
 	};
+
 };
+

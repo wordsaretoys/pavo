@@ -39,7 +39,7 @@ PAVO.world = new function() {
 		PAVO.player.init();
 		PAVO.ghosts.init();
 		PAVO.panels.init();
-		PAVO.dialogue.init();
+		PAVO.dialogue.init("#vignettes");
 		
 		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.turn(0, PAVO.game.player.rotation, 0);
