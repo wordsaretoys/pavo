@@ -33,9 +33,10 @@ PAVO.hud = new function() {
 			messages: jQuery("#messages"),
 			prompt: jQuery("#prompt"),
 			talk: jQuery("#talk"),
-			keywordFrame: jQuery("#talk-keyword-frame"),
-			dialogueFrame: jQuery("#talk-dialogue-frame"),
-			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
+			responseFrame: jQuery("#talk-response-frame"),
+			responseWrapper: jQuery("#talk-response-wrapper"),
+			requestFrame: jQuery("#talk-request-frame"),
+			requestWrapper: jQuery("#talk-request-wrapper")
 		};
 
 		dom.prompt.resize = function() {
@@ -199,9 +200,9 @@ PAVO.hud = new function() {
 	};
 
 	this.showDialogue = function() {
-		var request, response, wordlist;
+		var requests, response;
 
-		dom.dialogueFrame.empty();
+		dom.responseFrame.empty();
 
 		PAVO.player.freeze = true;
 
@@ -209,67 +210,48 @@ PAVO.hud = new function() {
 		dom.talk.resize();
 		dom.talk.visible = true;
 
-		response = PAVO.dialogue.respond(prompting.subject, [""]);
-		this.addResponse(response);
-		wordlist = PAVO.dialogue.enumerate(prompting.subject);
-		this.showWordList(wordlist);
+		response = PAVO.dialogue.greet(prompting.subject);
+		this.addToTranscript(response, "talk-response");
+		requests = PAVO.dialogue.ask(prompting.subject);
+		this.showRequests(requests);
 	};
 	
-	this.wordClicked = function() {
-		var word, request, response, wordlist;
-		
-		word = this.innerHTML;
-		if (!dom.entry) {
-			dom.entry = jQuery(document.createElement("div"));
-			dom.entry.addClass("talk-player");
-			dom.dialogueFrame.append(dom.entry);
-			dom.entry.html(word);
-			dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-		} else {
-			dom.entry.html( dom.entry.html() + " " + word );
-		}			
+	this.requestClicked = function() {
+		var request = this.innerHTML;
+		self.addToTranscript(request, "talk-request");
 
-		request = dom.entry.html().split(" ");
-		wordlist = PAVO.dialogue.enumerate(prompting.subject, request);
-		if (!wordlist) {
-			response = PAVO.dialogue.respond(prompting.subject, request);
-			self.addResponse(response);
-			wordlist = PAVO.dialogue.enumerate(prompting.subject);
-		}
-		self.showWordList(wordlist);
+		var id = this.rid;
+		var response = PAVO.dialogue.respond(id);
+		self.addToTranscript(response, "talk-response");
+
+		var requests = PAVO.dialogue.ask(prompting.subject);
+		self.showRequests(requests);
 	};
 	
-	this.showWordList = function(list) {
-		var llen = Math.min(list.length, KW_LIST_SIZE);
-		var i, div;
-		
-		dom.keywordFrame.empty();
-		for (i = 0; i < llen; i++) {
+	this.showRequests = function(list) {
+		var i, il, div;
+		dom.requestFrame.empty();
+		for (i = 0, il = list.length; i < il; i++) {
 			div = jQuery(document.createElement("div"));
-			div.html(list[i]);
-			div.addClass("talk-keyword");
-			dom.keywordFrame.append(div);
-			div.bind("mousedown", this.wordClicked);
+			div.html(list[i].request);
+			div[0].rid = list[i].id;
+			div.addClass("talk-request");
+			if (list[i].visited)
+				div.addClass("talk-request-visited");
+			dom.requestFrame.append(div);
+			div.bind("mousedown", this.requestClicked);
 		}
 	};
 	
-	this.addResponse = function(text) {
+	this.addToTranscript = function(text, type) {
 		var div = jQuery(document.createElement("div"));
-		div.addClass("talk-response");
+		div.addClass(type);
 		div.html(text);
-		dom.dialogueFrame.append(div);
-		dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-		delete dom.entry;
+		dom.responseFrame.append(div);
+		dom.responseWrapper.scrollTop(dom.responseWrapper[0].scrollHeight);
 	};
 
 	this.hideDialogue = function() {
-	
-		// wipe out any half-finished query
-		if (dom.entry) {
-			dom.entry.html("");
-			delete dom.entry;
-		}
-	
 		PAVO.player.freeze = false;
 		dom.talk.css("display", "none");
 		dom.talk.visible = false;

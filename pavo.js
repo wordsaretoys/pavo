@@ -40,7 +40,27 @@ var PAVO = new function() {
 			if (!this.contains(e))
 				this.push(e);
 		};
+		
+		Array.prototype.match = function(a) {
+			var i, il, list = [];
+			for (i = 0, il = a.length; i < il; i++) {
+				if (this.contains(a[i])) {
+					list.add(a[i]);
+				}
+			}
+			return list;
+		};
 
+		Array.prototype.del = function(e) {
+			var i;
+			for (i = this.length - 1; i >= 0; i--) {
+				if (this[i] === e) {
+					this.splice(i, 1);
+					return;
+				}
+			}
+		};
+		
 		// set up any webgl stuff that's not likely to change
 		gl.clearDepth(1.0);
 		gl.depthFunc(gl.LEQUAL);

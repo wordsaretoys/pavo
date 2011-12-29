@@ -37,8 +37,7 @@ PAVO.game = {
 	
 	player: {
 		position: { x: 44, y: 16, z: 28 },
-		rotation: 3 * Math.PI / 4,
-		vocabulary: "why when what where tell ghost panel robot factory here sing like"
+		rotation: 3 * Math.PI / 4
 	}
 };
 

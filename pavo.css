@@ -120,40 +120,25 @@ div {
 	z-index: 15;
 }
 
-#talk-dialogue-frame, #talk-keyword-frame, #talk-control-frame {
+#talk-response-frame, #talk-request-frame, #talk-control-frame {
 	padding: 5px;
 }
 
-#talk-keyword-frame, #talk-control-frame {
+#talk-request-frame, #talk-control-frame {
 	border-top: solid 1px white;
 }
 
-#talk-dialogue-wrapper {
+#talk-response-wrapper {
 	overflow-y: scroll;
 	height: 10em;
 }
 
-.talk-keyword {
-	float: left;
-	width: 5em;
-	border-radius: 5px;
-	background-color: white;
-	color: black;
-	text-align: center;
-	margin: 5px;
+#talk-request-wrapper {
+	overflow-y: scroll;
+	height: 5em;
 }
 
-.talk-keyword-clicked {
-	background-color: green;
-}
-
-.talk-name {
-	border-top: solid 1px white;
-	border-bottom: solid 1px white;
-	margin: 20px 0px;
-}
-
-.talk-player {
+.talk-request {
 	margin-bottom: 5px;
 	color: #aaf;
 }
@@ -161,6 +146,10 @@ div {
 .talk-response {
 	margin-bottom: 5px;
 	color: #afa;
+}
+
+.talk-request-visited {
+	color: #339;
 }
 
 /* flip dialog */

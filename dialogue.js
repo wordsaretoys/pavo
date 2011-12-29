@@ -3,103 +3,102 @@
 	Dialogue Object
 	Maintains the dialogue components.
 	
-	dialogue data format:
-	
-	NPC name | applicable NPC state | request | new vocabulary, if any | new state, if any | response
-	
 **/
 
 PAVO.dialogue = new function() {
 
-	var self = this;
-	var root = {};
+	var table = [];
+	var state = [];
 
-	var vocabulary = PAVO.game.player.vocabulary.split(" ");
-	
 	this.init = function(id) {
-		var record = jQuery(id).html().split("|");
-		var i, il, j, jl, data, type, ptr, temp, word;
+		var entry = jQuery(id).html().split("\n");
+		var data, header, record, pre, post;
+		var i, il, phase = 0;
 
-		for (i = 0, il = record.length, type = 0; i < il; i++) {
-			data = jQuery.trim(record[i]);
-			switch(type) {
-			
-			case 0:	// NPC name
-			
-				ptr = root[data] = root[data] || {};
-				break;
+		for (i = 0, il = entry.length; i < il; i++) {
+			data = jQuery.trim(entry[i]);
+			if (data !== "") {
 
-			case 1: // NPC state
-
-				ptr = ptr[data] = ptr[data] || {};
-				break;
-
-			case 2:	// request
-			
-				temp = data.split(" ");
-				for (j = 0, jl = temp.length; j < jl; j++) {
-					word = temp[j];
-					ptr.wordlist = ptr.wordlist || [];
-					if (word !== "")
-						ptr.wordlist.add(word);
-					ptr = ptr[word] = ptr[word] || {};
+				switch(phase) {
+				case 0:
+				
+					header = data.split("|");
+					pre = jQuery.trim(header[1]);
+					post = jQuery.trim(header[2]);
+					record = {
+						npc: jQuery.trim(header[0]),
+						pre: pre !== "" ? pre.split(" ") : [],
+						post: post !== "" ? post.split(" ") : []
+					};
+					break;
+					
+				case 1:
+				
+					record.request = data;
+					break;
+					
+				case 2:
+				
+					record.response = data;
+					record.visited = false;
+					table.push(record);
+					break;
 				}
-				break;
-	
-			case 3:	// new vocabulary list
-
-				ptr.newwords = data.split(" ");			
-				break;
-
-			case 4: // new state
-			
-				ptr.newstate = data;
-				break;
-
-			case 5: // response
-			
-				ptr.response = data;
-				break;
-			}
-			type = (type < 5) ? type + 1 : 0;
-		}
-	};
-	
-	this.follow = function(subject, request) {
-		var i, il, ptr;
-		ptr = root[subject.name][subject.state];
-		if (request) {
-			for (i = 0, il = request.length; i < il; i++) {
-				ptr = ptr[request[i]];
+				phase = (phase < 2) ? phase + 1 : 0;
 			}
 		}
-		return ptr;
 	};
-	
-	this.enumerate = function(subject, request) {
-		var record = this.follow(subject, request);
-		var i, il, word, list;
-		if (record.wordlist) {
-			list = [];
-			for (i = 0, il = record.wordlist.length; i < il; i++) {
-				word = record.wordlist[i];
-				if (vocabulary.contains(word)) {
-					list.push(word);
+
+	this.enumerate = function(subject, callback) {
+		var i, il, record, common;
+		var npc = subject.name;
+		for (i = 0, il = table.length; i < il; i++) {
+			record = table[i];
+			if (record.npc === npc) {
+				common = record.pre.match(state);
+				if (common.length === record.pre.length) {
+					callback(i, record);
 				}
 			}
-			return list;
-		} else {
-			return false;
 		}
 	};
-	
-	this.respond = function(subject, request) {
-		var record = this.follow(subject, request);
-		var i, il;
-		for (i = 0, il = record.newwords.length; i < il; i++) {
-			vocabulary.add(record.newwords[i]);
+
+	this.greet = function(subject) {
+		var list = [];
+		this.enumerate(subject, function(i, record) {
+			if (record.request === "*") {
+				list.push(record.response);
+			}
+		} );
+		return list[Math.floor(Math.random() * list.length)];
+	};
+
+	this.ask = function(subject) {
+		var list = [];
+		this.enumerate(subject, function(i, record) {
+			if (record.request !== "*") {
+				list.push( {
+					id: i,
+					request: record.request,
+					visited: record.visited
+				} );
+			}
+		} );
+		return list;
+	};
+
+	this.respond = function(id) {
+		var record = table[id];
+		var i, il, st;
+		for (i = 0, il = record.post.length; i < il; i++) {
+			st = record.post[i];
+			if (st.charAt(0) === "!") {
+				state.del(st.substr(1));
+			} else {
+				state.add(st);
+			}
 		}
-		subject.state = record.newstate;
+		record.visited = true;
 		return record.response;
 	};
 

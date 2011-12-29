@@ -38,7 +38,6 @@ PAVO.ghosts = new function() {
 			g.target = new FOAM.Vector();
 			g.lastPos = new FOAM.Vector();
 			g.name = gs[i].name;
-			g.state = "";
 			list.push(g);
 		}
 	};
