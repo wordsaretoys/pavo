@@ -3,166 +3,104 @@
 	Dialogue Object
 	Maintains the dialogue components.
 	
+	dialogue data format:
+	
+	NPC name | applicable NPC state | request | new vocabulary, if any | new state, if any | response
+	
 **/
 
 PAVO.dialogue = new function() {
 
-	var set = {
-		create: function() {
-			var s = [];
-			jQuery.extend(s, set);
-			return s;
-		},
-		add: function(e) {
-			if (!this.contains(e)) {
-				this.push(e);
-			}
-		},
-		del: function(e) {
-			var i, il;
-			for (i = 0, il = this.length; i < il; i++) {
-				if (this[i] === e) {
-					this.splice(i, 1);
-					return;
-				}
-			}
-		},
-		copy: function(a) {
-			var i, il;
-			for (i = 0, il = a.length; i < il; i++) {
-				this.add(a[i]);
-			}
-		},
-		contains: function(e) {
-			var i, il;
-			for (i = 0, il = this.length; i < il; i++) {
-				if (this[i] === e) {
-					return true;
-				}
-			}
-			return false;
-		},
-		punt: function() {
-			return this[Math.floor(Math.random() * this.length)];
-		},
-		union: function(s) {
-			var result = set.create();
-			result.copy(this);
-			result.copy(s);
-			return result;
-		},
-		intersect: function(s) {
-			var i, il, j, jl;
-			var result = set.create();
-			for (i = 0, il = this.length; i < il; i++) {
-				if (s.contains(this[i])) {
-					result.add(this[i]);
-				}
-			}
-			return result;
-		},
-		complement: function(s) {
-			var result = set.create();
-			var i, il;
-			result.copy(this);
-			for (i = 0, il = s.length; i < il; i++) {
-				result.del(s[i]);
-			}
-			return result;
-		}
-	};
-
 	var self = this;
 	var root = {};
-	var state = set.create();
+
+	var vocabulary = PAVO.game.player.vocabulary.split(" ");
 	
 	this.init = function(id) {
-		var text = jQuery(id).html();
-		var line = text.split("\n");
-		var character, header, name, state, nextstate, condition, phase;
-		var i, il, j, jl, ln, nm;
-		
-		for (i = 0, il = line.length, phase = 0; i < il; i++) {
-			ln = jQuery.trim(line[i]);
-			if (ln != "") {
-				if (ln.charAt(0) === "@") {
-					header = ln.substr(1, ln.length).split(",");
-					name = header[0];
-					state = header[1] || "";
-					root[name] = root[name] || {};
-					root[name][state] = root[name][state] || [];
-					character = root[name][state];
-				} else {
-					switch(phase) {
-					case 0:
-						condition = set.create();
-						header = ln.split(" ");
-						for (j = 0, jl = header.length; j < jl; j++) {
-							if (header[j].charAt(0) === "#") {
-								nextstate = header[j];
-							} else {
-								condition.add(header[j]);
-							}
-						}
-						phase = 1;
-						break;
-					case 1:
-						character.push( {
-							statement: ln,
-							condition: condition,
-							nextstate: nextstate
-						} );
-						phase = 0;
-						break;
-					}
+		var record = jQuery(id).html().split("|");
+		var i, il, j, jl, data, type, ptr, temp, word;
+
+		for (i = 0, il = record.length, type = 0; i < il; i++) {
+			data = jQuery.trim(record[i]);
+			switch(type) {
+			
+			case 0:	// NPC name
+			
+				ptr = root[data] = root[data] || {};
+				break;
+
+			case 1: // NPC state
+
+				ptr = ptr[data] = ptr[data] || {};
+				break;
+
+			case 2:	// request
+			
+				temp = data.split(" ");
+				for (j = 0, jl = temp.length; j < jl; j++) {
+					word = temp[j];
+					ptr.wordlist = ptr.wordlist || [];
+					if (word !== "")
+						ptr.wordlist.add(word);
+					ptr = ptr[word] = ptr[word] || {};
 				}
+				break;
+	
+			case 3:	// new vocabulary list
+
+				ptr.newwords = data.split(" ");			
+				break;
+
+			case 4: // new state
+			
+				ptr.newstate = data;
+				break;
+
+			case 5: // response
+			
+				ptr.response = data;
+				break;
 			}
+			type = (type < 5) ? type + 1 : 0;
 		}
 	};
 	
-	this.handle = function(subject, request) {
-		var search = set.create();
-		var result = set.create();
-		var topics = set.create();
-		var states = set.create();
-		var record = root[subject.name][subject.state];
-		var i, il, len, st;
-
-		if (request) {		
-			search.copy(request.split(" "));
-		} else {
-			search = set.create();
-		}
-		len = search.length;
-		
-		for (i = 0, il = record.length; i < il; i++) {
-			if (record[i].condition.intersect(search).length === len) {
-				result.add(record[i]);
-				topics.copy(record[i].condition);
+	this.follow = function(subject, request) {
+		var i, il, ptr;
+		ptr = root[subject.name][subject.state];
+		if (request) {
+			for (i = 0, il = request.length; i < il; i++) {
+				ptr = ptr[request[i]];
 			}
 		}
-
-		states = topics.intersect(state).complement(search);
-		
-		if (result.length === 1) {
-			record = result[0];
-			state.copy(record.condition);
-			state.del("*");
-			return {
-				statement: record.statement
-			};
-		} else if (states.length === 0) {
-			record = result.punt();
-			state.copy(record.condition);
-			state.del("*");
-			return {
-				statement: record.statement
-			};
+		return ptr;
+	};
+	
+	this.enumerate = function(subject, request) {
+		var record = this.follow(subject, request);
+		var i, il, word, list;
+		if (record.wordlist) {
+			list = [];
+			for (i = 0, il = record.wordlist.length; i < il; i++) {
+				word = record.wordlist[i];
+				if (vocabulary.contains(word)) {
+					list.push(word);
+				}
+			}
+			return list;
 		} else {
-			return {
-				nextwords: states
-			};
+			return false;
 		}
+	};
+	
+	this.respond = function(subject, request) {
+		var record = this.follow(subject, request);
+		var i, il;
+		for (i = 0, il = record.newwords.length; i < il; i++) {
+			vocabulary.add(record.newwords[i]);
+		}
+		subject.state = record.newstate;
+		return record.response;
 	};
 
 };

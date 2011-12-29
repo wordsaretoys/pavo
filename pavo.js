@@ -21,9 +21,25 @@ var PAVO = new function() {
 		}
 		gl = FOAM.gl;
 
+		// add useful methods to built-in objects
 		Math.clamp = function(x, lo, hi) {
 			return Math.min(Math.max(x, lo), hi);
 		}
+		
+		Array.prototype.contains = function(e) {
+			var i, il;
+			for (i = 0, il = this.length; i < il; i++) {
+				if (this[i] === e) {
+					return true;
+				}
+			}
+			return false;
+		};
+
+		Array.prototype.add = function(e) {
+			if (!this.contains(e))
+				this.push(e);
+		};
 
 		// set up any webgl stuff that's not likely to change
 		gl.clearDepth(1.0);

@@ -22,7 +22,7 @@ PAVO.game = {
 	ghosts: [
 		{ 
 			position: { x: 28, y: 0, z: 52 },
-			name: "medium barley"
+			name: "popper"
 		},
 	],
 	
@@ -37,7 +37,8 @@ PAVO.game = {
 	
 	player: {
 		position: { x: 44, y: 16, z: 28 },
-		rotation: 3 * Math.PI / 4
+		rotation: 3 * Math.PI / 4,
+		vocabulary: "why when what where tell ghost panel robot factory here sing like"
 	}
 };
 

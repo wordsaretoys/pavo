@@ -199,11 +199,9 @@ PAVO.hud = new function() {
 	};
 
 	this.showDialogue = function() {
-		var div, response;
-		div = jQuery(document.createElement("div"));
-		div.addClass("talk-name");
-		div.html(prompting.subject.name);
-		dom.dialogueFrame.append(div);
+		var request, response, wordlist;
+
+		dom.dialogueFrame.empty();
 
 		PAVO.player.freeze = true;
 
@@ -211,14 +209,14 @@ PAVO.hud = new function() {
 		dom.talk.resize();
 		dom.talk.visible = true;
 
-		response = PAVO.dialogue.handle(prompting.subject, "*");
-		this.addResponse(response.statement);
-		response = PAVO.dialogue.handle(prompting.subject);
-		this.showWordList(response.nextwords);
+		response = PAVO.dialogue.respond(prompting.subject, [""]);
+		this.addResponse(response);
+		wordlist = PAVO.dialogue.enumerate(prompting.subject);
+		this.showWordList(wordlist);
 	};
 	
 	this.wordClicked = function() {
-		var word, response;
+		var word, request, response, wordlist;
 		
 		word = this.innerHTML;
 		if (!dom.entry) {
@@ -231,16 +229,18 @@ PAVO.hud = new function() {
 			dom.entry.html( dom.entry.html() + " " + word );
 		}			
 
-		response = PAVO.dialogue.handle(prompting.subject, dom.entry.html());
-		if (response.statement) {
-			self.addResponse(response.statement);
-			response = PAVO.dialogue.handle(prompting.subject);
+		request = dom.entry.html().split(" ");
+		wordlist = PAVO.dialogue.enumerate(prompting.subject, request);
+		if (!wordlist) {
+			response = PAVO.dialogue.respond(prompting.subject, request);
+			self.addResponse(response);
+			wordlist = PAVO.dialogue.enumerate(prompting.subject);
 		}
-		self.showWordList(response.nextwords);
+		self.showWordList(wordlist);
 	};
 	
 	this.showWordList = function(list) {
-		var llen = list.length;
+		var llen = Math.min(list.length, KW_LIST_SIZE);
 		var i, div;
 		
 		dom.keywordFrame.empty();
