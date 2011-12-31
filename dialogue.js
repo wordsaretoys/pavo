@@ -41,6 +41,7 @@ PAVO.dialogue = new function() {
 				
 					record.response = data;
 					record.visited = false;
+					record.removed = false;
 					table.push(record);
 					break;
 				}
@@ -54,7 +55,7 @@ PAVO.dialogue = new function() {
 		var npc = subject.name;
 		for (i = 0, il = table.length; i < il; i++) {
 			record = table[i];
-			if (record.npc === npc) {
+			if (!record.removed && record.npc === npc) {
 				common = record.pre.match(state);
 				if (common.length === record.pre.length) {
 					callback(i, record);
@@ -63,37 +64,43 @@ PAVO.dialogue = new function() {
 		}
 	};
 
-	this.greet = function(subject) {
+	this.getRequests = function(subject) {
 		var list = [];
-		this.enumerate(subject, function(i, record) {
-			if (record.request === "*") {
-				list.push(record.response);
-			}
-		} );
-		return list[Math.floor(Math.random() * list.length)];
-	};
-
-	this.ask = function(subject) {
-		var list = [];
-		this.enumerate(subject, function(i, record) {
-			if (record.request !== "*") {
+		this.enumerate(subject, function(i, r) {
+			if (r.request !== "*") {
 				list.push( {
-					id: i,
-					request: record.request,
-					visited: record.visited
+					request: r.request,
+					visited: r.visited
 				} );
 			}
 		} );
+		list.sort( function(a, b) {
+			if (a.visited === b.visited) {
+				return a.request > b.request ? 1 : (a.request < b.request ? -1 : 0);
+			} else {
+				return a.visited - b.visited;
+			}
+		} );		
 		return list;
 	};
 
-	this.respond = function(id) {
-		var record = table[id];
+	this.getResponse = function(subject, request) {
+		var record, list = [];
 		var i, il, st;
+		this.enumerate(subject, function(i, r) {
+			if (r.request === request) {
+				list.push(r);
+			}
+		} );
+		record = list[Math.floor(Math.random() * list.length)];
 		for (i = 0, il = record.post.length; i < il; i++) {
 			st = record.post[i];
 			if (st.charAt(0) === "!") {
-				state.del(st.substr(1));
+				if (st.length === 1) {
+					record.removed = true;
+				} else {
+					state.del(st.substr(1));
+				}
 			} else {
 				state.add(st);
 			}

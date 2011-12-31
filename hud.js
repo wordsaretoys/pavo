@@ -210,9 +210,9 @@ PAVO.hud = new function() {
 		dom.talk.resize();
 		dom.talk.visible = true;
 
-		response = PAVO.dialogue.greet(prompting.subject);
+		response = PAVO.dialogue.getResponse(prompting.subject, "*");
 		this.addToTranscript(response, "talk-response");
-		requests = PAVO.dialogue.ask(prompting.subject);
+		requests = PAVO.dialogue.getRequests(prompting.subject);
 		this.showRequests(requests);
 	};
 	
@@ -220,11 +220,10 @@ PAVO.hud = new function() {
 		var request = this.innerHTML;
 		self.addToTranscript(request, "talk-request");
 
-		var id = this.rid;
-		var response = PAVO.dialogue.respond(id);
+		var response = PAVO.dialogue.getResponse(prompting.subject, request);
 		self.addToTranscript(response, "talk-response");
 
-		var requests = PAVO.dialogue.ask(prompting.subject);
+		var requests = PAVO.dialogue.getRequests(prompting.subject);
 		self.showRequests(requests);
 	};
 	
