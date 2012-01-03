@@ -22,7 +22,7 @@ PAVO.game = {
 	ghosts: [
 		{ 
 			position: { x: 28, y: 0, z: 52 },
-			name: "popper"
+			name: "barley"
 		},
 	],
 	

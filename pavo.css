@@ -124,7 +124,7 @@ div {
 	padding: 5px;
 }
 
-#talk-request-frame, #talk-control-frame {
+#talk-request-wrapper, #talk-control-frame {
 	border-top: solid 1px white;
 }
 
