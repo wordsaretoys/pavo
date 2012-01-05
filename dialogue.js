@@ -12,7 +12,7 @@ PAVO.dialogue = new function() {
 
 	this.init = function(id) {
 		var entry = jQuery(id).html().split("\n");
-		var data, header, record, pre, post;
+		var data, keyword, npc;
 		var i, il, phase = 0;
 
 		for (i = 0, il = entry.length; i < il; i++) {
@@ -22,30 +22,24 @@ PAVO.dialogue = new function() {
 				switch(phase) {
 				case 0:
 				
-					header = data.split("|");
-					pre = jQuery.trim(header[1]);
-					post = jQuery.trim(header[2]);
-					record = {
-						npc: jQuery.trim(header[0]),
-						pre: pre !== "" ? pre.split(" ") : [],
-						post: post !== "" ? post.split(" ") : []
-					};
+					keyword = data.split(" ");
+					npc = keyword[0];
+					table[npc] = table[npc] || {};
+					keyword.splice(0, 1);
 					break;
 					
 				case 1:
-				
-					record.request = data;
+					
+					table[npc].entry = table[npc].entry || [];
+					table[npc].entry.push( {
+						keyword: keyword,
+						response: data,
+						visited: false
+					} );
 					break;
 					
-				case 2:
-				
-					record.response = data;
-					record.visited = false;
-					record.removed = false;
-					table.push(record);
-					break;
 				}
-				phase = (phase < 2) ? phase + 1 : 0;
+				phase = phase ? 0 : 1;
 			}
 		}
 	};
