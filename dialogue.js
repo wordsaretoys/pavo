@@ -12,8 +12,8 @@ PAVO.dialogue = new function() {
 
 	this.init = function(id) {
 		var entry = jQuery(id).html().split("\n");
-		var data, keyword, npc;
-		var i, il, phase = 0;
+		var data, header, keyword, root, sect, record;
+		var i, il, j, jl, phase = 0;
 
 		for (i = 0, il = entry.length; i < il; i++) {
 			data = jQuery.trim(entry[i]);
@@ -22,20 +22,59 @@ PAVO.dialogue = new function() {
 				switch(phase) {
 				case 0:
 				
-					keyword = data.split(" ");
-					npc = keyword[0];
-					table[npc] = table[npc] || {};
-					keyword.splice(0, 1);
+					header = data.split(" ");
+					record = {
+						command: "",
+						keyword: [],
+						response: ""
+					};
+					for (j = 0, jl = header.length; j < jl; j++) {
+						switch(header[j]) {
+						
+						case "@npc":
+						
+							j++;
+							table[header[j]] = {
+								current: 0,
+								section: []
+							};
+							root = table[header[j]];
+
+							// fall through to allow @npc to create new section
+							
+						case "@section":
+						
+							root.section.push([]);
+							sect = root.section[root.section.length - 1];
+							break;
+							
+						case "@bump":
+						
+							record.command = "bump";
+							break;
+							
+						case "@hello":
+						
+							record.command = "hello";
+							break;
+							
+						case "@end":
+						
+							record.command = "end";
+							break;
+						
+						default:
+						
+							record.keyword.push(header[j]);
+						}
+					}
+
 					break;
 					
 				case 1:
 					
-					table[npc].entry = table[npc].entry || [];
-					table[npc].entry.push( {
-						keyword: keyword,
-						response: data,
-						visited: false
-					} );
+					record.response = data;
+					sect.push(record);
 					break;
 					
 				}
@@ -45,61 +84,60 @@ PAVO.dialogue = new function() {
 	};
 
 	this.enumerate = function(subject, callback) {
-		var i, il, record, common;
-		var npc = subject.name;
-		for (i = 0, il = table.length; i < il; i++) {
-			record = table[i];
-			if (!record.removed && record.npc === npc) {
-				common = record.pre.match(state);
-				if (common.length === record.pre.length) {
-					callback(i, record);
-				}
-			}
+		var npc = table[subject.name];
+		var section = npc.section[npc.current];
+		var i, il;
+		for (i = 0, il = section.length; i < il; i++) {
+			callback(section[i]);
 		}
 	};
 
-	this.getRequests = function(subject) {
-		var list = [];
-		this.enumerate(subject, function(i, r) {
-			if (r.request !== "*") {
-				list.push( {
-					request: r.request,
-					visited: r.visited
-				} );
+	this.getKeywords = function(subject) {
+		var i, il, word, list = [];
+		this.enumerate(subject, function(entry) {
+			for (i = 0, il = entry.keyword.length; i < il; i++) {
+				word = entry.keyword[i];
+				if (state.contains(word)) {
+					list.add(word);
+				}
 			}
-		} );
-		list.sort( function(a, b) {
-			if (a.visited === b.visited) {
-				return a.request > b.request ? 1 : (a.request < b.request ? -1 : 0);
-			} else {
-				return a.visited - b.visited;
-			}
-		} );		
+		});
 		return list;
 	};
 
 	this.getResponse = function(subject, request) {
 		var record, list = [];
 		var i, il, st;
-		this.enumerate(subject, function(i, r) {
-			if (r.request === request) {
-				list.push(r);
-			}
-		} );
-		record = list[Math.floor(Math.random() * list.length)];
-		for (i = 0, il = record.post.length; i < il; i++) {
-			st = record.post[i];
-			if (st.charAt(0) === "!") {
-				if (st.length === 1) {
-					record.removed = true;
-				} else {
-					state.del(st.substr(1));
+		
+		if (request) {
+		
+			this.enumerate(subject, function(entry) {
+				if (entry.keyword.contains(request)) {
+					list.push(entry);
 				}
-			} else {
-				state.add(st);
-			}
+			});
+		
+		} else {
+
+			this.enumerate(subject, function(entry) {
+				if (entry.command === "hello") {
+					list.push(entry);
+				}
+			});
+
 		}
-		record.visited = true;
+		
+		record = list[Math.floor(Math.random() * list.length)];
+
+		for (i = 0, il = record.keyword.length; i < il; i++) {
+			state.add(record.keyword[i]);
+		}
+		state.del(request);
+
+		if (record.command === "bump") {
+			table[subject.name].current++;
+		}
+
 		return record.response;
 	};
 
