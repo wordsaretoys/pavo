@@ -120,7 +120,7 @@ div {
 	z-index: 15;
 }
 
-#talk-dialogue-frame, #talk-keyword-frame, #talk-control-frame {
+#talk-response-frame, #talk-keyword-frame, #talk-control-frame {
 	padding: 5px;
 }
 
@@ -128,9 +128,9 @@ div {
 	border-top: solid 1px white;
 }
 
-#talk-dialogue-wrapper {
-	overflow-y: scroll;
-	height: 10em;
+#talk-response-frame {
+	color: #afa;
+	height: 3em;
 }
 
 .talk-keyword {
@@ -141,26 +141,6 @@ div {
 	color: black;
 	text-align: center;
 	margin: 5px;
-}
-
-.talk-keyword-clicked {
-	background-color: green;
-}
-
-.talk-name {
-	border-top: solid 1px white;
-	border-bottom: solid 1px white;
-	margin: 20px 0px;
-}
-
-.talk-player {
-	margin-bottom: 5px;
-	color: #aaf;
-}
-
-.talk-response {
-	margin-bottom: 5px;
-	color: #afa;
 }
 
 /* flip dialog */

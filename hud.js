@@ -34,8 +34,7 @@ PAVO.hud = new function() {
 			prompt: jQuery("#prompt"),
 			talk: jQuery("#talk"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
-			dialogueFrame: jQuery("#talk-dialogue-frame"),
-			dialogueWrapper: jQuery("#talk-dialogue-wrapper")
+			responseFrame: jQuery("#talk-response-frame")
 		};
 
 		dom.prompt.resize = function() {
@@ -201,8 +200,6 @@ PAVO.hud = new function() {
 	this.showDialogue = function() {
 		var response, wordlist;
 
-		dom.dialogueFrame.empty();
-
 		PAVO.player.freeze = true;
 
 		dom.talk.css("display", "block");
@@ -210,7 +207,7 @@ PAVO.hud = new function() {
 		dom.talk.visible = true;
 
 		response = PAVO.dialogue.getResponse(prompting.subject);
-		this.addResponse(response);
+		dom.responseFrame.html(response);
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
 		this.showWordList(wordlist);
 	};
@@ -219,7 +216,7 @@ PAVO.hud = new function() {
 		var request, response, wordlist;
 		request = this.innerHTML;
 		response = PAVO.dialogue.getResponse(prompting.subject, request);
-		self.addResponse(response);
+		dom.responseFrame.html(response);
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
 		self.showWordList(wordlist);
 	};
@@ -238,15 +235,6 @@ PAVO.hud = new function() {
 		}
 	};
 	
-	this.addResponse = function(text) {
-		var div = jQuery(document.createElement("div"));
-		div.addClass("talk-response");
-		div.html(text);
-		dom.dialogueFrame.append(div);
-		dom.dialogueWrapper.scrollTop(dom.dialogueWrapper[0].scrollHeight);
-		delete dom.entry;
-	};
-
 	this.hideDialogue = function() {
 		PAVO.player.freeze = false;
 		dom.talk.css("display", "none");
