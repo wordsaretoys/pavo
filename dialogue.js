@@ -26,7 +26,8 @@ PAVO.dialogue = new function() {
 					record = {
 						command: "",
 						keyword: [],
-						response: ""
+						response: "",
+						visited: 0
 					};
 					for (j = 0, jl = header.length; j < jl; j++) {
 						switch(header[j]) {
@@ -61,6 +62,7 @@ PAVO.dialogue = new function() {
 						case "@end":
 						
 							record.command = "end";
+							root.section.push([]);
 							break;
 						
 						default:
@@ -127,7 +129,11 @@ PAVO.dialogue = new function() {
 
 		}
 		
-		record = list[Math.floor(Math.random() * list.length)];
+		list.sort(function(a, b) {
+			return a.visited - b.visited;
+		});
+		record = list[0];
+		record.visited++;
 
 		for (i = 0, il = record.keyword.length; i < il; i++) {
 			state.add(record.keyword[i]);
@@ -135,6 +141,11 @@ PAVO.dialogue = new function() {
 		state.del(request);
 
 		if (record.command === "bump") {
+			table[subject.name].current++;
+		}
+
+		if (record.command === "end") {
+			subject.active = false;
 			table[subject.name].current++;
 		}
 

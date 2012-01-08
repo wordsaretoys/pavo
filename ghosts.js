@@ -38,11 +38,22 @@ PAVO.ghosts = new function() {
 			g.target = new FOAM.Vector();
 			g.lastPos = new FOAM.Vector();
 			g.name = gs[i].name;
+			g.active = true;
 			list.push(g);
 		}
 	};
 	
 	this.update = function() {
+		var i, g;
+		for (i = list.length - 1; i >= 0; i--) {
+			g = list[i];
+			if (!g.active) {
+				g.alpha = g.alpha ? g.alpha * 0.95 : 0.5;
+				if (g.alpha < 0.001) {
+					list.splice(i, 1);
+				}
+			}
+		}
 	};
 	
 	this.trackPlayer = function(g, pp) {
@@ -84,15 +95,19 @@ PAVO.ghosts = new function() {
 			
 				this.trackPlayer(g, cam.position);
 
-				if (d <= TALK_RADIUS) {
+				if (d <= TALK_RADIUS && g.active) {
 					scratch.pos.copy(cam.position).sub(g.position).norm();
 					t = TALK_RADIUS * scratch.pos.dot(cam.orientation.front) / d;
 					if (t > 1) {
 						lt = g;
 					}
 				}
-			
-				a = 0.5 * Math.clamp((VIEW_RADIUS - d) / FADE_RADIUS, 0, 1);
+
+				if (g.alpha) {
+					a = g.alpha;
+				} else {			
+					a = 0.5 * Math.clamp((VIEW_RADIUS - d) / FADE_RADIUS, 0, 1);
+				}
 				gl.uniform3f(program.center, g.position.x, g.position.y, g.position.z);
 				gl.uniform1f(program.alpha, a);
 				gl.uniformMatrix4fv(program.rotations, false, g.matrix.transpose);

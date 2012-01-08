@@ -209,7 +209,7 @@ PAVO.hud = new function() {
 		response = PAVO.dialogue.getResponse(prompting.subject);
 		dom.responseFrame.html(response);
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
-		this.showWordList(wordlist);
+		this.showKeywords(wordlist);
 	};
 	
 	this.wordClicked = function() {
@@ -218,10 +218,10 @@ PAVO.hud = new function() {
 		response = PAVO.dialogue.getResponse(prompting.subject, request);
 		dom.responseFrame.html(response);
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
-		self.showWordList(wordlist);
+		self.showKeywords(wordlist);
 	};
 	
-	this.showWordList = function(list) {
+	this.showKeywords = function(list) {
 		var llen = Math.min(list.length, KW_LIST_SIZE);
 		var i, div;
 		
