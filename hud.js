@@ -33,6 +33,7 @@ PAVO.hud = new function() {
 			messages: jQuery("#messages"),
 			prompt: jQuery("#prompt"),
 			talk: jQuery("#talk"),
+			npcFrame: jQuery("#talk-npc-frame"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
 			responseFrame: jQuery("#talk-response-frame")
 		};
@@ -206,6 +207,8 @@ PAVO.hud = new function() {
 		dom.talk.resize();
 		dom.talk.visible = true;
 
+		dom.npcFrame.html(prompting.subject.name);
+
 		response = PAVO.dialogue.getResponse(prompting.subject);
 		dom.responseFrame.html(response);
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
@@ -226,6 +229,8 @@ PAVO.hud = new function() {
 		var i, div;
 		
 		dom.keywordFrame.empty();
+		dom.keywordFrame.css("display", llen ? "block" : "none");
+		
 		for (i = 0; i < llen; i++) {
 			div = jQuery(document.createElement("div"));
 			div.html(list[i]);

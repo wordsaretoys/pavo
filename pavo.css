@@ -120,17 +120,22 @@ div {
 	z-index: 15;
 }
 
-#talk-response-frame, #talk-keyword-frame, #talk-control-frame {
+#talk-npc-frame, #talk-response-frame, 
+#talk-keyword-frame, #talk-control-frame {
 	padding: 5px;
 }
 
-#talk-keyword-frame, #talk-control-frame {
+#talk-response-frame, #talk-keyword-frame, #talk-control-frame {
 	border-top: solid 1px white;
 }
 
 #talk-response-frame {
 	color: #afa;
 	height: 3em;
+}
+
+#talk-npc-frame {
+	text-align: center;
 }
 
 .talk-keyword {
