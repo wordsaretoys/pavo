@@ -12,75 +12,71 @@ PAVO.dialogue = new function() {
 
 	this.init = function(id) {
 		var entry = jQuery(id).html().split("\n");
-		var data, header, keyword, root, sect, record;
+		var data, header, op, id, root, sect;
+		var keyword, record;
 		var i, il, j, jl, phase = 0;
 
 		for (i = 0, il = entry.length; i < il; i++) {
 			data = jQuery.trim(entry[i]);
 			if (data !== "") {
 
-				switch(phase) {
-				case 0:
-				
+				if (data.charAt(0) === "#") {
 					header = data.split(" ");
-					record = {
-						command: "",
-						keyword: [],
-						response: "",
-						visited: 0
-					};
-					for (j = 0, jl = header.length; j < jl; j++) {
-						switch(header[j]) {
+					op = header[0];
+					id = header[1];
+					switch(op) {
+				
+					case "#npc":
+						root = table[id] = {
+							current: "",
+							section: {}
+						};
+						break;
 						
-						case "@npc":
-						
-							j++;
-							table[header[j]] = {
-								current: 0,
-								section: []
-							};
-							root = table[header[j]];
+					case "#start":
+						root.current = id;
+						break;
 
-							// fall through to allow @npc to create new section
+					case "#section":
+						sect = root.section[id] = [];
+						break;
+						
+					case "#meta":
+						record = {
+							command: "",
+							keyword: [],
+							response: "",
+							visited: 0,
+							argument: ""
+						};
+						sect.push(record);
+						
+						for (j = 1, jl = header.length; j < jl; j++) {
+							op = header[j];
+							switch(op) {
+						
+							case "@goto":
+						
+								record.command = "goto";
+								j++;
+								record.argument = header[j];
+								break;
 							
-						case "@section":
+							case "@hello":
 						
-							root.section.push([]);
-							sect = root.section[root.section.length - 1];
-							break;
+								record.command = "hello";
+								break;
 							
-						case "@bump":
+							default:
 						
-							record.command = "bump";
-							break;
-							
-						case "@hello":
-						
-							record.command = "hello";
-							break;
-							
-						case "@end":
-						
-							record.command = "end";
-							root.section.push([]);
-							break;
-						
-						default:
-						
-							record.keyword.push(header[j]);
+								record.keyword.push(header[j]);
+							}
 						}
 					}
 
-					break;
-					
-				case 1:
-					
-					record.response = data;
-					sect.push(record);
-					break;
-					
+				} else {
+					record.response += data;
 				}
-				phase = phase ? 0 : 1;
 			}
 		}
 	};
@@ -138,15 +134,13 @@ PAVO.dialogue = new function() {
 		for (i = 0, il = record.keyword.length; i < il; i++) {
 			state.add(record.keyword[i]);
 		}
-		state.del(request);
+//		state.del(request);
 
-		if (record.command === "bump") {
-			table[subject.name].current++;
-		}
-
-		if (record.command === "end") {
-			subject.active = false;
-			table[subject.name].current++;
+		if (record.command === "goto") {
+			table[subject.name].current = record.argument;
+			if (table[subject.name].section[record.argument].length === 0) {
+				subject.active = false;
+			}
 		}
 
 		return record.response;
