@@ -139,6 +139,9 @@ PAVO.dialogue = new function() {
 			}
 			return true;
 		});
+		list.sort(function(a, b) {
+			return a > b ? 1 : (a < b ? -1 : 0);
+		});
 		return list;
 	};
 
