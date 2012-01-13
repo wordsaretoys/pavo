@@ -1,10 +1,10 @@
 PAVO.game = {
 
 	space: {
-		size: { x: 128, y: 32, z: 128 },
+		size: { x: 128, y: 8, z: 128 },
 		field: { 
-			seed: 349885716,
-			scale: { x: 0.1, y: 0.1, z: 0.1 }
+			seed: 349885726,
+			scale: { x: 0.53, y: 0.1, z: 0.61 }
 		},
 		color: {
 			seed: 238747483,
@@ -15,29 +15,65 @@ PAVO.game = {
 			scale: { x: 0.02, y: 0.02, z: 0.02 }
 		},
 		image: {
-			seed: 209348
+			seed: 599894542
 		}
 	},
 
 	ghosts: [
 		{ 
-			position: { x: 28, y: 0, z: 52 },
+			position: { x: 108, y: 0, z: 76 },
 			name: "barley"
 		},
+		{ 
+			position: { x: 100, y: 0, z: 28 },
+			name: "popper"
+		},
+		{ 
+			position: { x: 4, y: 0, z: 52 },
+			name: "aura"
+		},
+		{ 
+			position: { x: 60, y: 0, z: 4 },
+			name: "knotty"
+		},
+		{ 
+			position: { x: 52, y: 0, z: 68 },
+			name: "clearly"
+		}
 	],
 	
 	panels: [
-/*		{ 
-			position: { x: 36, y: 0, z: 54 },
+		{ 
+			position: { x: 108, y: 0, z: 124 },
 			rotation: 1,
-			name: "panel alpha"
+			name: "panel"
 		},
-*/
+		{ 
+			position: { x: 36, y: 0, z: 68 },
+			rotation: 0,
+			name: "panel"
+		},
+		{ 
+			position: { x: 4, y: 0, z: 36 },
+			rotation: 0.5,
+			name: "panel"
+		},
+		{ 
+			position: { x: 36, y: 0, z: 12 },
+			rotation: 1,
+			name: "panel"
+		},
+		{ 
+			position: { x: 36, y: 0, z: 36 },
+			rotation: 0.5,
+			name: "panel"
+		},
+
 	],
 	
 	player: {
-		position: { x: 44, y: 16, z: 28 },
-		rotation: 3 * Math.PI / 4
+		position: { x: 124, y: 0, z: 92 },
+		rotation: 0.25
 	}
 };
 

@@ -54,12 +54,12 @@ PAVO.space = new function() {
 		light.gets = function(x, y, z) {
 			return Math.pow(light.get(x, y, z), 2);
 		};
-		image.gets = function() {
+		image.gets = function(a, b) {
 			var i = image.get();
-			if (i > 0.03)
+			if (i > 0.1)
 				return 0;
 			else
-				return Math.floor(7 * image.get()) + 1;
+				return Math.floor((b - a) * image.get()) + a;
 		};
 	};
 
@@ -102,7 +102,7 @@ PAVO.space = new function() {
 					p = this.inside(x + RESOLUTION, y, z);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = image.gets(3, 7);
 						mesh.set(px, ny, nz, 1, 0, c, light.gets(px, ny, nz), w);
 						mesh.set(px, py, nz, 1, 1, c, light.gets(px, py, nz), w);
 						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);
@@ -113,7 +113,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = image.gets(3, 7);
 						mesh.set(px, ny, nz, 0, 0, c, light.gets(px, ny, nz), w);
 						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
 						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
@@ -126,7 +126,7 @@ PAVO.space = new function() {
 					p = this.inside(x, y + RESOLUTION, z);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = 0;	// floor always blank
 						mesh.set(nx, py, nz, 1, 0, c, light.gets(nx, py, nz), w);
 						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
 						mesh.set(px, py, nz, 0, 0, c, light.gets(px, py, nz), w);
@@ -137,7 +137,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = image.gets(0, 2);
 						mesh.set(nx, py, nz, 1, 1, c, light.gets(nx, py, nz), w);
 						mesh.set(px, py, nz, 0, 1, c, light.gets(px, py, nz), w);
 						mesh.set(nx, py, pz, 1, 0, c, light.gets(nx, py, pz), w);
@@ -150,7 +150,7 @@ PAVO.space = new function() {
 					p = this.inside(x, y, z + RESOLUTION);
 					if ( !o && p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = image.gets(3, 7);
 						mesh.set(nx, ny, pz, 0, 0, c, light.gets(nx, ny, pz), w);
 						mesh.set(px, py, pz, 1, 1, c, light.gets(px, py, pz), w);
 						mesh.set(nx, py, pz, 0, 1, c, light.gets(nx, py, pz), w);
@@ -161,7 +161,7 @@ PAVO.space = new function() {
 					}
 					if ( o && !p ) {
 						c = color.get(x, y, z);
-						w = image.gets();
+						w = image.gets(3, 7);
 						mesh.set(nx, ny, pz, 1, 0, c, light.gets(nx, ny, pz), w);
 						mesh.set(nx, py, pz, 1, 1, c, light.gets(nx, py, pz), w);
 						mesh.set(px, py, pz, 0, 1, c, light.gets(px, py, pz), w);

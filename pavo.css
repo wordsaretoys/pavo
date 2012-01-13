@@ -90,6 +90,26 @@ div {
 	text-shadow: black 0.1em 0.1em 0.2em;
 }
 
+/* keyboard controls */
+
+#controls {
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	
+	background: transparent;
+}
+
+#controls td {
+	width: 30px;
+	text-align: center;
+}
+#controls .border {
+	border: 1px solid white;
+	color: white;
+	box-shadow: 0.1em 0.1em 0.2em black;
+}
+
 /* mouse tracking surface */
 
 #mouse-tracker {
