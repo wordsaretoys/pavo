@@ -12,7 +12,7 @@ PAVO.dialogue = new function() {
 
 	this.init = function(id) {
 		var entry = jQuery(id).html().split("\n");
-		var data, tag, id, ch, wd, root, sect;
+		var data, tag, id, ch, wd, root;
 		var keyword, record;
 		var i, il, j, jl, phase = 0, lookup = {};
 
@@ -26,19 +26,7 @@ PAVO.dialogue = new function() {
 				
 					case "#npc":
 						id = tag[1];
-						root = table[id] = {
-							current: "",
-							section: {}
-						};
-						break;
-						
-					case "#start":
-						root.current = tag[1];
-						break;
-
-					case "#section":
-						id = tag[1];
-						sect = root.section[id] = [];
+						root = table[id] = [];
 						break;
 						
 					case "#message":
@@ -57,7 +45,7 @@ PAVO.dialogue = new function() {
 							response: "",
 							visited: false
 						};
-						sect.push(record);
+						root.push(record);
 						
 						tag = data.split(" ");
 						for (j = 0, jl = tag.length; j < jl; j++) {
@@ -69,7 +57,6 @@ PAVO.dialogue = new function() {
 							case "?":
 								record.required = record.required || [];
 								record.required.push(wd);
-								record.keyword.push(wd);
 								break;
 								
 							case "!":
@@ -77,17 +64,26 @@ PAVO.dialogue = new function() {
 								record.unwanted.push(wd);
 								break;
 								
+							case "+":
+								record.addition = record.addition || [];
+								record.addition.push(wd);
+								break;
+								
 							case "-":
 								record.deletion = record.deletion || [];
 								record.deletion.push(wd);
 								break;
 								
-							case "@":
-								record.transit = wd;
-								break;
-								
 							case "$":
 								record.message = lookup[wd];
+								break;
+								
+							case "^":
+								record.blocked = true;
+								break;
+								
+							case "@":
+								record.ending = true;
 								break;
 								
 							default:
@@ -103,39 +99,29 @@ PAVO.dialogue = new function() {
 		}
 	};
 
-	this.getSection = function(subject) {
-		var npc = table[subject.name];
-		return npc.section[npc.current];
-	};
-	
-	this.setSection = function(subject, section) {
-		var npc = table[subject.name];
-		npc.current = section;
-	};
-	
 	this.enumerate = function(subject, callback) {
-		var section = this.getSection(subject);
+		var root = table[subject.name];
 		var i, il, entry;
-		for (i = 0, il = section.length; i < il; i++) {
-			entry = section[i];
-			if (!entry.visited && 
+		for (i = 0, il = root.length; i < il; i++) {
+			entry = root[i];
+			if (!entry.visited &&
 			(!entry.required || entry.required.match(state).length === entry.required.length) &&
 			(!entry.unwanted || entry.unwanted.match(state).length === 0)) {
 				if (!callback(entry)) {
 					break;
 				}
 			}
+			if (entry.blocked) {
+				break;
+			}
 		}
 	};
 
 	this.getKeywords = function(subject) {
-		var i, il, word, list = [];
+		var i, il, list = [];
 		this.enumerate(subject, function(entry) {
 			for (i = 0, il = entry.keyword.length; i < il; i++) {
-				word = entry.keyword[i];
-				if (state.contains(word)) {
-					list.add(word);
-				}
+				list.add(entry.keyword[i]);
 			}
 			return true;
 		});
@@ -146,7 +132,8 @@ PAVO.dialogue = new function() {
 	};
 
 	this.getResponse = function(subject, request) {
-		var section, entry, i, il, st;
+		var root = table[subject.name];
+		var entry, i, il, st;
 		
 		if (request) {
 			this.enumerate(subject, function(e) {
@@ -154,14 +141,15 @@ PAVO.dialogue = new function() {
 				return !e.keyword.contains(request);
 			});
 		} else {
-			section = this.getSection(subject);
-			entry = section[0];
+			entry = root[0];
 		}
 		
 		entry.visited = true;
 
-		for (i = 0, il = entry.keyword.length; i < il; i++) {
-			state.add(entry.keyword[i]);
+		if (entry.addition) {
+			for (i = 0, il = entry.addition.length; i < il; i++) {
+				state.add(entry.addition[i]);
+			}
 		}
 
 		if (entry.deletion) {
@@ -170,12 +158,14 @@ PAVO.dialogue = new function() {
 			}
 		}
 		
-		if (entry.transit) {
-			this.setSection(subject, entry.transit);
-			if (this.getSection(subject).length === 0) {
-				subject.active = false;
-			}
+		if (entry.blocked) {
+			delete entry.blocked;
 		}
+		
+		if (entry.ending) {
+			subject.active = false;
+			table[subject.name] = [];
+		}		
 
 		if (entry.message) {
 			PAVO.hud.addMessage(entry.message);

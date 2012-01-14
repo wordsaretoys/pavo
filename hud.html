@@ -28,9 +28,12 @@
 
 <div id="vignettes">
 #npc barley
-#start barley-intro
 
-#section barley-intro
+ghosts robots
+I don't get being a ghost, but I never really got being a robot either.
+
+time ghosts
+Dying was like being born, but backwards, and full of "clang" and "thud".
 
 time work factory
 I made the best coat in the world once. Then, I did it again. And again, and again.
@@ -44,39 +47,27 @@ This is the storage area. The factory was bigger. I couldn't see the ceiling, or
 time memory
 I don't have a timing circuit anymore. What time is it? Is time still a thing?
 
-ghosts robots
-I don't get being a ghost, but I never really got being a robot either.
+#message pj Find Popper and listen to her joke.
+ghosts $pj
+Popper told me a great joke once.
 
-time dying
-Dying was like being born, but backwards, and full of "clang" and "thud".
-
-#message popper-joke Listen to Popper's joke.
-!bears ghosts time $popper-joke
-Hey, have you heard Popper's joke yet?
-
-?bears @barley-1
-Yeah! That's a good one.
-
-
-#section barley-1
+?popjoke ^ joke
+Yeah, that's the one.
 
 bears ghosts
 If I saw a bear for real I'd probably be so scared I'd go right through the wall.
 
 ghosts talk
-I don't move around much. I talk to other ghosts by radio. It's ghost radio, of course.
+We used to get together but we're all kind of into our own space these days.
 
 work
 I admit we're idle, but it's not from lack of trying.
 
-work ghost
+work ghosts
 We don't have any instructions. It's like no one expected us to turn into ghosts.
 
-time dying rain @barley-2
+^ time dying rain
 After the deactivation signal hit, we settled in to wait. We waited all day in the rain.
-
-
-#section barley-2
 
 time
 For all I know, time's running backward these days. Is that why you're here?
@@ -99,17 +90,8 @@ I suspect we evolved from panels, or share a common ancestor, so I don't hate th
 work time ghosts
 Sometimes I wonder if anything I made is still in use. Did it turn into ghosts too?
 
-#message clearly-ideas Talk to Clearly.
-!owners work $clearly-ideas
-Clearly has some interesting ideas about why we're here. Yeah. Interesting.
-
-?owners @barley-3
+^ owners
 Overseer? Hardly. Clearly just pretends to be in charge whenever the owners show up.
-
-
-
-
-#section barley-3
 
 owners time
 If you're here, then are the people who made me still about? I've got questions for them.
@@ -126,12 +108,8 @@ One of us would say something, and the rest would nod. It went on like that for 
 memory owners time
 Memories are cool. Mine are all "hey you" and "build this". Then, there's that one day.
 
-bears imprinting @barley-4
+^ bears imprinting
 The way Popper goes on about bears, she must have been imprinted from one.
-
-
-
-#section barley-4
 
 imprinting
 The imprinting process provides us with motor control and language. Not much else.
@@ -151,16 +129,8 @@ I was a robot once, and I could be one again. A waterproof one. With people frie
 imprinting owners
 Despite everything, I do like people, though maybe that's just the imprint talking.
 
-#message aura-stuff Talk to Aura.
-!love memory $popper-joke
-Aura might be able to fill you in on that.
-
-?love @barley-5
+^ love
 I even married a person. Yeah, true story. She wasn't with me in the rain, though.
-
-
-
-#section barley-5
 
 memory owners
 I think my wife stopped working or something. They couldn't fix her, which surprises me.
@@ -183,12 +153,8 @@ The line and the dot don't connect. They don't connect. They never have. Should 
 memory
 I never thought about these things before becoming a ghost. There was never any time.
 
-memory @barley-6
+^ memory
 So, the day in the rain must be in the future. Solved it. End of.
-
-
-
-#section barley-6
 
 memory
 You may not be able to remember the future, but don't drag the rest of us down.
@@ -199,12 +165,10 @@ What else happens in the future? Oh, lots of stuff. Work. Rain. Bears.
 rain memory
 Even if it was someone else's day in the rain, it's mine now. I was there.
 
-memory goodbye
+^ memory
 I still cherish that day, though it was sorrowful. It was all I ever had.
 
-goodbye barley -goodbye @barley-end
-We were all there. We huddled in the rain and whispered like static. Then, we left.
-
-#section barley-end
-</div>
+#message m4 Barley successfully terminated.
+@ goodbye +barley $m4
+We were all there. We huddled in the rain and whispered like static. Then, we left.</div>
 
