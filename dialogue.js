@@ -13,7 +13,7 @@ PAVO.dialogue = new function() {
 	this.init = function(id) {
 		var entry = jQuery(id).html().split("\n");
 		var data, tag, id, ch, wd, root;
-		var keyword, record;
+		var keyword, record, req;
 		var i, il, j, jl, phase = 0, lookup = {};
 
 		for (i = 0, il = entry.length; i < il; i++) {
@@ -27,6 +27,7 @@ PAVO.dialogue = new function() {
 					case "#npc":
 						id = tag[1];
 						root = table[id] = [];
+						req = [];
 						break;
 						
 					case "#message":
@@ -34,6 +35,18 @@ PAVO.dialogue = new function() {
 						tag.splice(0, 2);
 						lookup[id] = tag.join(" ");
 						break; 
+						
+					case "#require":
+						for (j = 1, jl = tag.length; j < jl; j++) {
+							req.add(tag[j]);
+						}
+						break;
+
+					case "#unrequire":
+						for (j = 1, jl = tag.length; j < jl; j++) {
+							req.del(tag[j]);
+						}
+						break;
 					}
 				
 				} else {
@@ -46,6 +59,12 @@ PAVO.dialogue = new function() {
 							visited: false
 						};
 						root.push(record);
+						if (req.length > 0) {
+							record.required = [];
+							for (j = 0, jl = req.length; j < jl; j++) {
+								record.required.add(req[j]);
+							}
+						}
 						
 						tag = data.split(" ");
 						for (j = 0, jl = tag.length; j < jl; j++) {
@@ -56,30 +75,26 @@ PAVO.dialogue = new function() {
 							
 							case "?":
 								record.required = record.required || [];
-								record.required.push(wd);
+								record.required.add(wd);
 								break;
 								
 							case "!":
 								record.unwanted = record.unwanted || [];
-								record.unwanted.push(wd);
+								record.unwanted.add(wd);
 								break;
 								
 							case "+":
 								record.addition = record.addition || [];
-								record.addition.push(wd);
+								record.addition.add(wd);
 								break;
 								
 							case "-":
 								record.deletion = record.deletion || [];
-								record.deletion.push(wd);
+								record.deletion.add(wd);
 								break;
 								
 							case "$":
 								record.message = lookup[wd];
-								break;
-								
-							case "^":
-								record.blocked = true;
 								break;
 								
 							case "@":
@@ -110,9 +125,6 @@ PAVO.dialogue = new function() {
 				if (!callback(entry)) {
 					break;
 				}
-			}
-			if (entry.blocked) {
-				break;
 			}
 		}
 	};
@@ -156,10 +168,6 @@ PAVO.dialogue = new function() {
 			for (i = 0, il = entry.deletion.length; i < il; i++) {
 				state.del(entry.keyword[i]);
 			}
-		}
-		
-		if (entry.blocked) {
-			delete entry.blocked;
 		}
 		
 		if (entry.ending) {

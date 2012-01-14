@@ -47,12 +47,15 @@ This is the storage area. The factory was bigger. I couldn't see the ceiling, or
 time memory
 I don't have a timing circuit anymore. What time is it? Is time still a thing?
 
-#message pj Find Popper and listen to her joke.
-ghosts $pj
-Popper told me a great joke once.
+#message pj Find Popper and listen to her joke. 
+!popjoke ghosts $pj
+Popper told me a great joke. It goes--wait, no. She tells it better. Ask her.
 
-?popjoke ^ joke
-Yeah, that's the one.
+#message pjc Completed: Find Popper and listen to her joke. 
+?popjoke joke +bar0 $pjc
+Yeah, that's it. Popper got me twice with that one.
+
+#require bar0
 
 bears ghosts
 If I saw a bear for real I'd probably be so scared I'd go right through the wall.
@@ -66,7 +69,9 @@ I admit we're idle, but it's not from lack of trying.
 work ghosts
 We don't have any instructions. It's like no one expected us to turn into ghosts.
 
-^ time dying rain
+#require bar1
+
+time dying rain
 After the deactivation signal hit, we settled in to wait. We waited all day in the rain.
 
 time
@@ -90,8 +95,10 @@ I suspect we evolved from panels, or share a common ancestor, so I don't hate th
 work time ghosts
 Sometimes I wonder if anything I made is still in use. Did it turn into ghosts too?
 
-^ owners
+owners
 Overseer? Hardly. Clearly just pretends to be in charge whenever the owners show up.
+
+#require bar2
 
 owners time
 If you're here, then are the people who made me still about? I've got questions for them.
@@ -108,7 +115,9 @@ One of us would say something, and the rest would nod. It went on like that for 
 memory owners time
 Memories are cool. Mine are all "hey you" and "build this". Then, there's that one day.
 
-^ bears imprinting
+#require bar3
+
+bears imprinting
 The way Popper goes on about bears, she must have been imprinted from one.
 
 imprinting
@@ -129,8 +138,10 @@ I was a robot once, and I could be one again. A waterproof one. With people frie
 imprinting owners
 Despite everything, I do like people, though maybe that's just the imprint talking.
 
-^ love
+love
 I even married a person. Yeah, true story. She wasn't with me in the rain, though.
+
+#require bar4
 
 memory owners
 I think my wife stopped working or something. They couldn't fix her, which surprises me.
@@ -153,8 +164,10 @@ The line and the dot don't connect. They don't connect. They never have. Should 
 memory
 I never thought about these things before becoming a ghost. There was never any time.
 
-^ memory
+memory
 So, the day in the rain must be in the future. Solved it. End of.
+
+#require bar5
 
 memory
 You may not be able to remember the future, but don't drag the rest of us down.
@@ -165,10 +178,11 @@ What else happens in the future? Oh, lots of stuff. Work. Rain. Bears.
 rain memory
 Even if it was someone else's day in the rain, it's mine now. I was there.
 
-^ memory
+memory
 I still cherish that day, though it was sorrowful. It was all I ever had.
 
-#message m4 Barley successfully terminated.
-@ goodbye +barley $m4
-We were all there. We huddled in the rain and whispered like static. Then, we left.</div>
+#require barend
 
+@ goodbye +barley
+We were all there. We huddled in the rain and whispered like static. Then, we left.
+</div>
