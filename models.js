@@ -7,8 +7,8 @@
 PAVO.models = new function() {
 
 	this.createGhostMesh = function() {
-		var nx = ny = nz = -0.5;
-		var px = py = pz =  0.5;
+		var nx = -0.5, ny = -0.5, nz = -0.5;
+		var px = 0.5, py = 0.5, pz = 0.5;
 		var program = FOAM.shaders.get("ghost");
 		var mesh = new FOAM.Mesh();
 
@@ -70,8 +70,8 @@ PAVO.models = new function() {
 	};
 	
 	this.createPanelMesh = function() {
-		var nx = ny = nz = -1.0;
-		var px = py = pz =  1.0;
+		var nx = -1, ny = -1, nz = -1;
+		var px = 1, py = 1, pz = 1;
 		var hy = 0;
 		var program = FOAM.shaders.get("panel");
 		var mesh = new FOAM.Mesh();

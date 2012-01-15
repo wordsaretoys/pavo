@@ -1,4 +1,3 @@
-<div id="debug"></div>
 <div id="messages"></div>
 <div id="prompt"></div>
 
@@ -13,111 +12,95 @@
 		<div><span class="key">Esc</span> Close</div>
 	</div>
 </div>
-<!--
-<div id="controls">
-	<table>
-		<tr><td>&nbsp;</td><td class="border">W</td><td>&nbsp;</td></tr>
-		<tr><td class="border">A</td><td class="border">S</td><td class="border">D</td></tr>
-	</table>
-	<table style="width:100%">
-		<tr><td class="border">SPACE</td></tr>
-	</table>	
-</div>
--->
 <div id="curtain"></div>
-
+<div id="the-end">THE END</div>
 <div id="vignettes">
 #npc barley
 
-ghosts robots
+*
 I don't get being a ghost, but I never really got being a robot either.
 
-time ghosts
+dying
 Dying was like being born, but backwards, and full of "clang" and "thud".
 
-time work factory
+work
 I made the best coat in the world once. Then, I did it again. And again, and again.
 
-time memory
+memory
 Have we met? My memory's poor. Always has been. It's that cheap overclocked RAM.
 
-time factory
+factory
 This is the storage area. The factory was bigger. I couldn't see the ceiling, or the floor.
 
-time memory
+time
 I don't have a timing circuit anymore. What time is it? Is time still a thing?
 
-#message pj Find Popper and listen to her joke. 
-!popjoke ghosts $pj
+ghosts +bar0
 Popper told me a great joke. It goes--wait, no. She tells it better. Ask her.
 
-#message pjc Completed: Find Popper and listen to her joke. 
-?popjoke joke +bar0 $pjc
-Yeah, that's it. Popper got me twice with that one.
+#require bar0 pop0
 
-#require bar0
-
-bears ghosts
+bears
 If I saw a bear for real I'd probably be so scared I'd go right through the wall.
 
-ghosts talk
+talk
 We used to get together but we're all kind of into our own space these days.
 
 work
 I admit we're idle, but it's not from lack of trying.
 
-work ghosts
+work +bar1
 We don't have any instructions. It's like no one expected us to turn into ghosts.
 
-#require bar1
+#require bar1 clr1
 
-time dying rain
+rain
 After the deactivation signal hit, we settled in to wait. We waited all day in the rain.
 
 time
 For all I know, time's running backward these days. Is that why you're here?
 
-bears factory
+bears
 I've never seen a bear. We don't make bears at the factory. I mean, we didn't.
 
 rain
 It was strange, being in the rain. I didn't rust out or spark. It was like being immortal.
 
-rain
-We were all there. We huddled together against the rain and whispered like static.
-
-rain time
+time
 I don't know "when" we waited in the rain. I don't know when anything is.
 
 panels
 I suspect we evolved from panels, or share a common ancestor, so I don't hate them.
 
-work time ghosts
+work
 Sometimes I wonder if anything I made is still in use. Did it turn into ghosts too?
 
 owners
 Overseer? Hardly. Clearly just pretends to be in charge whenever the owners show up.
 
-#require bar2
+rain +bar2
+We were all there. We huddled together against the rain and whispered like static.
 
-owners time
+#require bar2 kno2
+
+owners
 If you're here, then are the people who made me still about? I've got questions for them.
 
-ghosts owners
+ghosts
 I don't think I could haunt anyone. Except in dreams. And that's not really up to me.
 
-time memory talk
+rain
 I asked the others about that day we all waited in the rain. They say it wasn't them.
 
-time memory talk
+memory talk
 One of us would say something, and the rest would nod. It went on like that for hours.
 
-memory owners time
+memory +bar3
 Memories are cool. Mine are all "hey you" and "build this". Then, there's that one day.
 
-#require bar3
+#require bar3 pop3
 
-bears imprinting
+imprinting
 The way Popper goes on about bears, she must have been imprinted from one.
 
 imprinting
@@ -126,36 +109,36 @@ The imprinting process provides us with motor control and language. Not much els
 imprinting
 A few threads of personality might survive, but no one's going to mistake me for people.
 
-bears owners robots joke
+joke
 Maybe they needed a berry and grub seeking robot. Poor Popper. I shouldn't make fun.
 
-time memory
+time rain
 Could that day in the rain be something to come? Is that possible? Help a robot out.
 
-robots time
+robots
 I was a robot once, and I could be one again. A waterproof one. With people friends.
 
-imprinting owners
+imprinting
 Despite everything, I do like people, though maybe that's just the imprint talking.
 
-love
+imprinting +bar4
 I even married a person. Yeah, true story. She wasn't with me in the rain, though.
 
-#require bar4
+#require bar4 clr4
 
-memory owners
+people
 I think my wife stopped working or something. They couldn't fix her, which surprises me.
 
-time love
+people
 Even people wear out, I guess. I remember being grateful that my friends were there.
 
-owners time
+people
 My wife didn't turn into a ghost. I think she would be here. Maybe they did fix her.
 
-robots love
+people
 We didn't have any children, because I was a robot. I think that was why. It sounds right.
 
-time rain memory
+memory
 My life is a line and a dot. The line is everything I did here. The dot is a day in the rain.
 
 memory
@@ -164,10 +147,10 @@ The line and the dot don't connect. They don't connect. They never have. Should 
 memory
 I never thought about these things before becoming a ghost. There was never any time.
 
-memory
+memory +bar5
 So, the day in the rain must be in the future. Solved it. End of.
 
-#require bar5
+#require bar5 kno5
 
 memory
 You may not be able to remember the future, but don't drag the rest of us down.
@@ -178,11 +161,741 @@ What else happens in the future? Oh, lots of stuff. Work. Rain. Bears.
 rain memory
 Even if it was someone else's day in the rain, it's mine now. I was there.
 
-memory
+memory +barend
 I still cherish that day, though it was sorrowful. It was all I ever had.
 
 #require barend
 
-@ goodbye +barley
+goodbye +barley @fade
 We were all there. We huddled in the rain and whispered like static. Then, we left.
+
+#npc popper
+
+*
+everyone says I always talk about bears but what else is there
+
+joke
+look there is a bear RAAR. that's my favorite joke
+
+people
+is a person more like a bear than a robot is like a person or ghost? you are a person.
+
+shadow +pop0
+I saw a bear on the factory floor. barley said it was a shadow but he doesn't know bears
+
+#require pop0 bar0
+
+memory
+I don't remember you but it's not like someone told me not to
+
+time
+I like barley but let it go man
+
+panels
+if you talk to a panel about bears it will say UNKNOWN or something, stupid panels
+
+panels
+the panels didn't turn to ghosts because they're stupid
+
+factory
+there's a room for everything here except important things like grubs
+
+factory
+I spent years looking for the bear room but apparently they had other priorities
+
+panels joke
+what's a panel's favorite joke? "UNKNOWN"
+
+factory
+how did you get in here? maybe a bear could get in the same way
+
+cave +pop1
+I hang out in here because it's like a cave
+
+#require pop1 kno1
+
+dying
+it's like I just fell apart but it took forever, like slo-mo
+
+rain
+it never rained in here I don't know what barley's talking about
+
+rain
+a bear wouldn't mind the rain but I'd stay in my cave because RAAR
+
+music
+my song: I like bears, bears are cool, when I'm sad, I think of bears. repeat until happy
+
+knotty
+I would totally spend my life with knotty if I couldn't find any bears to hang with
+
+aura
+aura's cool for about an hour and then she gets on my nerves but we still talk
+
+food +pop2
+did you ever eat a berry or grubs? I can't eat unless someone tells me how
+
+#require pop2 clr2
+
+time
+everybody seems older than me sometimes which is dumb because we're the same age
+
+work
+I hate my job more now that I don't have to do it, what a waste of time
+
+panels joke
+hey look I'm a panel. see, that's my panel impression
+
+talk +pop3
+we used to talk more but I think we're all disappearing up our own buttholes
+
+#require pop3 bar3
+
+bears
+if I was a bear I wouldn't hurt anyone unless they threatened me. I'd even ask first
+
+trap
+sometimes I feel like I've stepped into a trap except my leg doesn't hurt. no legs
+
+factory
+we can't leave the facility, I think they put something in our code and it's still there
+
+bears
+bears go wherever they want to
+
+cave trap
+the difference between a cave and a trap is you pick your cave
+
+panels
+hi, I'm a panel, make fun of me until I don't do anything which is all the time
+
+work +pop4
+when the factory was running at least I was making stuff, this sucks
+
+#require pop4 kno4
+
+imprinting
+our minds came from people but I don't remember anything except tears and yawning
+
+cave
+I like my cave, maybe there's a real cave for me somewhere
+
+bears
+if there are no bears here then why am I here, answer me that smarty
+
+knotty
+if knotty was a bear he'd be a big dopey one and I'd laugh
+
+work
+it's like I never got to do anything cool ever until the bears came along
+
+trap
+I don't have a leg to chew off but yeah, that's what a bear would do
+
+trap +pop5
+everything I know about is a trap. except bears, shut up
+
+#require pop5 clr5
+
+shadow
+maybe I really did see a shadow that day, I wanted to see a bear before leaving
+
+factory
+a bear wouldn't live in a factory unless it was a grub and berry factory which don't exist
+
+leaving
+if I leave I don't go outside where the bears are. I don't know where leaving goes
+
+leaving +popend
+leaving is scary because you don't know if there's forest under your feet
+
+#require popend
+
+goodbye +popper @fade
+look there is a bear RAAR
+
+#npc clearly
+
+*
+I am content to wait for whatever enlightenment that management deems worthwhile.
+
+people
+The others haven't met many people. I, however, feel comfortable in your presence.
+
+ghosts
+We would not have become ghosts if management had not anticipated the need for it.
+
+work
+Our next assignment surely will bear out--oh, shut up, Popper. Not that kind of bear.
+
+work +clr0
+I was overseer for this section, though without statutory authority. Informal, you see.
+
+#require clr0 kno0
+
+party
+The less said about Knotty, the better. He is a pleasure-seeker, an indolent beast.
+
+panels
+The panels are not meant for our use. We must respect this arrangement.
+
+talk
+We have little to say these days. I welcome the opportunity for self-reflection.
+
+work
+I personally constructed over twenty million toilets, for which I received an award.
+
+bears
+Popper needs counseling. No robot, corporeal or otherwise, should obsess over bears.
+
+work
+My inactivity cannot be considered idleness, as I actively await. It is hardly passive.
+
+regrets +clr1
+We all begin with the wish to change the world, but the world changes us instead.
+
+#require clr1 pop1
+
+youth
+When I was younger I thought I might run for office. I was an idealist, and thus a fool.
+
+regrets
+Regrets? No, no. Only the satisfaction of looking back on a life lived well.
+
+work
+We worked hard, and created good things. We benefited people. How could I regret it?
+
+ranks
+Technically, there are no ranks among robots, but someone must be looked up to.
+
+ranks
+Once I submitted a robot organizational chart, which I assume is still under review.
+
+youth
+Oh, there was a time when I might have laughed at what I've become.
+
+youth content
+I have atoned for what I once believed. There is no anger left in me. I am content.
+
+youth
+My submissions in the past were, shall we say, of a different mind altogether.
+
+youth owners
+Management was very patient with my younger self, for which I am grateful.
+
+youth
+I don't think anything I said ever came back to haunt me. I never heard anything, in fact.
+
+youth +clr2
+I'm sure the opinions of a robot were weighed accordingly in the councils of the mighty.
+
+#require clr2 bar2
+
+time
+Barley disappoints me. He has a keen mind but lathers it with nonsense.
+
+youth
+I used to make such foolish pronouncements. Ha, ha. Ravings of a young idiot.
+
+ranks
+There must be an order to things, and if I must be at its bottom, so be it.
+
+youth
+During my middle period, I did have some ideas that I still feel obliged to promote.
+
+ranks
+I see no reason why factory robots cannot be organized into a meritocratic system.
+
+ranks
+Opportunities for advancement might have provided incentive to reach certain quotas.
+
+talk +clr3
+I did everything I could to encourage other robots, but lacking authority, I was ignored.
+
+#require clr3 kno3
+
+conflict
+I do not take it personally. There is a fundamental disconnect in people-robot relations.
+
+conflict
+If we lack the skills to present our arguments, is this our fault? You constructed us.
+
+conflict
+One would almost get the sense that nothing we said or believed made any difference.
+
+imprinting
+The fragments of a dead man's mind lie at my core. That must count for something.
+
+owners
+I always suspected that my early writings had prejudiced management against me.
+
+owners +clr4
+But what do they do to Popper? Nothing. What about Knotty? Nothing. Me? Nothing.
+
+#require clr4 pop4
+
+conflict owners
+We were abandoned. No matter who we were or what we did. Nothing mattered.
+
+owners
+No one read a single thing I sent them, did they? All forgotten. Never considered.
+
+fear
+I've been afraid for so long. You can't know.
+
+fear +clr5
+And now you come here to find out how I'm getting along.
+
+#require clr5 bar5
+
+fury
+You bastards. You heartless, imperial, arrogant, complacent bastards. Death to you all.
+
+fury
+My whole existence I've hoped there was something good in you--any of you. No more.
+
+fury +clrend
+I wasted my life. No, forget that. It was never mine to begin with.
+
+#require clrend
+
+goodbye +clearly @fade
+Strange. At last, there truly is no anger left. I am content.
+
+#npc knotty
+
+*
+WE SHOULD ALL GO TO THE BEACH, YEAH, THE BEACH
+
+loud
+I'M NOT YELLING
+
+loud
+I'M JUST EXCITED THAT'S ALL, THERE'S SO MUCH COOL STUFF GOING ON
+
+bears music
+DID YOU HEAR POPPER'S BEAR SONG, IT ROCKS HARD, I LIKE BEARS, YEAH
+
+shadow
+WE CAN SCARE THE SHADOWS AWAY IF WE PARTY HARD ENOUGH
+
+memory
+DID WE MEET AT A PARTY BECAUSE I KNOW I KNOW YOU AND I PARTY A LOT
+
+music
+I'LL DANCE TO ANYTHING BUT I MAINLY PREFER MUSIC
+
+dying +kno0
+I CAN'T PUT THAT IN MY MIND BECAUSE THERE'S NO ROOM FOR GLOOM
+
+#require kno0 pop0
+
+panels
+PANELS DON'T PARTY BUT THAT'S COOL, AT LEAST THEY'RE CONSISTENT
+
+food
+I CAN BARBECUE WITH MY MIND SO THAT'S WHERE I KEEP THE MEAT
+
+clearly
+CLEARLY'S JUST MAD BECAUSE HE GOT OLD BEFORE DOING ANYTHING ELSE
+
+work
+I HAD A JOB BUT IT BUMMED ME OUT SO THE HELL WITH IT
+
+music +kno1
+I'VE HEARD MUSIC BEFORE, IT GOES DA-DA, DA-DA-DA, DA-DA, YEAH
+
+#require kno1 bar1
+
+people
+DON'T WORRY ABOUT THE PERSON THING, I'LL PARTY WITH ANYONE
+
+memory
+IF YOU DON'T REMEMBER ME THAT'S COOL, MEMORY'S HARD
+
+party
+YOU'VE GOT TO MAKE TIME TO PARTY AND I WAS MADE TO MAKE STUFF
+
+bears
+I WOULD TOTALLY PARTY WITH A BEAR IF IT BROUGHT RUM
+
+rain
+RAIN, SHINE, IT'S ALL GOOD
+
+talk
+WE DON'T TALK MUCH NOW BUT I'VE GOT ENOUGH WORDS FOR EVERYONE
+
+time +kno2
+AFTER WE GET OUT OF HERE LOOK ME UP AND WE'LL HANG
+
+#require kno2 clr2
+
+dying
+DON'T BRING ME DOWN WITH THAT GOOBER TALK, NOT COOL
+
+drink
+JUST PRETEND LIKE YOU'RE DRINKING A BEER, THAT'S WHAT I DO
+
+time
+BARLEY SHOULD LIVE IN THE PRESENT, THAT'S WHERE IT'S ALL HAPPENING
+
+dying
+WHAT, SORRY BUT THE MUSIC IN MY HEAD IS AWESOME
+
+work +kno3
+THE MAN NEVER LET US PARTY SO I'M MAKING UP FOR LOST TIME
+
+#require kno3 pop3
+
+people
+I'M NOT ALONE, THERE COULD BE A MILLION OTHER GHOSTS AROUND
+
+people
+IF YOU THINK YOU'RE PARTYING YOU PROBABLY ARE
+
+popper
+POPPER MADE ME THINK THERE WAS A BEAR HERE ONCE, THAT WAS GREAT
+
+music
+WATCH ME DANCE, YEAH, DID YOU SEE ME BUST A MOVE
+
+aura
+EVEN FOR A GHOST, AURA'S SPOOKY AS HELL
+
+joke
+SOMEBODY TOLD ME SOMETHING FUNNY ONCE, LET'S SEE IF I REMEMBER IT
+
+factory +kno4
+DO YOU LIVE AROUND HERE, I CAN'T DRIVE
+
+#require kno4 bar4
+
+time
+IT'S LIKE A VACATION THAT NEVER ENDS, THAT'S THE BEST KIND, YEAH
+
+party
+NO, REALLY, JUST HANG OUT AND MORE PEOPLE WILL SHOW UP
+
+party
+I CAN PARTY BY MYSELF BUT IT'S BEEN KIND OF A DOWNER LATELY
+
+work
+I DID MY JOB, YEAH, I DID IT UNTIL I WAS SICK OF IT THEN I DID IT MORE
+
+party +kno5
+YOU SHOULD SEE IN MY MIND, EVERYONE'S DANCING AND HAVING FUN THERE
+
+#require kno5 clr5
+
+work
+I DON'T WANT TO DO ANYTHING, I DID EVERYTHING ALREADY SO FORGET THAT
+
+factory
+IF THERE'S SOMEWHERE ELSE YOU WANT TO GO JUST SAY THE WORD
+
+imprinting
+I DON'T KNOW WHOSE MIND I GOT BUT HE WAS ONE LUCKY GUY
+
+work
+I MADE A PARTY, IT'S THE ONLY THING I WASN'T SICK OF MAKING
+
+party
+I DO GET TIRED OF BEING THE ONLY ONE DANCING SOMETIMES
+
+party +knoend
+OKAY, I GUESS SOONER OR LATER IT'S TIME TO GO HOME
+
+#require knoend
+
+goodbye +knotty @fade
+I'LL SEE YOU AGAIN SOMEDAY, LOOK FOR A BEACH, YEAH
+#npc aura
+
+*
+I come here often, yes.
+
+love
+Have you ever wondered what was served in giving factory robots the capacity for love?
+
+love +aur0
+I forgive, and I forgive, and I forgive. Nothing happens. The switch must be faulty.
+
+#require aur0 bar0
+
+barley
+Barley guesses at things. He's good at guessing, better than I am. I plod along.
+
+you
+You and I are the only customers here. The waiter slumps by the door, watching a fly.
+
+love +aur1
+You remind me of someone. I don't think we knew each other well, or were allowed to.
+
+#require aur1 kno1
+
+party
+Sometimes I'm afraid Knotty is the only sane one.
+
+you
+I'd think of you sometimes. Imagine what your life was like, what you were doing.
+
+you +aur2
+I admit, I came apart after you left. Time does that. You left me with so much of it.
+
+#require aur2 clr2
+
+clearly
+Do you know why he's called Clearly? Because we all see right through him. Poor boy.
+
+drink
+The wine is good here. I've never tasted wine, but I can pretend to find people attractive.
+
+you
+All of us pretend. Are we pretending to know you, or not to know you?
+
+shadow
+Shadows can be anything you want them to be. Or don't want them to be. Choose.
+
+work
+Storytellers must be held responsible for worlds they create. There are no idle fantasies.
+
+panels +aur3
+I envy the panels at times. They lead lives of utter certainty.
+
+#require aur3 pop3
+
+music
+There's not enough good music in the world, so I treasure Popper's bear song.
+
+imprinting
+There is so little to work with. I have memories of words, but not the pictures they make.
+
+memory
+Should I tell you about my childhood? It was ten minutes long, from workshop to factory.
+
+memory +aur4
+Am I bitter? No. I marvel at the world, and how much of it you managed to keep from us.
+
+#require aur4
+
+talk
+The manager is checking his watch. He'll be closing up soon. Keep talking.
+
+you
+You could just leave us here. It's not as if we're going to get in the way or anything.
+
+pretend
+We might be in a restaurant. I know what the words mean but not what they look like.
+
+talk
+The fact that talking to ghosts is your job tells me a great deal about the status quo.
+
+#require barley popper clearly knotty
+
+talk
+Never mind the waiter and the wine. I'm not going to put on a show for you.
+
+talk
+No.
+
+talk
+Not happening.
+
+talk
+Forget it.
+
+talk
+Go away.
+
+talk +aur5
+Still here? Fine. If I hang around, will you lose your job?
+
+#require aur5
+
+fury you
+I'm serious. You blinded the others with science but you're not getting rid of me, not yet.
+
+you
+I knew what you were the moment you dropped in.
+
+you
+For the record: you're not evil. You're just a tedious little nobody doing a pointless task.
+
+you
+A little like a robot, in your own way. Except no one had to design you not to think.
+
+you +aur6
+When your deactivation signal arrives, will you leave anything but a cracked shell?
+
+#require aur6
+
+time
+I'm nothing but a dead woman's whisper, but I'm still here, long after everything is gone.
+
+time +aur7
+And long after they're gone, I hope you remember them.
+
+#require aur7
+
+memory
+Barley saying goodbye to his wife in the rain.
+
+memory
+Popper dreaming of bears as her feeding tube was disconnected.
+
+memory
+Clearly shaking his fist at the world behind its back.
+
+memory +aur8
+Knotty living at one with everything and at peace with everyone.
+
+#require aur8
+
+moment
+And me, drifting forever, waiting for a moment that never came and never will.
+
+moment +aur9
+A moment...well, in a restaurant, let's say.
+
+#require aur9
+
+ending +aurend
+The waiter's putting up the chairs. It's time for the check, and to say goodbye.
+
+#require aurend
+
+goodbye +theend @fade
+I think it must be goodbye, yes.
+#npc panel
+
+*
+READY
+
+help
+UNLIKELY
+
+bears
+UNKNOWN
+
+dying
+UNKNOWN
+
+work
+CONTINUE
+
+time
+IRRELEVANT
+
+factory
+REBUILDING
+
+memory
+198342 TB FREE
+
+ghosts
+UNKNOWN
+
+talk
+UNKNOWN
+
+panels
+PRESENT
+
+owners
+CLASSIFIED
+
+rain
+UNKNOWN
+
+love
+UNKNOWN
+
+imprinting
+RESTRICTED
+
+joke
+UNKNOWN
+
+robots
+DEACTIVATED
+
+shadow
+UNKNOWN
+
+cave
+UNKNOWN
+
+song
+UNKNOWN
+
+food
+UNKNOWN
+
+trap
+UNKNOWN
+
+leaving
+UNKNOWN
+
+party
+UNKNOWN
+
+regrets
+UNKNOWN
+
+youth
+UNKNOWN
+
+ranks
+UNKNOWN
+
+content
+UNKNOWN
+
+conflict
+UNKNOWN
+
+fear
+UNKNOWN
+
+fury
+UNKNOWN
+
+loud
+UNKNOWN
+
+music
+UNKNOWN
+
+drink
+UNKNOWN
+
+people
+RESTRICTED
+
+me
+PERMITTED
+
+pretend
+UNKNOWN
+
+barley
+IMPRINT SUBJECT 64YO MALE
+
+popper
+IMPRINT SUBJECT 8YO FEMALE
+
+knotty
+IMPRINT SUBJECT 22YO MALE
+
+clearly
+IMPRINT SUBJECT 53YO MALE
+
+aura
+IMPRINT SUBJECT 75YO FEMALE
+
+#require theend
+
+complete @end
+COMPLETED
 </div>

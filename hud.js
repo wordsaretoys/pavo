@@ -6,8 +6,8 @@
 
 PAVO.hud = new function() {
 
-	var MESSAGE_FADE_TIME = 250;
-	var MESSAGE_DELAY = 2500;
+	var MESSAGE_FADE_TIME = 500;
+	var MESSAGE_DELAY = 5000;
 
 	var KW_LIST_SIZE = 12;
 
@@ -28,6 +28,7 @@ PAVO.hud = new function() {
 	this.init = function() {
 
 		dom = {
+			window: jQuery(window),
 			curtain: jQuery("#curtain"),
 			debug: jQuery("#debug"),
 			messages: jQuery("#messages"),
@@ -35,7 +36,8 @@ PAVO.hud = new function() {
 			talk: jQuery("#talk"),
 			npcFrame: jQuery("#talk-npc-frame"),
 			keywordFrame: jQuery("#talk-keyword-frame"),
-			responseFrame: jQuery("#talk-response-frame")
+			responseFrame: jQuery("#talk-response-frame"),
+			theend: jQuery("#the-end")
 		};
 
 		dom.prompt.resize = function() {
@@ -52,10 +54,20 @@ PAVO.hud = new function() {
 			});
 		};
 		
-		jQuery(window).bind("resize", function() { 
+		dom.theend.resize = function() {
+			dom.theend.offset({
+				top: (FOAM.height - dom.theend.height()) / 2,
+				left: (FOAM.width - dom.theend.width()) / 2
+			});
+		};
+
+		// insure that window redraws when paused and resized
+		dom.window.bind("resize", function() { 
 			self.resize();
+			PAVO.world.draw();
 		});
-		jQuery(window).bind("keydown", this.onKeyDown);
+
+		dom.window.bind("keydown", this.onKeyDown);
 		
 		// disable mouse selection behaviors
 		dom.talk.bind("mousedown", function() {
@@ -64,8 +76,15 @@ PAVO.hud = new function() {
 		dom.curtain.bind("mousedown", function() {
 			return false;
 		} );
+		dom.theend.bind("mousedown", function() {
+			return false;
+		} );
 
 		this.resize();
+		
+		this.addMessage("Click and drag the mouse to look around.");
+		this.addMessage("Use the W S A D keys to move. Hold down SHIFT to sprint.");
+		this.addMessage("Press E when prompted to interact.");
 	};
 	
 	this.start = function() {
@@ -246,4 +265,17 @@ PAVO.hud = new function() {
 		dom.talk.visible = false;
 	};
 
+	this.end = function() {
+		dom.curtain.css("display", "block");
+		dom.curtain.width(FOAM.width);
+		dom.curtain.height(FOAM.height);
+		dom.curtain.css("background-color", "white");
+		dom.curtain.css("opacity", "0");
+		dom.curtain.animate( { opacity: 1 }, 2500, function() {
+			FOAM.running = false;
+			PAVO.hud.togglePause = function() {};
+			dom.theend.css("display", "block");
+			dom.theend.resize();
+		});
+	};
 };

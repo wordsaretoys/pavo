@@ -19,7 +19,7 @@ var PAVO = new function() {
 			jQuery("#glerror").show();
 			return;
 		}
-		gl = FOAM.gl;
+		var gl = FOAM.gl;
 
 		// add useful methods to built-in objects
 		Math.clamp = function(x, lo, hi) {
@@ -100,13 +100,6 @@ var PAVO = new function() {
 
 			FOAM.schedule(self.world.update, 0, true);
 			FOAM.schedule(self.world.draw, 0, true);
-
-			// insure that window redraws when paused and resized			
-			jQuery(window).bind("resize", function(){
-				PAVO.hud.resize();
-				self.world.draw();
-			});
-		
 		};
 		
 		FOAM.resources.load();

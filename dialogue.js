@@ -98,7 +98,7 @@ PAVO.dialogue = new function() {
 								break;
 								
 							case "@":
-								record.ending = true;
+								record.event = wd;
 								break;
 								
 							default:
@@ -170,9 +170,16 @@ PAVO.dialogue = new function() {
 			}
 		}
 		
-		if (entry.ending) {
-			subject.active = false;
-			table[subject.name] = [];
+		if (entry.event) {
+			switch(entry.event) {
+			case "fade":
+				subject.active = false;
+				table[subject.name] = [];
+				break;
+			case "end":
+				PAVO.hud.end();
+				break;
+			}
 		}		
 
 		if (entry.message) {

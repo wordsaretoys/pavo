@@ -57,6 +57,8 @@ PAVO.ghosts = new function() {
 	};
 	
 	this.trackPlayer = function(g, pp) {
+		var z;
+		
 		if (g.timer <= 0 || pp.distance(g.lastPos) > 0) {
 			g.target.set(
 				pp.x + 4 * (prng.get() - 0.5),

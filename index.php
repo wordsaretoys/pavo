@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>pavo</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="pavo.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="/shared/toybox.css">
 		<script type="text/javascript" src="/shared/jquery-1.7.1.js"></script>
 
 		<script type="text/javascript" src="/debug/foam/foam.js"></script>
@@ -34,12 +35,13 @@
 include("pavo.glsl");
 ?>
 		<script type="text/javascript">
-			window.addEventListener("load", function() {
+			jQuery(window).bind("load", function() {
 				PAVO.init();
 			});
 		</script>
     </head>
 	<body>
+		<?php include($_SERVER["DOCUMENT_ROOT"] . "/shared/toybox.php"); ?>
 		<canvas id="gl"></canvas>
 		<?php include("hud.html"); ?>
 	</body>

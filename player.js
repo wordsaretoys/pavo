@@ -39,17 +39,19 @@ PAVO.Player = function() {
 	
 		dom = {
 			mouseTracker: jQuery("#mouse-tracker"),
-			curtain: jQuery("#curtain")
+			curtain: jQuery("#curtain"),
+			window: jQuery(window)
 		};
 		dom.mouseTracker.resize = function() {
 			dom.mouseTracker.width(FOAM.width);
 			dom.mouseTracker.height(FOAM.height);
 		}
 		dom.mouseTracker.resize();
-		jQuery(window).bind("resize", dom.mouseTracker.resize);
 
-		jQuery(window).bind("keydown", this.onKeyDown);
-		jQuery(window).bind("keyup", this.onKeyUp);
+		dom.window.bind("resize", dom.mouseTracker.resize);
+		dom.window.bind("keydown", this.onKeyDown);
+		dom.window.bind("keyup", this.onKeyUp);
+		
 		dom.mouseTracker.bind("mousedown", this.onMouseDown);
 		dom.mouseTracker.bind("mouseup", this.onMouseUp);
 		dom.mouseTracker.bind("mousemove", this.onMouseMove);
@@ -87,13 +89,6 @@ PAVO.Player = function() {
 			PAVO.space.collision(this.position, this.velocity);
 		scratch.velocity.copy(this.velocity).mul(dt);
 		this.position.add(scratch.velocity);
-/*		
-		scratch.direction.copy(this.position);
-		scratch.direction.dejitter(8, Math.floor);
-//		scratch.velocity.set(4, 4, 4).add(scratch.direction);
-		scratch.velocity.set(4, 0, 4).add(scratch.direction);
-		PAVO.hud.setDebug(scratch.velocity.x + "<br>" + scratch.velocity.y + "<br>" + scratch.velocity.z);
-*/
 	};
 	
 	this.onKeyDown = function(event) {
@@ -117,12 +112,16 @@ PAVO.Player = function() {
 			case FOAM.KEY.SHIFT:
 				self.sprint = true;
 				break;
+/*
 			case FOAM.KEY.X:
 				self.debug = !self.debug;
 				break;
+
 			case FOAM.KEY.SPACE:
 				if (self.velocity.y === 0)
 					self.velocity.y = 15;
+*/
+
 			default:
 				//window.alert(event.keyCode);
 				break;
@@ -158,13 +157,11 @@ PAVO.Player = function() {
 
 	this.onMouseDown = function(event) {
 		mouse.down = true;
-		dom.mouseTracker.css("cursor", "move");
 		return false;
 	};
 	
 	this.onMouseUp = function(event) {
 		mouse.down = false;
-		dom.mouseTracker.css("cursor", "default");
 		return false;
 	};
 
