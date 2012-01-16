@@ -1,10 +1,9 @@
 /**
 
-	Pavo Main Object
-
-	requires Foam library
-
-	TODO: how to deal with gl context loss/restore?
+	Pavo: WebGL-based Interactive Fiction Game
+	
+	@module pavo
+	@author cpgauthier
 
 **/
 
@@ -12,6 +11,12 @@ var PAVO = new function() {
 	
 	var self = this;
 	
+	/**
+		initialize FOAM library, load resources, perform set up
+
+		@method init
+	**/
+
 	this.init = function() {
 	
 		// initialize the Foam API
@@ -67,13 +72,16 @@ var PAVO = new function() {
 		gl.enable(gl.DEPTH_TEST);
 		
 		self.hud.init();
-		
+
+		// describe binary resources to load
 		FOAM.resources.addImage("walls", "res/walls.png");
 		FOAM.resources.addImage("ghost", "res/ghost.png");
 		FOAM.resources.addImage("panel", "res/panel.png");
 		
+		// set up event handler to execute once loading complete
 		FOAM.resources.onComplete = function() {
 		
+			// compile and link all shaders
 			FOAM.shaders.build(
 				"block", "vs-block", "fs-block",
 				["position", "texturec", "a_color", "a_light", "a_image"],
@@ -92,16 +100,19 @@ var PAVO = new function() {
 				["projector", "modelview", "center", "rotations", "alpha", "phase"],
 				["images"] );
 
+			// compile textures from loaded images
 			FOAM.textures.build("walls");
 			FOAM.textures.build("ghost");
 			FOAM.textures.build("panel");
 
+			// create the world and schedule game loop methods
 			self.world.init();
 
 			FOAM.schedule(self.world.update, 0, true);
 			FOAM.schedule(self.world.draw, 0, true);
 		};
 		
+		// load specified resources
 		FOAM.resources.load();
 	};
 	

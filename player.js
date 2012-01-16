@@ -1,8 +1,17 @@
 /**
+	construct a player object
 
-	Player Object
+	player is only created once, but is written to inherit
+	from the PAVO.Mover object in order to use its methods
 
+	inheritance chain:
+	FOAM.Thing -> PAVO.Mover -> FOAM.Camera -> PAVO.Player
+	
+	@namespace PAVO
+	@class Player
+	@constructor
 **/
+
 
 PAVO.Player = function() {
 
@@ -35,6 +44,16 @@ PAVO.Player = function() {
 	this.debug = false;
 	this.freeze = false;
 
+	/**
+		establish jQuery shells around player DOM objects &
+		set up event handlers for player controls
+		
+		mouseTracker div lies over canvas and HUD elements to
+		prevent mouse dragging from selecting anything under it
+		
+		@method init
+	**/
+
 	this.init = function() {
 	
 		dom = {
@@ -60,6 +79,15 @@ PAVO.Player = function() {
 		this.farLimit = 1024;
 	};
 	
+	/**
+		react to player controls by updating velocity and position &
+		handle collision detection
+		
+		called on every animation frame
+		
+		@method update
+	**/
+
 	this.update = function() {
 		var dt = FOAM.interval * 0.001;
 		var speed = (this.sprint) ? SPRINT_SPEED : NORMAL_SPEED;
@@ -91,6 +119,14 @@ PAVO.Player = function() {
 		this.position.add(scratch.velocity);
 	};
 	
+	/**
+		handle a keypress
+		
+		@method onKeyDown
+		@param event browser object containing event information
+		@return true to enable default key behavior
+	**/
+
 	this.onKeyDown = function(event) {
 
 		if (self.freeze)
@@ -112,21 +148,19 @@ PAVO.Player = function() {
 			case FOAM.KEY.SHIFT:
 				self.sprint = true;
 				break;
-/*
-			case FOAM.KEY.X:
-				self.debug = !self.debug;
-				break;
-
-			case FOAM.KEY.SPACE:
-				if (self.velocity.y === 0)
-					self.velocity.y = 15;
-*/
-
 			default:
 				//window.alert(event.keyCode);
 				break;
 		}
 	};
+
+	/**
+		handle a key release
+		
+		@method onKeyUp
+		@param event browser object containing event information
+		@return true to enable default key behavior
+	**/
 
 	this.onKeyUp = function(event) {
 
@@ -155,15 +189,39 @@ PAVO.Player = function() {
 		}
 	};
 
+	/**
+		handle a mouse down event
+		
+		@method onMouseDown
+		@param event browser object containing event information
+		@return true to enable default mouse behavior
+	**/
+
 	this.onMouseDown = function(event) {
 		mouse.down = true;
 		return false;
 	};
 	
+	/**
+		handle a mouse up event
+		
+		@method onMouseUp
+		@param event browser object containing event information
+		@return true to enable default mouse behavior
+	**/
+
 	this.onMouseUp = function(event) {
 		mouse.down = false;
 		return false;
 	};
+
+	/**
+		handle a mouse move event
+		
+		@method onMouseMove
+		@param event browser object containing event information
+		@return true to enable default mouse behavior
+	**/
 
 	this.onMouseMove = function(event) {
 		var dx, dy;
@@ -175,19 +233,34 @@ PAVO.Player = function() {
 		}
 		mouse.x = event.pageX;
 		mouse.y = event.pageY;
-		if (mouse.invalid)
-			mouse.invalid = false;
+		mouse.invalid = false;
 		return false;
 	};
 	
+	/**
+		invalidate the next mouse motion event
+		
+		use this when returning from a modal dialog to prevent a "whiplash" effect
+		(event.pageX & event.pageY may not represent useful/contiguous mouse values)
+		
+		@method invalidateMouse
+	**/
+
 	this.invalidateMouse = function() {
 		mouse.invalid = true;
 	};
 	
 };
 
-// for those playing along at home, the inheritance chain goes:
-// FOAM.Thing -> PAVO.Mover -> FOAM.Camera -> PAVO.Player
-FOAM.Camera.prototype = PAVO.makeMover();
-PAVO.Player.prototype = new FOAM.Camera();
-PAVO.player = new PAVO.Player();
+
+/**
+	generate player object
+	
+	@method makePlayer
+**/
+
+PAVO.makePlayer = function() {
+	FOAM.Camera.prototype = PAVO.makeMover();
+	PAVO.Player.prototype = new FOAM.Camera();
+	PAVO.player = new PAVO.Player();
+}

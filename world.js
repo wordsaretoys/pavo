@@ -1,46 +1,30 @@
 /**
-
-	World Object
-	Maintains all actor, space, and narrative objects.
-
+	maintain npc, space, and narrative objects
+	
+	@namespace PAVO
+	@class world
 **/
 
 PAVO.world = new function() {
 
 	var self = this;
-	var nospace = false;
 	
-	this.generateTextures = function() {
-		var pastels = [
-			224, 224, 224, 255,
-			224, 224, 255, 255,
-			224, 255, 224, 255,
-			224, 255, 255, 255,
-			255, 224, 224, 255,
-			255, 224, 255, 255,
-			255, 255, 224, 255,
-			255, 255, 255, 255
-		];
-		var canvas = document.createElement("canvas");
-		var context = canvas.getContext("2d");
-		var palette = context.createImageData(1, pastels.length / 4);
-		var i, il;
-		for (i = 0, il = pastels.length; i < il; i++)
-			palette.data[i] = pastels[i];
-		FOAM.textures.buildFromImageData("block-palette", palette);
-	};
+	/**
+		initialize all game objects and start the game running
+		
+		@method init
+	**/
 
 	this.init = function() {
-		var r;
-		
-		this.generateTextures();
+		PAVO.makePlayer();
 
 		PAVO.space.init();
 		PAVO.player.init();
 		PAVO.ghosts.init();
 		PAVO.panels.init();
-		PAVO.dialogue.init("#vignettes");
+		PAVO.dialogue.init("#narratives");
 		
+		// position and orient the player
 		PAVO.player.position.copy(PAVO.game.player.position);
 		PAVO.player.turn(0, PAVO.game.player.rotation * Math.PI, 0);
 
@@ -49,12 +33,27 @@ PAVO.world = new function() {
 		PAVO.hud.start();
 	};
 	
+	/**
+		update all game objects that require it
+		
+		execute on every animation frame
+		
+		@method update
+	**/
+
 	this.update = function() {
 		PAVO.ghosts.update();
 		PAVO.player.update();
-		PAVO.hud.update();
 	};
 	
+	/**
+		draw all drawable objects
+		
+		execute on every animation frame
+		
+		@method draw
+	**/
+
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player.camera;
@@ -66,8 +65,7 @@ PAVO.world = new function() {
 		gl.enable(gl.CULL_FACE);
 		gl.cullFace(gl.BACK);
 
-		if (!nospace)
-			PAVO.space.draw();
+		PAVO.space.draw();
 		PAVO.ghosts.draw();
 		PAVO.panels.draw();
 					

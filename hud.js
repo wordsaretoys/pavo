@@ -1,7 +1,8 @@
 /**
-
-	HUD Object
-
+	handle heads-up display and general ui functions
+	
+	@namespace PAVO
+	@class hud
 **/
 
 PAVO.hud = new function() {
@@ -25,12 +26,18 @@ PAVO.hud = new function() {
 	var self = this;
 	var dom;
 
+	/**
+		establish jQuery shells around UI DOM objects &
+		assign methods for simple behaviors (resize, etc)
+		
+		@method init
+	**/
+	
 	this.init = function() {
 
 		dom = {
 			window: jQuery(window),
 			curtain: jQuery("#curtain"),
-			debug: jQuery("#debug"),
 			messages: jQuery("#messages"),
 			prompt: jQuery("#prompt"),
 			talk: jQuery("#talk"),
@@ -87,10 +94,25 @@ PAVO.hud = new function() {
 		this.addMessage("Press E when prompted to interact.");
 	};
 	
+	/**
+		get rid of pause curtain at game start
+		
+		@method start
+	**/
+
 	this.start = function() {
 		dom.curtain.css("background-color", "rgba(0, 0, 0, 0.75)");
 		dom.curtain.css("display", "none");
 	};
+
+	/**
+		adjust UI elements in response to browser window resize
+
+		some elements are attached to the edges via CSS, and do
+		not require manual resizing or recentering
+		
+		@method resize
+	**/
 
 	this.resize = function() {
 		dom.curtain.width(FOAM.width);
@@ -98,17 +120,20 @@ PAVO.hud = new function() {
 		dom.prompt.resize();
 		dom.messages.css("bottom", (4 * FOAM.height / 5) + "px");
 		dom.talk.resize();
+		dom.theend.resize();
 	};
 
-	this.setDebug = function(s) {
-		if (dom.debug.css("display") === "none") {
-			dom.debug.css("display", "block");
-		}
-		dom.debug.html(s);
-	};
 
-	this.update = function() {
-	};
+	/**
+		handle a keypress
+		
+		note that the hud object only handles keys related to 
+		HUD activity. see player.js for motion control keys
+		
+		@method onKeyDown
+		@param event browser object containing event information
+		@return true to enable default key behavior
+	**/
 
 	this.onKeyDown = function(event) {
 		switch(event.keyCode) {
@@ -139,7 +164,7 @@ PAVO.hud = new function() {
 			}
 			break;
 		case FOAM.KEY.TAB:
-			// prevent tab focus change
+			// prevent accidental TAB keypress from changing focus
 			return false;
 			break;
 		default:
@@ -147,6 +172,15 @@ PAVO.hud = new function() {
 			break;
 		}
 	};
+
+	/**
+		toggle between running and non-running game states
+		
+		non-running means put up the "pause curtain" to darken scene
+		and stop the FOAM engine
+		
+		@method togglePause
+	**/
 
 	this.togglePause = function() {
 		if (FOAM.running) {
@@ -162,6 +196,16 @@ PAVO.hud = new function() {
 		}
 	};
 	
+	/**
+		adds a simple message to the HUD
+		
+		messages are stacked at the top of the screen, fading after
+		a constant timeout, then removed from the DOM
+		
+		@method addMessage
+		@param msg string containing message to display
+	**/
+
 	this.addMessage = function(msg) {
 		var div = jQuery(document.createElement("div"));
 		div.html(msg);
@@ -174,6 +218,21 @@ PAVO.hud = new function() {
 		});
 	};
 	
+	/**
+		display a contextual user prompt
+		
+		each line is an object of the format {
+			key: single character string represting a key (ex: "E")
+			msg: a message to the user
+		}
+		
+		prompts are displayed at the center of the screen and are used
+		to let the user know they can press a key to initiate an action
+		
+		@method setPrompt
+		@param lines array of strings to display as prompt
+	**/
+
 	this.setPrompt = function(lines) {
 		var i, il, ln, div, s;
 		lines = lines || [];
@@ -189,6 +248,16 @@ PAVO.hud = new function() {
 		dom.prompt.resize();
 	};
 	
+	/**
+		generates a prompt to speak to a ghost
+		
+		called by the ghost collection when the player
+		is facing a ghost and is close enough to talk 
+		
+		@method promptToTalk
+		@param ghost object representing NPC
+	**/
+
 	this.promptToTalk = function(ghost) {
 		if (ghost) {
 			this.setPrompt( [
@@ -202,6 +271,16 @@ PAVO.hud = new function() {
 		}
 		prompting.subject = ghost;
 	};
+
+	/**
+		generates a prompt to operate a panel
+		
+		called by the panel collection when the player
+		is facing a panel and is close enough to use
+		
+		@method promptToUse
+		@param panel object representing panel
+	**/
 
 	this.promptToUse = function(panel) {
 		if (panel) {
@@ -217,9 +296,17 @@ PAVO.hud = new function() {
 		prompting.subject = panel;
 	};
 
+	/**
+		displays the talk dialog
+		
+		@method showDialogue
+	**/
+
 	this.showDialogue = function() {
 		var response, wordlist;
 
+		// lock the player controls
+		// prevents player from moving out of context
 		PAVO.player.freeze = true;
 
 		dom.talk.css("display", "block");
@@ -228,22 +315,45 @@ PAVO.hud = new function() {
 
 		dom.npcFrame.html(prompting.subject.name);
 
+		// obtain a "greeting" from the current NPC
 		response = PAVO.dialogue.getResponse(prompting.subject);
 		dom.responseFrame.html(response);
+
+		// and the initial list of queryable keywords
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
 		this.showKeywords(wordlist);
 	};
 	
+	/**
+		handles a click on a keyword in the talk dialog
+		
+		@method wordClicked
+	**/
+
 	this.wordClicked = function() {
 		var request, response, wordlist;
+
+		// obtain a response to the keyword
 		request = this.innerHTML;
 		response = PAVO.dialogue.getResponse(prompting.subject, request);
 		dom.responseFrame.html(response);
+
+		// select a new list of queryable keywords
 		wordlist = PAVO.dialogue.getKeywords(prompting.subject);
 		self.showKeywords(wordlist);
 	};
 	
+	/**
+		displays a list of keywords in the talk dialog
+		
+		@method showKeywords
+		@param list array of strings containing keywords
+	**/
+
 	this.showKeywords = function(list) {
+
+		// limit the keyword list to a maximum upper bound
+		// prevents the dialog from growing too large
 		var llen = Math.min(list.length, KW_LIST_SIZE);
 		var i, div;
 		
@@ -259,11 +369,24 @@ PAVO.hud = new function() {
 		}
 	};
 	
+	/**
+		hide the talk dialog
+		
+		@method hideDialogue
+	**/
+
 	this.hideDialogue = function() {
 		PAVO.player.freeze = false;
 		dom.talk.css("display", "none");
 		dom.talk.visible = false;
 	};
+
+	/**
+		end the game, displaying final credits
+		leave it in a state requiring restart
+		
+		@method end
+	**/
 
 	this.end = function() {
 		dom.curtain.css("display", "block");

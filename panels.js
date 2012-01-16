@@ -1,8 +1,8 @@
 /**
-
-	Panels Object
-	Maintains collection of control panels.
+	maintain collection of panel objects
 	
+	@namespace PAVO
+	@class panels
 **/
 
 PAVO.panels = new function() {
@@ -21,6 +21,13 @@ PAVO.panels = new function() {
 
 	this.listening = null;
 	
+	/**
+		generate collection of panel objects
+		and standard panel vertex mesh
+		
+		@method init
+	**/
+
 	this.init = function() {
 		var cs = PAVO.game.panels;
 		var i, il, c;
@@ -35,6 +42,12 @@ PAVO.panels = new function() {
 		}
 	};
 	
+	/**
+		draw the collection of panels
+		
+		@method draw
+	**/
+
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
@@ -53,8 +66,12 @@ PAVO.panels = new function() {
 		for (i = 0, il = list.length; i < il; i++) {
 			c = list[i];
 			d = c.position.distance(cam.position);
+			
+			// we only draw panels close enough to see
 			if (d <= VIEW_RADIUS) {
 			
+				// if the player is close enough to a panel to use it
+				// make a note of which panel the player is looking at
 				if (d <= TALK_RADIUS) {
 					scratch.pos.copy(cam.position).sub(c.position).norm();
 					t = TALK_RADIUS * scratch.pos.dot(cam.orientation.front) / d;
@@ -73,6 +90,7 @@ PAVO.panels = new function() {
 
 		gl.disable(gl.BLEND);
 
+		// let the HUD know if the player is looking at a nearby panel
 		if (lt !== this.listening) {
 			PAVO.hud.promptToUse(lt);
 			this.listening = lt;

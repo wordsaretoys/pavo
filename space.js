@@ -1,9 +1,9 @@
 /**
-
-	Space Object
-	Generates the map and mesh for the current space.
-	Assists in collision detection.
+	generate the map and mesh for the game space
+	provide methods to assist in collision detection
 	
+	@namespace PAVO
+	@class space
 **/
 
 PAVO.space = new function() {
@@ -31,6 +31,12 @@ PAVO.space = new function() {
 		vel0: new FOAM.Vector()
 	};
 	
+	/**
+		generate the 3D noise fields that will shape/color/light the game space
+		
+		@method init
+	**/
+
 	this.init = function() {
 		var gspace = PAVO.game.space;
 
@@ -51,9 +57,14 @@ PAVO.space = new function() {
 		this.field = field;
 		this.light = light;
 
+		// wrapper method for light
+		// expresses 1/r^2 intensity relationship
 		light.gets = function(x, y, z) {
 			return Math.pow(light.get(x, y, z), 2);
 		};
+		
+		// wrapper method for image
+		// provides 10% chance of a non-default wall image
 		image.gets = function(a, b) {
 			var i = image.get();
 			if (i > 0.1)
@@ -61,7 +72,44 @@ PAVO.space = new function() {
 			else
 				return Math.floor((b - a) * image.get()) + a;
 		};
+		
+		this.generatePalette();
+		
 	};
+
+	/**
+		generate the color palette for the space
+		
+		@method generatePalette
+	**/
+
+	this.generatePalette = function() {
+		var pastels = [
+			224, 224, 224, 255,
+			224, 224, 255, 255,
+			224, 255, 224, 255,
+			224, 255, 255, 255,
+			255, 224, 224, 255,
+			255, 224, 255, 255,
+			255, 255, 224, 255,
+			255, 255, 255, 255
+		];
+		var canvas = document.createElement("canvas");
+		var context = canvas.getContext("2d");
+		var palette = context.createImageData(1, pastels.length / 4);
+		var i, il;
+		for (i = 0, il = pastels.length; i < il; i++)
+			palette.data[i] = pastels[i];
+		FOAM.textures.buildFromImageData("block-palette", palette);
+	};
+
+	/**
+		return whether a point is inside the game space
+
+		@method pinside
+		@param p the point to test
+		@return true if the point is inside the space
+	**/
 
 	this.pinside = function(p) {
 		if (p.x < LLIMIT.x || p.y < LLIMIT.y || p.z < LLIMIT.z || 
@@ -70,11 +118,34 @@ PAVO.space = new function() {
 		return field.get(p.x + HALF_RES, p.y + HALF_RES, p.z + HALF_RES) > THRESHOLD;
 	}
 	
+	/**
+		return whether a block defined by a point is inside the game space
+		
+		block extends from (x, y, z) to (x + r, y + r, z + r) where r = RESOLUTION
+
+		@method inside
+		@param x the x-coordinate of the point to test
+		@param y the y-coordinate of the point to test
+		@param z the z-coordinate of the point to test
+		@return true if the point is inside the space
+	**/
+
 	this.inside = function(x, y, z) {
 		scratch.pos0.set(x, y, z).dejitter(RESOLUTION, Math.floor);
 		return this.pinside(scratch.pos0);
 	};
 	
+	/**
+		generates the game space mesh
+		
+		this is just a simplification of the marching cubes algorithm
+		we march through a 3D noise field and generate a polygon when
+		we cross the "surface" of the field; that is, when the values
+		cross a threshold value
+
+		@method generate
+	**/
+
 	this.generate = function() {
 		var nx, px, ny, py, nz, pz;
 		var x, y, z, o, p, c, l, w;
@@ -176,6 +247,18 @@ PAVO.space = new function() {
 		mesh.build();
 	};
 	
+	/**
+		tests whether a point in motion is about to collide with the game space
+		
+		note that the call changes the contents of the vectors the caller supplies
+		instead of returning a true/false value; it's simpler just to make all the
+		changes right where you're doing the detection.
+
+		@method collision
+		@param p point to test
+		@param v velocity of the point 
+	**/
+
 	this.collision = function(p, v) {
 		var surf;
 		
@@ -219,6 +302,12 @@ PAVO.space = new function() {
 		}
 	};
 	
+	/**
+		draw the game space
+
+		@method draw
+	**/
+
 	this.draw = function() {
 		var gl = FOAM.gl;
 		var cam = PAVO.player;
@@ -234,29 +323,5 @@ PAVO.space = new function() {
 		mesh.draw();
 	};
 
-	this.findFreeSpace = function(prng, p) {
-		do {		
-			p.set(prng.get() * LENGTH.x, prng.get() * LENGTH.y, prng.get() * LENGTH.z);
-			p.dejitter(RESOLUTION, Math.floor);
-		} while (!this.pinside(p));
-	};
-	
-	this.checkFloorSpace = function(p) {
-		var above, below;
-		p.dejitter(RESOLUTION, Math.floor);
-		above = this.pinside(p);
-		while (p.y >= LLIMIT.y) {
-			p.y -= RESOLUTION;
-			below = this.pinside(p);
-			if (above && !below) {
-				p.y += RESOLUTION;
-				p.x += HALF_RES;
-				p.z += HALF_RES;
-				return true;
-			}
-			above = below;
-		}
-		return false;
-	}
-
 };
+

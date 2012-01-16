@@ -1,10 +1,20 @@
 /**
-
-	Models Object
+	generate reusable game models
 	
+	@namespace PAVO
+	@class models
 **/
 
 PAVO.models = new function() {
+
+	/**
+		create a mesh representing a ghost NPC
+
+		requires ghost shader to have been compiled
+		
+		@method createGhostMesh
+		@return the mesh object
+	**/
 
 	this.createGhostMesh = function() {
 		var nx = -0.5, ny = -0.5, nz = -0.5;
@@ -69,6 +79,15 @@ PAVO.models = new function() {
 	
 	};
 	
+	/**
+		create a mesh representing a panel object
+
+		requires panel shader to have been compiled
+		
+		@method createPanelMesh
+		@return the mesh object
+	**/
+
 	this.createPanelMesh = function() {
 		var nx = -1, ny = -1, nz = -1;
 		var px = 1, py = 1, pz = 1;

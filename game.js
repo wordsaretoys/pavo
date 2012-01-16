@@ -1,5 +1,15 @@
+/**
+	specify certain game parameters
+	more of an settings file than a code module
+	
+	@namespace PAVO
+	@class game
+**/
+
+
 PAVO.game = {
 
+	// parameters to generate the game space
 	space: {
 		size: { x: 128, y: 8, z: 128 },
 		field: { 
@@ -19,6 +29,7 @@ PAVO.game = {
 		}
 	},
 
+	// list of NPC positions and identities
 	ghosts: [
 		{ 
 			position: { x: 108, y: 0, z: 76 },
@@ -42,6 +53,7 @@ PAVO.game = {
 		}
 	],
 	
+	// list of panel positions and orientations
 	panels: [
 		{ 
 			position: { x: 108, y: 0, z: 124 },
@@ -71,6 +83,7 @@ PAVO.game = {
 
 	],
 	
+	// player starting position and orientation
 	player: {
 		position: { x: 124, y: 0, z: 92 },
 		rotation: 0.25

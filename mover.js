@@ -1,9 +1,12 @@
 /**
+	construct a mover object
 
-	Mover Object
-	Represents an object with yaw and pitch axes and position.
-	Inherits from FOAM.Thing object.
+	movers inherit from FOAM.Thing
+	and support independent pitch and yaw rotation
 	
+	@namespace PAVO
+	@class Mover
+	@constructor
 **/
 
 PAVO.Mover = function() {
@@ -22,6 +25,15 @@ PAVO.Mover = function() {
 };
 
 PAVO.Mover.proto = {
+
+	/**
+		rotate the object
+
+		@method spin
+		@param yaw angle to rotate around y-axis
+		@param pitch angle to rotate around x-axis
+	**/
+
 	spin: function(yaw, pitch) {
 		// clumsy, but it works. rotate the first quaternion by
 		// pitch angle, then use its orientation vectors as the
@@ -39,8 +51,20 @@ PAVO.Mover.proto = {
 	}
 };
 
+/**
+
+	create a mover object
+	
+	JS doesn't support multiple inheritance, so we "assemble"
+	a prototype object by pasting methods onto a thing object
+
+	@method makeMover
+	@return a new mover object
+**/
+
 PAVO.makeMover = function() {
 	PAVO.Mover.prototype = new FOAM.Thing();
 	jQuery.extend(PAVO.Mover.prototype, PAVO.Mover.proto);
 	return new PAVO.Mover();
 };
+
