@@ -21,10 +21,10 @@
 	@param modelview modelview matrix
 	
 	(passed to fragment shader for each vertex)
-	@uv		texture coordinates
-	@color	color index
-	@light	light intensity
-	@image	image index
+	@param uv		texture coordinates
+	@param color	color index
+	@param light	light intensity
+	@param image	image index
 	
 **/
 
