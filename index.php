@@ -4,32 +4,20 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title>pavo</title>
 		<link rel="stylesheet" type="text/css" media="screen" href="pavo.css">
-		<link rel="stylesheet" type="text/css" media="screen" href="/shared/toybox.css">
-		<script type="text/javascript" src="/shared/jquery-1.7.1.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
-		<script type="text/javascript" src="/debug/foam/foam.js"></script>
-		<script type="text/javascript" src="/debug/foam/resources.js"></script>
-		<script type="text/javascript" src="/debug/foam/vector.js"></script>
-		<script type="text/javascript" src="/debug/foam/quaternion.js"></script>
-		<script type="text/javascript" src="/debug/foam/thing.js"></script>
-		<script type="text/javascript" src="/debug/foam/shaders.js"></script>
-		<script type="text/javascript" src="/debug/foam/textures.js"></script>
-		<script type="text/javascript" src="/debug/foam/camera.js"></script>
-		<script type="text/javascript" src="/debug/foam/mesh.js"></script>
-		<script type="text/javascript" src="/debug/foam/noise.js"></script>
-		<script type="text/javascript" src="/debug/foam/sound.js"></script>
-
-		<script type="text/javascript" src="/debug/pavo/pavo.js"></script>
-		<script type="text/javascript" src="/debug/pavo/game.js"></script>
-		<script type="text/javascript" src="/debug/pavo/hud.js"></script>
-		<script type="text/javascript" src="/debug/pavo/world.js"></script>
-		<script type="text/javascript" src="/debug/pavo/mover.js"></script>
-		<script type="text/javascript" src="/debug/pavo/player.js"></script>
-		<script type="text/javascript" src="/debug/pavo/space.js"></script>
-		<script type="text/javascript" src="/debug/pavo/models.js"></script>
-		<script type="text/javascript" src="/debug/pavo/ghosts.js"></script>
-		<script type="text/javascript" src="/debug/pavo/panels.js"></script>
-		<script type="text/javascript" src="/debug/pavo/dialogue.js"></script>
+		<script type="text/javascript" src="foam.js"></script>
+		<script type="text/javascript" src="pavo.js"></script>
+		<script type="text/javascript" src="game.js"></script>
+		<script type="text/javascript" src="hud.js"></script>
+		<script type="text/javascript" src="world.js"></script>
+		<script type="text/javascript" src="mover.js"></script>
+		<script type="text/javascript" src="player.js"></script>
+		<script type="text/javascript" src="space.js"></script>
+		<script type="text/javascript" src="models.js"></script>
+		<script type="text/javascript" src="ghosts.js"></script>
+		<script type="text/javascript" src="panels.js"></script>
+		<script type="text/javascript" src="dialogue.js"></script>
 
 <?php
 include("pavo.glsl");
@@ -41,7 +29,6 @@ include("pavo.glsl");
 		</script>
     </head>
 	<body>
-		<?php include($_SERVER["DOCUMENT_ROOT"] . "/shared/toybox.php"); ?>
 		<canvas id="gl"></canvas>
 		<?php include("hud.html"); ?>
 	</body>
